@@ -63,6 +63,7 @@ def get_argparser():
         Cypress FX2/FX2LP bootloader tool
 
         This tool can read and write data in three formats:
+
           * hex: contiguous hexadecimal dump with non-significant whitespace
           * bin (.bin extension): contiguous binary
           * ihex (.ihex, .ihx, .hex extensions): discontiguous Intel HEX records
