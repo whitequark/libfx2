@@ -231,7 +231,7 @@
  IE5
  IE4
  I2CINT
- USBNT
+ USBINT
  1
  0
  0
@@ -441,7 +441,8 @@ AD
  reserved
 AF
  1
- AUTOPTRSETUP[15] Autopointer 1&2 setup
+ AUTOPTRSETUP[15]
+ Autopointer 1&2 setup
  0
  0
  0
@@ -582,7 +583,7 @@ BB
  1
  GPIFTRIG[15, 13]
  Endpoint 2,4,6,8 GPIF slave FIFO Trigger
- DONE
+ GPIFIDLE
  0
  0
  0
@@ -2381,7 +2382,7 @@ E6C1
  1
  GPIFIDLECS
  GPIF Done, GPIF IDLE drive mode
- DONE
+ GPIFIDLE
  0
  0
  0
@@ -2611,7 +2612,7 @@ E6D1
 E6D2
  1
  EP2GPIFFLGSEL
- Endpoint 2 GPIF Flag select
+ Endpoint 2 GPIF Flag Select
  0
  0
  0
@@ -2624,7 +2625,7 @@ E6D2
 E6D3
  1
  EP2GPIFPFSTOP
- Endpoint 2 GPIF stop transaction on prog. flag
+ Endpoint 2 GPIF Stop Transaction on Programmable flag
  0
  0
  0
@@ -2654,7 +2655,7 @@ reserved
 E6DA
  1
  EP4GPIFFLGSEL
- Endpoint 4 GPIF Flag select
+ Endpoint 4 GPIF Flag Select
  0
  0
  0
@@ -2667,7 +2668,7 @@ E6DA
 E6DB
  1
  EP4GPIFPFSTOP
- Endpoint 4 GPIF stop transaction on prog. Flag
+ Endpoint 4 GPIF Stop Transaction on Programmable Flag
  0
  0
  0
@@ -2697,7 +2698,7 @@ reserved
 E6E2
  1
  EP6GPIFFLGSEL
- Endpoint 6 GPIF Flag select
+ Endpoint 6 GPIF Flag Select
  0
  0
  0
@@ -2710,7 +2711,7 @@ E6E2
 E6E3
  1
  EP6GPIFPFSTOP
- Endpoint 6 GPIF stop transaction on prog. flag
+ Endpoint 6 GPIF Stop Transaction on Programmable flag
  0
  0
  0
@@ -2740,7 +2741,7 @@ reserved
 E6EA
  1
  EP8GPIFFLGSEL
- Endpoint 8 GPIF Flag select
+ Endpoint 8 GPIF Flag Select
  0
  0
  0
@@ -2753,7 +2754,7 @@ E6EA
 E6EB
  1
  EP8GPIFPFSTOP
- Endpoint 8 GPIF stop transaction on prog. flag
+ Endpoint 8 GPIF Stop Transaction on Programmable flag
  0
  0
  0

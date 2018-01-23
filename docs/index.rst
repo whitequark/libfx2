@@ -11,4 +11,5 @@ Contents:
    getting_started
    commands
    host_library
+   device_library
    faq

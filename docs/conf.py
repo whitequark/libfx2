@@ -17,8 +17,34 @@ class Mock(MagicMock):
 MOCK_MODULES = ['usb1']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
+# Configure Breathe and doxygen
+breathe_projects_source = {
+    'libfx2': (
+        '../firmware/library/include', [
+            'fx2.h', 'fx2regs.h', 'fx2ints.h'
+        ]
+    )
+}
+breathe_default_project = 'libfx2'
+breathe_doxygen_config_options = {
+    'EXTRACT_ALL':            'YES',
+    'SORT_MEMBER_DOCS':       'NO',
+    'ENABLE_PREPROCESSING':   'YES',
+    'MACRO_EXPANSION':        'YES',
+    'EXPAND_ONLY_PREDEF':     'YES',
+    'PREDEFINED': " ".join([
+        'DOXYGEN',
+        '_SFR(addr)="volatile sfr8_t"',
+        '_SFR16(addr)="volatile sfr16_t"',
+        '_SBIT(addr)="volatile sbit_t"',
+        '_IOR(addr)="volatile uint8_t"',
+        '_IOR16(addr)="volatile uint16_t"',
+    ])
+}
+breathe_show_define_initializer = True
+
 # Configure Sphinx
-extensions = ['sphinx.ext.autodoc', 'sphinxarg.ext', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinxarg.ext', 'sphinx.ext.viewcode', 'breathe']
 autodoc_member_order = 'bysource'
 source_suffix = '.rst'
 master_doc = 'index'
