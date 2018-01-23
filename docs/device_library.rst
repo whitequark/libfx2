@@ -4,6 +4,7 @@ Device-side library reference
 .. toctree::
    :maxdepth: 1
 
+   usb_h
    fx2regs_h
    fx2ints_h
    fx2lib_h

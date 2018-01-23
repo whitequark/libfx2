@@ -22,6 +22,7 @@ breathe_projects_source = {
     'libfx2': (
         '../firmware/library/include', [
             'fx2regs.h', 'fx2ints.h', 'fx2lib.h', 'fx2delay.h',
+            'usb.h'
         ]
     )
 }
