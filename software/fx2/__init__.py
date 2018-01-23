@@ -28,7 +28,7 @@ class FX2Device:
         self._context = usb1.USBContext()
         self._device = self._context.openByVendorIDAndProductID(vid, pid)
         if self._device is None:
-            raise FX2DeviceError(f"Device {vid:04x}:{pid:04x} not found")
+            raise FX2DeviceError("Device {04x}:{04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
 
         self._eeprom_size = None
@@ -61,7 +61,8 @@ class FX2Device:
         elif addr_width == 2:
             return _CMD_RW_EEPROM_DB
         else:
-            raise ValueError(f"Address width {addr_width} is not supported")
+            raise ValueError("Address width {addr_width} is not supported"
+                             .format(addr_width=addr_width))
 
     def read_eeprom(self, addr, length, addr_width):
         """Read ``length`` bytes at ``addr`` from boot EEPROM."""

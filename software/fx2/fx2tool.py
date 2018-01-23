@@ -14,13 +14,13 @@ class VID_PID(collections.namedtuple("VID_PID", "vid pid")):
     def parse(cls, s):
         match = re.match(r"^([0-9a-f]{1,4}):([0-9a-f]{1,4})$", s, re.I)
         if not match:
-            raise ValueError(f"{s} is not a VID:PID pair")
+            raise ValueError("{} is not a VID:PID pair".format(s))
         vid = int(match.group(1), 16)
         pid = int(match.group(2), 16)
         return cls(vid, pid)
 
     def __str__(self):
-        return f"{self.vid:04x}:{self.pid:04x}"
+        return "{04x}:{04x}".format(self.vid, self.pid)
 
 
 class TextHelpFormatter(argparse.HelpFormatter):
@@ -49,13 +49,13 @@ def get_argparser():
         try:
             return VID_PID.parse(arg)
         except ValueError:
-            raise argparse.ArgumentTypeError(f"{arg} is not a VID:PID pair")
+            raise argparse.ArgumentTypeError("{} is not a VID:PID pair".format(arg))
 
     def int_with_base(arg):
         try:
             return int(arg, 0)
         except ValueError:
-            raise argparse.ArgumentTypeError(f"{arg} is not an integer")
+            raise argparse.ArgumentTypeError("{} is not an integer".format(arg))
 
     parser = argparse.ArgumentParser(
         formatter_class=TextHelpFormatter,
@@ -187,7 +187,7 @@ def output_data(fmt, file, data, offset):
     elif fmt == "hex":
         n = 0
         for n, byte in enumerate(data):
-            file.write(f"{byte:02x}".encode())
+            file.write("{02x}".format(byte).encode())
             if n > 0 and n % 16 == 15:
                 file.write(b"\n")
             elif n > 0 and n % 8 == 7:
@@ -253,21 +253,21 @@ def input_data(fmt, file, data, offset):
         while pos < len(data):
             match = RE_HDR.match(data, pos)
             if match is None:
-                raise SystemExit(f"Invalid record header at offset {pos}")
+                raise SystemExit("Invalid record header at offset {}".format(pos))
             *rechdr, = bytes.fromhex(match.group(1).decode())
             reclen, recoffh, recoffl, rectype = rechdr
 
             recdatahex = data[match.end(0):match.end(0)+(reclen+1)*2]
             if len(recdatahex) < (reclen + 1) * 2:
-                raise SystemExit(f"Truncated record at offset {pos}")
+                raise SystemExit("Truncated record at offset {}".format(pos))
             try:
                 *recdata, recsum = bytes.fromhex(recdatahex.decode())
             except ValueError:
-                raise SystemExit(f"Invalid record data at offset {pos}")
+                raise SystemExit("Invalid record data at offset {}".format(pos))
             if sum(rechdr + recdata + [recsum]) & 0xff != 0:
-                raise SystemExit(f"Invalid record checksum at offset {pos}")
+                raise SystemExit("Invalid record checksum at offset {}".format(pos))
             if rectype not in [0x00, 0x01]:
-                raise SystemExit(f"Unknown record type at offset {pos}")
+                raise SystemExit("Unknown record type at offset {}".format(pos))
             if rectype == 0x01:
                 break
 

@@ -4,7 +4,7 @@ Prerequisites
 *libfx2* has the following dependencies:
 
   * make and sdcc_ for building the firmware code,
-  * `Python 3.6+ <python_>`_ and `Python libusb1 wrapper <python-libusb1_>`_ for interacting with the device.
+  * `Python 3 <python_>`_ and `Python libusb1 wrapper <python-libusb1_>`_ for interacting with the device.
 
 On a Debian system, these can be installed with:
 

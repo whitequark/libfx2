@@ -10,5 +10,5 @@ Contents:
    prerequisites
    getting_started
    commands
-   hostlibrary
+   host_library
    faq
