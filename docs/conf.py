@@ -21,7 +21,7 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 breathe_projects_source = {
     'libfx2': (
         '../firmware/library/include', [
-            'fx2regs.h', 'fx2ints.h', 'fx2delay.h',
+            'fx2regs.h', 'fx2ints.h', 'fx2lib.h', 'fx2delay.h',
         ]
     )
 }
@@ -37,8 +37,10 @@ breathe_doxygen_config_options = {
         '_SFR(addr)="volatile sfr8_t"',
         '_SFR16(addr)="volatile sfr16_t"',
         '_SBIT(addr)="volatile sbit_t"',
-        '_IOR(addr)="volatile uint8_t"',
-        '_IOR16(addr)="volatile uint16_t"',
+        '_IOR(addr)="volatile ior8_t"',
+        '_IOR16(addr)="volatile ior16_t"',
+        '__at(x)=',
+        '__xdata=',
     ])
 }
 
