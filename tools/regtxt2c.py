@@ -7,7 +7,7 @@ hidebit = r"""
 .+:EP\d+$|.+:PKTS\d+$| # too ambiguous
 (?!IO|ACC|B).+:([AD]|BC|PFC)\d+$| # address/data/counter regs
 USBFRAME.|MICROFRAME|ERRCNTLIM|EP.AUTOINLEN.|EP.ISOINPKTS:INPPF.|GPIFTCB.| # counter reg
-INT.IVEC|FNADDR|SUDPTR.|XAUTODAT.|GPIFADR.| # address reg
+INT.IVEC|FNADDR|SUDPTR.$|XAUTODAT.|GPIFADR.| # address reg
 REVID|ECC.B.|SETUPDAT|I2DAT|UDMACRC. # data reg
 """
 

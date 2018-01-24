@@ -2364,6 +2364,307 @@ E69D
 E69E
  2
  reserved
+E6A0
+ 1
+ EP0CS
+ Endpoint 0 Control and Status
+ HSNAK
+ 0
+ 0
+ 0
+ 0
+ 0
+ BUSY
+ STALL
+ 10000000 bbbbbbrb
+E6A1
+ 1
+ EP1OUTCS
+ Endpoint 1 OUT Control and Status
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ BUSY
+ STALL
+ 00000000 bbbbbbrb
+E6A2
+ 1
+ EP1INCS
+ Endpoint 1 IN Control and Status
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ BUSY
+ STALL
+ 00000000 bbbbbbrb
+E6A3
+ 1
+ EP2CS
+ Endpoint 2 Control and Status
+ 0
+ NPAK2
+ NPAK1
+ NPAK0
+ FULL
+ EMPTY
+ 0
+ STALL
+ 00101000 rrrrrrrb
+E6A4
+ 1
+ EP4CS
+ Endpoint 4 Control and Status
+ 0
+ 0
+ NPAK1
+ NPAK0
+ FULL
+ EMPTY
+ 0
+ STALL
+ 00101000 rrrrrrrb
+E6A5
+ 1
+ EP6CS
+ Endpoint 6 Control and Status
+ 0
+ NPAK2
+ NPAK1
+ NPAK0
+ FULL
+ EMPTY
+ 0
+ STALL
+ 00000100 rrrrrrrb
+E6A6
+ 1
+ EP8CS
+ Endpoint 8 Control and Status
+ 0
+ 0
+ NPAK1
+ NPAK0
+ FULL
+ EMPTY
+ 0
+ STALL
+ 00000100 rrrrrrrb
+E6A7
+ 1
+ EP2FIFOFLGS
+ Endpoint 2 slave FIFO Flags
+ 0
+ 0
+ 0
+ 0
+ 0
+ PF
+ EF
+ FF
+ 00000010 R
+E6A8
+ 1
+ EP4FIFOFLGS
+ Endpoint 4 slave FIFO Flags
+ 0
+ 0
+ 0
+ 0
+ 0
+ PF
+ EF
+ FF
+ 00000010 R
+E6A9
+ 1
+ EP6FIFOFLGS
+ Endpoint 6 slave FIFO Flags
+ 0
+ 0
+ 0
+ 0
+ 0
+ PF
+ EF
+ FF
+ 00000110 R
+E6AA
+ 1
+ EP8FIFOFLGS
+ Endpoint 8 slave FIFO Flags
+ 0
+ 0
+ 0
+ 0
+ 0
+ PF
+ EF
+ FF
+ 00000110 R
+E6AB
+ 1
+ EP2FIFOBCH
+ Endpoint 2 slave FIFO total byte count H
+ 0
+ 0
+ 0
+ BC12
+ BC11
+ BC10
+ BC9
+ BC8
+ 00000000 R
+E6AC
+ 1
+ EP2FIFOBCL
+ Endpoint 2 slave FIFO total byte count L
+ BC7
+ BC6
+ BC5
+ BC4
+ BC3
+ BC2
+ BC1
+ BC0
+ 00000000 R
+E6AD
+ 1
+ EP4FIFOBCH
+ Endpoint 4 slave FIFO total byte count H
+ 0
+ 0
+ 0
+ 0
+ 0
+ BC10
+ BC9
+ BC8
+ 00000000 R
+E6AE
+ 1
+ EP4FIFOBCL
+ Endpoint 4 slave FIFO total byte count L
+ BC7
+ BC6
+ BC5
+ BC4
+ BC3
+ BC2
+ BC1
+ BC0
+ 00000000 R
+E6AF
+ 1
+ EP6FIFOBCH
+ Endpoint 6 slave FIFO total byte count H
+ 0
+ 0
+ 0
+ 0
+ BC11
+ BC10
+ BC9
+ BC8
+ 00000000 R
+E6B0
+ 1
+ EP6FIFOBCL
+ Endpoint 6 slave FIFO total byte count L
+ BC7
+ BC6
+ BC5
+ BC4
+ BC3
+ BC2
+ BC1
+ BC0
+ 00000000 R
+E6B1
+ 1
+ EP8FIFOBCH
+ Endpoint 8 slave FIFO total byte count H
+ 0
+ 0
+ 0
+ 0
+ 0
+ BC10
+ BC9
+ BC8
+ 00000000 R
+E6B2
+ 1
+ EP8FIFOBCL
+ Endpoint 8 slave FIFO total byte count L
+ BC7
+ BC6
+ BC5
+ BC4
+ BC3
+ BC2
+ BC1
+ BC0
+ 00000000 R
+E6B3
+ 1
+ SUDPTRH
+ Setup Data Pointer high address byte
+ A15
+ A14
+ A13
+ A12
+ A11
+ A10
+ A9
+ A8
+ xxxxxxxx RW
+E6B4
+ 1
+ SUDPTRL
+ Setup Data Pointer low address byte
+ A7
+ A6
+ A5
+ A4
+ A3
+ A2
+ A1
+ 0
+ xxxxxxx0 bbbbbbbr
+E6B5
+ 1
+ SUDPTRCTL
+ Setup Data Pointer Auto Mode
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ SDPAUTO
+ 00000001 RW
+2
+ reserved
+E6B8
+ 8
+ SETUPDAT
+ 8 bytes of setup data
+ D7
+ D6
+ D5
+ D4
+ D3
+ D2
+ D1
+ D0
+ xxxxxxxx R
 #GPIF
 E6C0
  1

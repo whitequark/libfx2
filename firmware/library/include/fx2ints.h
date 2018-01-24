@@ -53,6 +53,7 @@ void isr_I2C() __interrupt(_INT_I2C);
 void isr_GPIF_IE4() __interrupt(_INT_GPIF_IE4);
 void isr_IE5() __interrupt(_INT_IE5);
 void isr_IE6() __interrupt(_INT_IE6);
+
 /**@}*/
 
 /**
@@ -70,7 +71,7 @@ void isr_IE6() __interrupt(_INT_IE6);
  * Clears the main USB interrupt request.
  * This must be done before clearing the individual USB interrupt request latch.
  */
-#define CLEAR_USBINT_IRQ() \
+#define CLEAR_USB_IRQ() \
   do { EXIF &= ~_USBINT; } while(0)
 
 void isr_SUDAV() __interrupt;

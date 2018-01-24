@@ -333,6 +333,29 @@ _IOR(0xe698) EP6BCH; ///< Register 0xE698: Endpoint 6 Byte Count H
 _IOR(0xe699) EP6BCL; ///< Register 0xE699: Endpoint 6 Byte Count L
 _IOR(0xe69c) EP8BCH; ///< Register 0xE69C: Endpoint 8 Byte Count H
 _IOR(0xe69d) EP8BCL; ///< Register 0xE69D: Endpoint 8 Byte Count L
+_IOR(0xe6a0) EP0CS; ///< Register 0xE6A0: Endpoint 0 Control and Status
+_IOR(0xe6a1) EP1OUTCS; ///< Register 0xE6A1: Endpoint 1 OUT Control and Status
+_IOR(0xe6a2) EP1INCS; ///< Register 0xE6A2: Endpoint 1 IN Control and Status
+_IOR(0xe6a3) EP2CS; ///< Register 0xE6A3: Endpoint 2 Control and Status
+_IOR(0xe6a4) EP4CS; ///< Register 0xE6A4: Endpoint 4 Control and Status
+_IOR(0xe6a5) EP6CS; ///< Register 0xE6A5: Endpoint 6 Control and Status
+_IOR(0xe6a6) EP8CS; ///< Register 0xE6A6: Endpoint 8 Control and Status
+_IOR(0xe6a7) EP2FIFOFLGS; ///< Register 0xE6A7: Endpoint 2 slave FIFO Flags
+_IOR(0xe6a8) EP4FIFOFLGS; ///< Register 0xE6A8: Endpoint 4 slave FIFO Flags
+_IOR(0xe6a9) EP6FIFOFLGS; ///< Register 0xE6A9: Endpoint 6 slave FIFO Flags
+_IOR(0xe6aa) EP8FIFOFLGS; ///< Register 0xE6AA: Endpoint 8 slave FIFO Flags
+_IOR(0xe6ab) EP2FIFOBCH; ///< Register 0xE6AB: Endpoint 2 slave FIFO total byte count H
+_IOR(0xe6ac) EP2FIFOBCL; ///< Register 0xE6AC: Endpoint 2 slave FIFO total byte count L
+_IOR(0xe6ad) EP4FIFOBCH; ///< Register 0xE6AD: Endpoint 4 slave FIFO total byte count H
+_IOR(0xe6ae) EP4FIFOBCL; ///< Register 0xE6AE: Endpoint 4 slave FIFO total byte count L
+_IOR(0xe6af) EP6FIFOBCH; ///< Register 0xE6AF: Endpoint 6 slave FIFO total byte count H
+_IOR(0xe6b0) EP6FIFOBCL; ///< Register 0xE6B0: Endpoint 6 slave FIFO total byte count L
+_IOR(0xe6b1) EP8FIFOBCH; ///< Register 0xE6B1: Endpoint 8 slave FIFO total byte count H
+_IOR(0xe6b2) EP8FIFOBCL; ///< Register 0xE6B2: Endpoint 8 slave FIFO total byte count L
+_IOR(0xe6b3) SUDPTRH; ///< Register 0xE6B3: Setup Data Pointer high address byte
+_IOR(0xe6b4) SUDPTRL; ///< Register 0xE6B4: Setup Data Pointer low address byte
+_IOR(0xe6b5) SUDPTRCTL; ///< Register 0xE6B5: Setup Data Pointer Auto Mode
+_IOR(0xe6b8) SETUPDAT[8]; ///< Register 0xE6B8: 8 bytes of setup data
 
 // GPIF
 
@@ -445,7 +468,7 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from register EXIF
  * @{
  */
-#define _USBNT       (1<<4)
+#define _USBINT      (1<<4)
 #define _I2CINT      (1<<5)
 #define _IE4         (1<<6)
 #define _IE5         (1<<7)
@@ -728,7 +751,7 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
 /**@}*/
 
 /**
- * \name Bits from registers EP2FIFOIE, EP2FIFOIRQ, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOIE, EP8FIFOIRQ, FIFOPINPOLAR
+ * \name Bits from registers EP2FIFOFLGS, EP2FIFOIE, EP2FIFOIRQ, EP4FIFOFLGS, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOFLGS, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOFLGS, EP8FIFOIE, EP8FIFOIRQ, FIFOPINPOLAR
  * @{
  */
 #define _FF          (1<<0)
@@ -825,7 +848,7 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
 /**@}*/
 
 /**
- * \name Bits from registers EP2FIFOIE, EP2FIFOIRQ, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOIE, EP8FIFOIRQ
+ * \name Bits from registers EP2FIFOFLGS, EP2FIFOIE, EP2FIFOIRQ, EP4FIFOFLGS, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOFLGS, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOFLGS, EP8FIFOIE, EP8FIFOIRQ
  * @{
  */
 #define _PF          (1<<2)
@@ -984,6 +1007,51 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
 /**@}*/
 
 /**
+ * \name Bits from register EP0CS
+ * @{
+ */
+#define _HSNAK       (1<<7)
+/**@}*/
+
+/**
+ * \name Bits from registers EP0CS, EP1INCS, EP1OUTCS
+ * @{
+ */
+#define _BUSY        (1<<1)
+/**@}*/
+
+/**
+ * \name Bits from registers EP2CS, EP6CS
+ * @{
+ */
+#define _NPAK2       (1<<6)
+/**@}*/
+
+/**
+ * \name Bits from registers EP2CS, EP4CS, EP6CS, EP8CS
+ * @{
+ */
+#define _EMPTY       (1<<2)
+#define _FULL        (1<<3)
+#define _NPAK0       (1<<4)
+#define _NPAK1       (1<<5)
+/**@}*/
+
+/**
+ * \name Bits from registers EP0CS, EP1INCS, EP1OUTCS, EP2CS, EP4CS, EP6CS, EP8CS
+ * @{
+ */
+#define _STALL       (1<<0)
+/**@}*/
+
+/**
+ * \name Bits from register SUDPTRCTL
+ * @{
+ */
+#define _SDPAUTO     (1<<0) ///< Bit 0
+/**@}*/
+
+/**
  * \name Bits from register GPIFWFSELECT
  * @{
  */
@@ -1009,6 +1077,16 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * @{
  */
 #define _TRICTL      (1<<7)
+/**@}*/
+
+/**
+ * \name Bits from registers FLOWEQ0CTL, FLOWEQ1CTL
+ * @{
+ */
+#define _CTL0E0      (1<<4)
+#define _CTL0E1      (1<<5)
+#define _CTL0E2      (1<<6)
+#define _CTL0E3      (1<<7)
 /**@}*/
 
 /**
@@ -1051,16 +1129,6 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
 #define _TERMA2      (1<<5)
 #define _LFUNC0      (1<<6)
 #define _LFUNC1      (1<<7)
-/**@}*/
-
-/**
- * \name Bits from registers FLOWEQ0CTL, FLOWEQ1CTL
- * @{
- */
-#define _CTL0E0      (1<<4)
-#define _CTL0E1      (1<<5)
-#define _CTL0E2      (1<<6)
-#define _CTL0E3      (1<<7)
 /**@}*/
 
 /**
