@@ -41,7 +41,6 @@ breathe_doxygen_config_options = {
         '_IOR16(addr)="volatile uint16_t"',
     ])
 }
-breathe_show_define_initializer = True
 
 # Configure Sphinx
 extensions = ['sphinx.ext.autodoc', 'sphinxarg.ext', 'sphinx.ext.viewcode', 'breathe']

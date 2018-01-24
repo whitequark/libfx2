@@ -413,635 +413,635 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from register DPS
  * @{
  */
-#define _SEL         (1<<0)
+#define _SEL         (1<<0) ///< Bit 0
 /**@}*/
 
 /**
  * \name Bits from register PCON
  * @{
  */
-#define _IDLE        (1<<0)
-#define _SMOD0       (1<<7)
+#define _IDLE        (1<<0) ///< Bit 0
+#define _SMOD0       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register TCON
  * @{
  */
-#define _IT0         (1<<0)
-#define _IE0         (1<<1)
-#define _IT1         (1<<2)
-#define _IE1         (1<<3)
-#define _TR0         (1<<4)
-#define _TF0         (1<<5)
-#define _TR1         (1<<6)
-#define _TF1         (1<<7)
+#define _IT0         (1<<0) ///< Bit 0
+#define _IE0         (1<<1) ///< Bit 1
+#define _IT1         (1<<2) ///< Bit 2
+#define _IE1         (1<<3) ///< Bit 3
+#define _TR0         (1<<4) ///< Bit 4
+#define _TF0         (1<<5) ///< Bit 5
+#define _TR1         (1<<6) ///< Bit 6
+#define _TF1         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register TMOD
  * @{
  */
-#define _M0_0        (1<<0)
-#define _M1_0        (1<<1)
-#define _CT_0        (1<<2)
-#define _GATE_0      (1<<3)
-#define _M0_1        (1<<4)
-#define _M1_1        (1<<5)
-#define _CT_1        (1<<6)
-#define _GATE_1      (1<<7)
+#define _M0_0        (1<<0) ///< Bit 0
+#define _M1_0        (1<<1) ///< Bit 1
+#define _CT_0        (1<<2) ///< Bit 2
+#define _GATE_0      (1<<3) ///< Bit 3
+#define _M0_1        (1<<4) ///< Bit 4
+#define _M1_1        (1<<5) ///< Bit 5
+#define _CT_1        (1<<6) ///< Bit 6
+#define _GATE_1      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register CKCON
  * @{
  */
-#define _MD0         (1<<0)
-#define _MD1         (1<<1)
-#define _MD2         (1<<2)
-#define _T0M         (1<<3)
-#define _T1M         (1<<4)
-#define _T2M         (1<<5)
+#define _MD0         (1<<0) ///< Bit 0
+#define _MD1         (1<<1) ///< Bit 1
+#define _MD2         (1<<2) ///< Bit 2
+#define _T0M         (1<<3) ///< Bit 3
+#define _T1M         (1<<4) ///< Bit 4
+#define _T2M         (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from register EXIF
  * @{
  */
-#define _USBINT      (1<<4)
-#define _I2CINT      (1<<5)
-#define _IE4         (1<<6)
-#define _IE5         (1<<7)
+#define _USBINT      (1<<4) ///< Bit 4
+#define _I2CINT      (1<<5) ///< Bit 5
+#define _IE4         (1<<6) ///< Bit 6
+#define _IE5         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register SCON0
  * @{
  */
-#define _RI_0        (1<<0)
-#define _TI_0        (1<<1)
-#define _RB8_0       (1<<2)
-#define _TB8_0       (1<<3)
-#define _REN_0       (1<<4)
-#define _SM2_0       (1<<5)
-#define _SM1_0       (1<<6)
-#define _SM0_0       (1<<7)
+#define _RI_0        (1<<0) ///< Bit 0
+#define _TI_0        (1<<1) ///< Bit 1
+#define _RB8_0       (1<<2) ///< Bit 2
+#define _TB8_0       (1<<3) ///< Bit 3
+#define _REN_0       (1<<4) ///< Bit 4
+#define _SM2_0       (1<<5) ///< Bit 5
+#define _SM1_0       (1<<6) ///< Bit 6
+#define _SM0_0       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register IE
  * @{
  */
-#define _EX0         (1<<0)
-#define _ET0         (1<<1)
-#define _EX1         (1<<2)
-#define _ET1         (1<<3)
-#define _ES0         (1<<4)
-#define _ET2         (1<<5)
-#define _ES1         (1<<6)
-#define _EA          (1<<7)
+#define _EX0         (1<<0) ///< Bit 0
+#define _ET0         (1<<1) ///< Bit 1
+#define _EX1         (1<<2) ///< Bit 2
+#define _ET1         (1<<3) ///< Bit 3
+#define _ES0         (1<<4) ///< Bit 4
+#define _ET2         (1<<5) ///< Bit 5
+#define _ES1         (1<<6) ///< Bit 6
+#define _EA          (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register EP2468STAT
  * @{
  */
-#define _EP2E        (1<<0)
-#define _EP2F        (1<<1)
-#define _EP4E        (1<<2)
-#define _EP4F        (1<<3)
-#define _EP6E        (1<<4)
-#define _EP6F        (1<<5)
-#define _EP8E        (1<<6)
-#define _EP8F        (1<<7)
+#define _EP2E        (1<<0) ///< Bit 0
+#define _EP2F        (1<<1) ///< Bit 1
+#define _EP4E        (1<<2) ///< Bit 2
+#define _EP4F        (1<<3) ///< Bit 3
+#define _EP6E        (1<<4) ///< Bit 4
+#define _EP6F        (1<<5) ///< Bit 5
+#define _EP8E        (1<<6) ///< Bit 6
+#define _EP8F        (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register EP24FIFOFLGS
  * @{
  */
-#define _EP2FF       (1<<0)
-#define _EP2EF       (1<<1)
-#define _EP2PF       (1<<2)
-#define _EP4FF       (1<<4)
-#define _EP4EF       (1<<5)
-#define _EP4PF       (1<<6)
+#define _EP2FF       (1<<0) ///< Bit 0
+#define _EP2EF       (1<<1) ///< Bit 1
+#define _EP2PF       (1<<2) ///< Bit 2
+#define _EP4FF       (1<<4) ///< Bit 4
+#define _EP4EF       (1<<5) ///< Bit 5
+#define _EP4PF       (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from register EP68FIFOFLGS
  * @{
  */
-#define _EP6FF       (1<<0)
-#define _EP6EF       (1<<1)
-#define _EP6PF       (1<<2)
-#define _EP8FF       (1<<4)
-#define _EP8EF       (1<<5)
-#define _EP8PF       (1<<6)
+#define _EP6FF       (1<<0) ///< Bit 0
+#define _EP6EF       (1<<1) ///< Bit 1
+#define _EP6PF       (1<<2) ///< Bit 2
+#define _EP8FF       (1<<4) ///< Bit 4
+#define _EP8EF       (1<<5) ///< Bit 5
+#define _EP8PF       (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from register AUTOPTRSETUP
  * @{
  */
-#define _APTREN      (1<<0)
-#define _APTR1INC    (1<<1)
-#define _APTR2INC    (1<<2)
+#define _APTREN      (1<<0) ///< Bit 0
+#define _APTR1INC    (1<<1) ///< Bit 1
+#define _APTR2INC    (1<<2) ///< Bit 2
 /**@}*/
 
 /**
  * \name Bits from register IP
  * @{
  */
-#define _PX0         (1<<0)
-#define _PT0         (1<<1)
-#define _PX1         (1<<2)
-#define _PT1         (1<<3)
-#define _PS0         (1<<4)
-#define _PT2         (1<<5)
-#define _PS1         (1<<6)
+#define _PX0         (1<<0) ///< Bit 0
+#define _PT0         (1<<1) ///< Bit 1
+#define _PX1         (1<<2) ///< Bit 2
+#define _PT1         (1<<3) ///< Bit 3
+#define _PS0         (1<<4) ///< Bit 4
+#define _PT2         (1<<5) ///< Bit 5
+#define _PS1         (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from register EP01STAT
  * @{
  */
-#define _EP1OUTBSY   (1<<1)
-#define _EP1INBSY    (1<<2)
+#define _EP1OUTBSY   (1<<1) ///< Bit 1
+#define _EP1INBSY    (1<<2) ///< Bit 2
 /**@}*/
 
 /**
  * \name Bits from register GPIFTRIG
  * @{
  */
-#define _RW          (1<<2)
+#define _RW          (1<<2) ///< Bit 2
 /**@}*/
 
 /**
  * \name Bits from registers GPIFIDLECS, GPIFTRIG
  * @{
  */
-#define _GPIFIDLE    (1<<7)
+#define _GPIFIDLE    (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register SCON1
  * @{
  */
-#define _RI_1        (1<<0)
-#define _TI_1        (1<<1)
-#define _RB8_1       (1<<2)
-#define _TB8_1       (1<<3)
-#define _REN_1       (1<<4)
-#define _SM2_1       (1<<5)
-#define _SM1_1       (1<<6)
-#define _SM0_1       (1<<7)
+#define _RI_1        (1<<0) ///< Bit 0
+#define _TI_1        (1<<1) ///< Bit 1
+#define _RB8_1       (1<<2) ///< Bit 2
+#define _TB8_1       (1<<3) ///< Bit 3
+#define _REN_1       (1<<4) ///< Bit 4
+#define _SM2_1       (1<<5) ///< Bit 5
+#define _SM1_1       (1<<6) ///< Bit 6
+#define _SM0_1       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register T2CON
  * @{
  */
-#define _CPRL2       (1<<0)
-#define _CT2         (1<<1)
-#define _TR2         (1<<2)
-#define _EXEN2       (1<<3)
-#define _TCLK        (1<<4)
-#define _RCLK        (1<<5)
-#define _EXF2        (1<<6)
-#define _TF2         (1<<7)
+#define _CPRL2       (1<<0) ///< Bit 0
+#define _CT2         (1<<1) ///< Bit 1
+#define _TR2         (1<<2) ///< Bit 2
+#define _EXEN2       (1<<3) ///< Bit 3
+#define _TCLK        (1<<4) ///< Bit 4
+#define _RCLK        (1<<5) ///< Bit 5
+#define _EXF2        (1<<6) ///< Bit 6
+#define _TF2         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register PSW
  * @{
  */
-#define _P           (1<<0)
-#define _F1          (1<<1)
-#define _OV          (1<<2)
-#define _RS0         (1<<3)
-#define _RS1         (1<<4)
-#define _F0          (1<<5)
-#define _AC          (1<<6)
-#define _CY          (1<<7)
+#define _P           (1<<0) ///< Bit 0
+#define _F1          (1<<1) ///< Bit 1
+#define _OV          (1<<2) ///< Bit 2
+#define _RS0         (1<<3) ///< Bit 3
+#define _RS1         (1<<4) ///< Bit 4
+#define _F0          (1<<5) ///< Bit 5
+#define _AC          (1<<6) ///< Bit 6
+#define _CY          (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register EICON
  * @{
  */
-#define _INT6        (1<<4)
-#define _RESI        (1<<5)
-#define _ERESI       (1<<6)
+#define _INT6        (1<<4) ///< Bit 4
+#define _RESI        (1<<5) ///< Bit 5
+#define _ERESI       (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from register EIE
  * @{
  */
-#define _EUSB        (1<<0)
-#define _EI2C        (1<<1)
-#define _EX4         (1<<2)
-#define _EX5         (1<<3)
-#define _EX6         (1<<4)
+#define _EUSB        (1<<0) ///< Bit 0
+#define _EI2C        (1<<1) ///< Bit 1
+#define _EX4         (1<<2) ///< Bit 2
+#define _EX5         (1<<3) ///< Bit 3
+#define _EX6         (1<<4) ///< Bit 4
 /**@}*/
 
 /**
  * \name Bits from register EIP
  * @{
  */
-#define _PUSB        (1<<1)
-#define _PI2C        (1<<2)
-#define _PX4         (1<<3)
-#define _PX5         (1<<4)
-#define _PX6         (1<<5)
+#define _PUSB        (1<<1) ///< Bit 1
+#define _PI2C        (1<<2) ///< Bit 2
+#define _PX4         (1<<3) ///< Bit 3
+#define _PX5         (1<<4) ///< Bit 4
+#define _PX6         (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from register GPCR2
  * @{
  */
-#define _FULL_SPEED_ONLY  (1<<4)
+#define _FULL_SPEED_ONLY  (1<<4) ///< Bit 4
 /**@}*/
 
 /**
  * \name Bits from register CPUCS
  * @{
  */
-#define _8051RES     (1<<1)
-#define _CLKOE       (1<<2)
-#define _CLKINV      (1<<3)
-#define _CLKSPD0     (1<<4)
-#define _PORTCSTB    (1<<5)
+#define _8051RES     (1<<1) ///< Bit 1
+#define _CLKOE       (1<<2) ///< Bit 2
+#define _CLKINV      (1<<3) ///< Bit 3
+#define _CLKSPD0     (1<<4) ///< Bit 4
+#define _PORTCSTB    (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from register IFCONFIG
  * @{
  */
-#define _IFCFG0      (1<<1)
-#define _IFCFG1      (1<<2)
-#define _GSTATE      (1<<3)
-#define _IFCLKPOL    (1<<4)
-#define _IFCLKOE     (1<<5)
-#define _3048MHZ     (1<<6)
-#define _IFCLKSRC    (1<<7)
+#define _IFCFG0      (1<<1) ///< Bit 1
+#define _IFCFG1      (1<<2) ///< Bit 2
+#define _GSTATE      (1<<3) ///< Bit 3
+#define _IFCLKPOL    (1<<4) ///< Bit 4
+#define _IFCLKOE     (1<<5) ///< Bit 5
+#define _3048MHZ     (1<<6) ///< Bit 6
+#define _IFCLKSRC    (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register PINFLAGSAB
  * @{
  */
-#define _FLAGA0      (1<<0)
-#define _FLAGA1      (1<<1)
-#define _FLAGA2      (1<<2)
-#define _FLAGA3      (1<<3)
-#define _FLAGB0      (1<<4)
-#define _FLAGB1      (1<<5)
-#define _FLAGB2      (1<<6)
-#define _FLAGB3      (1<<7)
+#define _FLAGA0      (1<<0) ///< Bit 0
+#define _FLAGA1      (1<<1) ///< Bit 1
+#define _FLAGA2      (1<<2) ///< Bit 2
+#define _FLAGA3      (1<<3) ///< Bit 3
+#define _FLAGB0      (1<<4) ///< Bit 4
+#define _FLAGB1      (1<<5) ///< Bit 5
+#define _FLAGB2      (1<<6) ///< Bit 6
+#define _FLAGB3      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register PINFLAGSCD
  * @{
  */
-#define _FLAGC0      (1<<0)
-#define _FLAGC1      (1<<1)
-#define _FLAGC2      (1<<2)
-#define _FLAGC3      (1<<3)
-#define _FLAGD0      (1<<4)
-#define _FLAGD1      (1<<5)
-#define _FLAGD2      (1<<6)
-#define _FLAGD3      (1<<7)
+#define _FLAGC0      (1<<0) ///< Bit 0
+#define _FLAGC1      (1<<1) ///< Bit 1
+#define _FLAGC2      (1<<2) ///< Bit 2
+#define _FLAGC3      (1<<3) ///< Bit 3
+#define _FLAGD0      (1<<4) ///< Bit 4
+#define _FLAGD1      (1<<5) ///< Bit 5
+#define _FLAGD2      (1<<6) ///< Bit 6
+#define _FLAGD3      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register FIFORESET
  * @{
  */
-#define _NAKALL      (1<<7)
+#define _NAKALL      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register BREAKPT
  * @{
  */
-#define _BPEN        (1<<1)
-#define _BPPULSE     (1<<2)
-#define _BREAK       (1<<3)
+#define _BPEN        (1<<1) ///< Bit 1
+#define _BPPULSE     (1<<2) ///< Bit 2
+#define _BREAK       (1<<3) ///< Bit 3
 /**@}*/
 
 /**
  * \name Bits from register UART230
  * @{
  */
-#define _230UART0    (1<<0)
-#define _230UART1    (1<<1)
+#define _230UART0    (1<<0) ///< Bit 0
+#define _230UART1    (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from register FIFOPINPOLAR
  * @{
  */
-#define _SLWR        (1<<2)
-#define _SLRD        (1<<3)
-#define _SLOE        (1<<4)
-#define _PKTEND      (1<<5)
+#define _SLWR        (1<<2) ///< Bit 2
+#define _SLRD        (1<<3) ///< Bit 3
+#define _SLOE        (1<<4) ///< Bit 4
+#define _PKTEND      (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from registers EP2FIFOFLGS, EP2FIFOIE, EP2FIFOIRQ, EP4FIFOFLGS, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOFLGS, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOFLGS, EP8FIFOIE, EP8FIFOIRQ, FIFOPINPOLAR
  * @{
  */
-#define _FF          (1<<0)
-#define _EF          (1<<1)
+#define _FF          (1<<0) ///< Bit 0
+#define _EF          (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from register REVCTL
  * @{
  */
-#define _ENH_PKT     (1<<0)
-#define _DYN_OUT     (1<<1)
+#define _ENH_PKT     (1<<0) ///< Bit 0
+#define _DYN_OUT     (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from register GPIFHOLDAMOUNT
  * @{
  */
-#define _HOLDTIME0   (1<<0)
-#define _HOLDTIME1   (1<<1)
+#define _HOLDTIME0   (1<<0) ///< Bit 0
+#define _HOLDTIME1   (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from registers EP2CFG, EP6CFG
  * @{
  */
-#define _BUF0        (1<<0)
-#define _BUF1        (1<<1)
-#define _SIZE        (1<<3)
+#define _BUF0        (1<<0) ///< Bit 0
+#define _BUF1        (1<<1) ///< Bit 1
+#define _SIZE        (1<<3) ///< Bit 3
 /**@}*/
 
 /**
  * \name Bits from registers EP2CFG, EP4CFG, EP6CFG, EP8CFG
  * @{
  */
-#define _DIR         (1<<6)
+#define _DIR         (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from registers EP1INCFG, EP1OUTCFG, EP2CFG, EP4CFG, EP6CFG, EP8CFG
  * @{
  */
-#define _TYPE0       (1<<4)
-#define _TYPE1       (1<<5)
-#define _VALID       (1<<7)
+#define _TYPE0       (1<<4) ///< Bit 4
+#define _TYPE1       (1<<5) ///< Bit 5
+#define _VALID       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP2FIFOCFG, EP4FIFOCFG, EP6FIFOCFG, EP8FIFOCFG
  * @{
  */
-#define _WORDWIDE    (1<<0)
-#define _ZEROLENIN   (1<<2)
-#define _AUTOIN      (1<<3)
-#define _AUTOOUT     (1<<4)
-#define _OEP1        (1<<5)
-#define _INFM1       (1<<6)
+#define _WORDWIDE    (1<<0) ///< Bit 0
+#define _ZEROLENIN   (1<<2) ///< Bit 2
+#define _AUTOIN      (1<<3) ///< Bit 3
+#define _AUTOOUT     (1<<4) ///< Bit 4
+#define _OEP1        (1<<5) ///< Bit 5
+#define _INFM1       (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from register ECCCFG
  * @{
  */
-#define _ECCM        (1<<0)
+#define _ECCM        (1<<0) ///< Bit 0
 /**@}*/
 
 /**
  * \name Bits from registers EP2FIFOPFH, EP4FIFOPFH, EP6FIFOPFH, EP8FIFOPFH
  * @{
  */
-#define _PKTSTAT     (1<<6)
-#define _DECIS       (1<<7)
+#define _PKTSTAT     (1<<6) ///< Bit 6
+#define _DECIS       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP2ISOINPKTS, EP4ISOINPKTS, EP6ISOINPKTS, EP8ISOINPKTS
  * @{
  */
-#define _AADJ        (1<<7)
+#define _AADJ        (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP2BCL, EP4BCL, EP6BCL, EP8BCL, INPKTEND, OUTPKTEND
  * @{
  */
-#define _SKIP        (1<<7)
+#define _SKIP        (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP2FIFOIE, EP4FIFOIE, EP6FIFOIE, EP8FIFOIE
  * @{
  */
-#define _EDGEPF      (1<<3)
+#define _EDGEPF      (1<<3) ///< Bit 3
 /**@}*/
 
 /**
  * \name Bits from registers EP2FIFOFLGS, EP2FIFOIE, EP2FIFOIRQ, EP4FIFOFLGS, EP4FIFOIE, EP4FIFOIRQ, EP6FIFOFLGS, EP6FIFOIE, EP6FIFOIRQ, EP8FIFOFLGS, EP8FIFOIE, EP8FIFOIRQ
  * @{
  */
-#define _PF          (1<<2)
+#define _PF          (1<<2) ///< Bit 2
 /**@}*/
 
 /**
  * \name Bits from registers NAKIE, NAKIRQ
  * @{
  */
-#define _IBN         (1<<0)
+#define _IBN         (1<<0) ///< Bit 0
 /**@}*/
 
 /**
  * \name Bits from registers USBIE, USBIRQ
  * @{
  */
-#define _SUDAV       (1<<0)
-#define _SOF         (1<<1)
-#define _SUTOK       (1<<2)
-#define _SUSP        (1<<3)
-#define _URES        (1<<4)
-#define _HSGRANT     (1<<5)
-#define _EP0ACK      (1<<6)
+#define _SUDAV       (1<<0) ///< Bit 0
+#define _SOF         (1<<1) ///< Bit 1
+#define _SUTOK       (1<<2) ///< Bit 2
+#define _SUSP        (1<<3) ///< Bit 3
+#define _URES        (1<<4) ///< Bit 4
+#define _HSGRANT     (1<<5) ///< Bit 5
+#define _EP0ACK      (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from registers EPIE, EPIRQ
  * @{
  */
-#define _EP0IN       (1<<0)
-#define _EP0OUT      (1<<1)
-#define _EP1IN       (1<<2)
-#define _EP1OUT      (1<<3)
+#define _EP0IN       (1<<0) ///< Bit 0
+#define _EP0OUT      (1<<1) ///< Bit 1
+#define _EP1IN       (1<<2) ///< Bit 2
+#define _EP1OUT      (1<<3) ///< Bit 3
 /**@}*/
 
 /**
  * \name Bits from registers GPIFIE, GPIFIRQ
  * @{
  */
-#define _GPIFDONE    (1<<0)
-#define _GPIFWF      (1<<1)
+#define _GPIFDONE    (1<<0) ///< Bit 0
+#define _GPIFWF      (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from registers USBERRIE, USBERRIRQ
  * @{
  */
-#define _ERRLIMIT    (1<<0)
-#define _ISOEP2      (1<<4)
-#define _ISOEP4      (1<<5)
-#define _ISOEP6      (1<<6)
-#define _ISOEP8      (1<<7)
+#define _ERRLIMIT    (1<<0) ///< Bit 0
+#define _ISOEP2      (1<<4) ///< Bit 4
+#define _ISOEP4      (1<<5) ///< Bit 5
+#define _ISOEP6      (1<<6) ///< Bit 6
+#define _ISOEP8      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register INTSETUP
  * @{
  */
-#define _AV4EN       (1<<0)
-#define _INT4SRC     (1<<1)
-#define _AV2EN       (1<<3)
+#define _AV4EN       (1<<0) ///< Bit 0
+#define _INT4SRC     (1<<1) ///< Bit 1
+#define _AV2EN       (1<<3) ///< Bit 3
 /**@}*/
 
 /**
  * \name Bits from register PORTACFG
  * @{
  */
-#define _INT0        (1<<0)
-#define _INT1        (1<<1)
-#define _SLCS        (1<<6)
-#define _FLAGD       (1<<7)
+#define _INT0        (1<<0) ///< Bit 0
+#define _INT1        (1<<1) ///< Bit 1
+#define _SLCS        (1<<6) ///< Bit 6
+#define _FLAGD       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register PORTCCFG
  * @{
  */
-#define _GPIFA0      (1<<0)
-#define _GPIFA1      (1<<1)
-#define _GPIFA2      (1<<2)
-#define _GPIFA3      (1<<3)
-#define _GPIFA4      (1<<4)
-#define _GPIFA5      (1<<5)
-#define _GPIFA6      (1<<6)
-#define _GPIFA7      (1<<7)
+#define _GPIFA0      (1<<0) ///< Bit 0
+#define _GPIFA1      (1<<1) ///< Bit 1
+#define _GPIFA2      (1<<2) ///< Bit 2
+#define _GPIFA3      (1<<3) ///< Bit 3
+#define _GPIFA4      (1<<4) ///< Bit 4
+#define _GPIFA5      (1<<5) ///< Bit 5
+#define _GPIFA6      (1<<6) ///< Bit 6
+#define _GPIFA7      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register PORTECFG
  * @{
  */
-#define _T0OUT       (1<<0)
-#define _T1OUT       (1<<1)
-#define _T2OUT       (1<<2)
-#define _RXD0OUT     (1<<3)
-#define _RXD1OUT     (1<<4)
-#define _INT6EX      (1<<5)
-#define _T2EX        (1<<6)
-#define _GPIFA8      (1<<7)
+#define _T0OUT       (1<<0) ///< Bit 0
+#define _T1OUT       (1<<1) ///< Bit 1
+#define _T2OUT       (1<<2) ///< Bit 2
+#define _RXD0OUT     (1<<3) ///< Bit 3
+#define _RXD1OUT     (1<<4) ///< Bit 4
+#define _INT6EX      (1<<5) ///< Bit 5
+#define _T2EX        (1<<6) ///< Bit 6
+#define _GPIFA8      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register I2CS
  * @{
  */
-#define _DONE        (1<<0)
-#define _ACK         (1<<1)
-#define _BERR        (1<<2)
-#define _ID0         (1<<3)
-#define _ID1         (1<<4)
-#define _LASTRD      (1<<5)
-#define _STOP        (1<<6)
-#define _START       (1<<7)
+#define _DONE        (1<<0) ///< Bit 0
+#define _ACK         (1<<1) ///< Bit 1
+#define _BERR        (1<<2) ///< Bit 2
+#define _ID0         (1<<3) ///< Bit 3
+#define _ID1         (1<<4) ///< Bit 4
+#define _LASTRD      (1<<5) ///< Bit 5
+#define _STOP        (1<<6) ///< Bit 6
+#define _START       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register I2CTL
  * @{
  */
-#define _400KHZ      (1<<0)
-#define _STOPIE      (1<<1)
+#define _400KHZ      (1<<0) ///< Bit 0
+#define _STOPIE      (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from register USBCS
  * @{
  */
-#define _SIGRSUME    (1<<0)
-#define _RENUM       (1<<1)
-#define _NOSYNSOF    (1<<2)
-#define _DISCON      (1<<3)
-#define _HSM         (1<<7)
+#define _SIGRSUME    (1<<0) ///< Bit 0
+#define _RENUM       (1<<1) ///< Bit 1
+#define _NOSYNSOF    (1<<2) ///< Bit 2
+#define _DISCON      (1<<3) ///< Bit 3
+#define _HSM         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register WAKEUPCS
  * @{
  */
-#define _WUEN        (1<<0)
-#define _WU2EN       (1<<1)
-#define _DPEN        (1<<2)
-#define _WUPOL       (1<<4)
-#define _WU2POL      (1<<5)
-#define _WU          (1<<6)
-#define _WU2         (1<<7)
+#define _WUEN        (1<<0) ///< Bit 0
+#define _WU2EN       (1<<1) ///< Bit 1
+#define _DPEN        (1<<2) ///< Bit 2
+#define _WUPOL       (1<<4) ///< Bit 4
+#define _WU2POL      (1<<5) ///< Bit 5
+#define _WU          (1<<6) ///< Bit 6
+#define _WU2         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register TOGCTL
  * @{
  */
-#define _IO          (1<<4)
-#define _R           (1<<5)
-#define _S           (1<<6)
-#define _Q           (1<<7)
+#define _IO          (1<<4) ///< Bit 4
+#define _R           (1<<5) ///< Bit 5
+#define _S           (1<<6) ///< Bit 6
+#define _Q           (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register EP0CS
  * @{
  */
-#define _HSNAK       (1<<7)
+#define _HSNAK       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP0CS, EP1INCS, EP1OUTCS
  * @{
  */
-#define _BUSY        (1<<1)
+#define _BUSY        (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from registers EP2CS, EP6CS
  * @{
  */
-#define _NPAK2       (1<<6)
+#define _NPAK2       (1<<6) ///< Bit 6
 /**@}*/
 
 /**
  * \name Bits from registers EP2CS, EP4CS, EP6CS, EP8CS
  * @{
  */
-#define _EMPTY       (1<<2)
-#define _FULL        (1<<3)
-#define _NPAK0       (1<<4)
-#define _NPAK1       (1<<5)
+#define _EMPTY       (1<<2) ///< Bit 2
+#define _FULL        (1<<3) ///< Bit 3
+#define _NPAK0       (1<<4) ///< Bit 4
+#define _NPAK1       (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from registers EP0CS, EP1INCS, EP1OUTCS, EP2CS, EP4CS, EP6CS, EP8CS
  * @{
  */
-#define _STALL       (1<<0)
+#define _STALL       (1<<0) ///< Bit 0
 /**@}*/
 
 /**
@@ -1055,143 +1055,143 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from register GPIFWFSELECT
  * @{
  */
-#define _FIFORD0     (1<<0)
-#define _FIFORD1     (1<<1)
-#define _FIFOWR0     (1<<2)
-#define _FIFOWR1     (1<<3)
-#define _SINGLERD0   (1<<4)
-#define _SINGLERD1   (1<<5)
-#define _SINGLEWR0   (1<<6)
-#define _SINGLEWR1   (1<<7)
+#define _FIFORD0     (1<<0) ///< Bit 0
+#define _FIFORD1     (1<<1) ///< Bit 1
+#define _FIFOWR0     (1<<2) ///< Bit 2
+#define _FIFOWR1     (1<<3) ///< Bit 3
+#define _SINGLERD0   (1<<4) ///< Bit 4
+#define _SINGLERD1   (1<<5) ///< Bit 5
+#define _SINGLEWR0   (1<<6) ///< Bit 6
+#define _SINGLEWR1   (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register GPIFIDLECS
  * @{
  */
-#define _IDLEDRV     (1<<0)
+#define _IDLEDRV     (1<<0) ///< Bit 0
 /**@}*/
 
 /**
  * \name Bits from register GPIFCTLCFG
  * @{
  */
-#define _TRICTL      (1<<7)
+#define _TRICTL      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers FLOWEQ0CTL, FLOWEQ1CTL
  * @{
  */
-#define _CTL0E0      (1<<4)
-#define _CTL0E1      (1<<5)
-#define _CTL0E2      (1<<6)
-#define _CTL0E3      (1<<7)
+#define _CTL0E0      (1<<4) ///< Bit 4
+#define _CTL0E1      (1<<5) ///< Bit 5
+#define _CTL0E2      (1<<6) ///< Bit 6
+#define _CTL0E3      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers FLOWEQ0CTL, FLOWEQ1CTL, GPIFCTLCFG, GPIFIDLECTL
  * @{
  */
-#define _CTL0        (1<<0)
-#define _CTL1        (1<<1)
-#define _CTL2        (1<<2)
-#define _CTL3        (1<<3)
-#define _CTL4        (1<<4)
-#define _CTL5        (1<<5)
+#define _CTL0        (1<<0) ///< Bit 0
+#define _CTL1        (1<<1) ///< Bit 1
+#define _CTL2        (1<<2) ///< Bit 2
+#define _CTL3        (1<<3) ///< Bit 3
+#define _CTL4        (1<<4) ///< Bit 4
+#define _CTL5        (1<<5) ///< Bit 5
 /**@}*/
 
 /**
  * \name Bits from register FLOWSTATE
  * @{
  */
-#define _FS2         (1<<2)
-#define _FSE         (1<<7)
+#define _FS2         (1<<2) ///< Bit 2
+#define _FSE         (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from registers EP2GPIFFLGSEL, EP4GPIFFLGSEL, EP6GPIFFLGSEL, EP8GPIFFLGSEL, FLOWSTATE
  * @{
  */
-#define _FS0         (1<<0)
-#define _FS1         (1<<1)
+#define _FS0         (1<<0) ///< Bit 0
+#define _FS1         (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from register FLOWLOGIC
  * @{
  */
-#define _TERMB0      (1<<0)
-#define _TERMB1      (1<<1)
-#define _TERMB2      (1<<2)
-#define _TERMA0      (1<<3)
-#define _TERMA1      (1<<4)
-#define _TERMA2      (1<<5)
-#define _LFUNC0      (1<<6)
-#define _LFUNC1      (1<<7)
+#define _TERMB0      (1<<0) ///< Bit 0
+#define _TERMB1      (1<<1) ///< Bit 1
+#define _TERMB2      (1<<2) ///< Bit 2
+#define _TERMA0      (1<<3) ///< Bit 3
+#define _TERMA1      (1<<4) ///< Bit 4
+#define _TERMA2      (1<<5) ///< Bit 5
+#define _LFUNC0      (1<<6) ///< Bit 6
+#define _LFUNC1      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register FLOWHOLDOFF
  * @{
  */
-#define _HOCTL0      (1<<0)
-#define _HOCTL1      (1<<1)
-#define _HOCTL2      (1<<2)
-#define _HOSTATE     (1<<3)
-#define _HOPERIOD0   (1<<4)
-#define _HOPERIOD1   (1<<5)
-#define _HOPERIOD2   (1<<6)
-#define _HOPERIOD3   (1<<7)
+#define _HOCTL0      (1<<0) ///< Bit 0
+#define _HOCTL1      (1<<1) ///< Bit 1
+#define _HOCTL2      (1<<2) ///< Bit 2
+#define _HOSTATE     (1<<3) ///< Bit 3
+#define _HOPERIOD0   (1<<4) ///< Bit 4
+#define _HOPERIOD1   (1<<5) ///< Bit 5
+#define _HOPERIOD2   (1<<6) ///< Bit 6
+#define _HOPERIOD3   (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register FLOWSTB
  * @{
  */
-#define _MSTB0       (1<<0)
-#define _MSTB1       (1<<1)
-#define _MSTB2       (1<<2)
-#define _SUSTAIN     (1<<4)
-#define _CTLTOGL     (1<<5)
-#define _RDYASYNC    (1<<6)
-#define _SLAVE       (1<<7)
+#define _MSTB0       (1<<0) ///< Bit 0
+#define _MSTB1       (1<<1) ///< Bit 1
+#define _MSTB2       (1<<2) ///< Bit 2
+#define _SUSTAIN     (1<<4) ///< Bit 4
+#define _CTLTOGL     (1<<5) ///< Bit 5
+#define _RDYASYNC    (1<<6) ///< Bit 6
+#define _SLAVE       (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register FLOWSTBEDGE
  * @{
  */
-#define _RISING      (1<<0)
-#define _FALLING     (1<<1)
+#define _RISING      (1<<0) ///< Bit 0
+#define _FALLING     (1<<1) ///< Bit 1
 /**@}*/
 
 /**
  * \name Bits from registers EP2GPIFPFSTOP, EP4GPIFPFSTOP, EP6GPIFPFSTOP, EP8GPIFPFSTOP
  * @{
  */
-#define _FIFOFLAG    (1<<0)
+#define _FIFOFLAG    (1<<0) ///< Bit 0
 /**@}*/
 
 /**
  * \name Bits from register GPIFREADYCFG
  * @{
  */
-#define _TCXRDY5     (1<<5)
-#define _SAS         (1<<6)
-#define _INTRDY      (1<<7)
+#define _TCXRDY5     (1<<5) ///< Bit 5
+#define _SAS         (1<<6) ///< Bit 6
+#define _INTRDY      (1<<7) ///< Bit 7
 /**@}*/
 
 /**
  * \name Bits from register GPIFREADYSTAT
  * @{
  */
-#define _RDY0        (1<<0)
-#define _RDY1        (1<<1)
-#define _RDY2        (1<<2)
-#define _RDY3        (1<<3)
-#define _RDY4        (1<<4)
-#define _RDY5        (1<<5)
+#define _RDY0        (1<<0) ///< Bit 0
+#define _RDY1        (1<<1) ///< Bit 1
+#define _RDY2        (1<<2) ///< Bit 2
+#define _RDY3        (1<<3) ///< Bit 3
+#define _RDY4        (1<<4) ///< Bit 4
+#define _RDY5        (1<<5) ///< Bit 5
 /**@}*/
 
 #endif
