@@ -20,7 +20,7 @@ class VID_PID(collections.namedtuple("VID_PID", "vid pid")):
         return cls(vid, pid)
 
     def __str__(self):
-        return "{04x}:{04x}".format(self.vid, self.pid)
+        return "{:04x}:{:04x}".format(self.vid, self.pid)
 
 
 class TextHelpFormatter(argparse.HelpFormatter):
@@ -187,7 +187,7 @@ def output_data(fmt, file, data, offset):
     elif fmt == "hex":
         n = 0
         for n, byte in enumerate(data):
-            file.write("{02x}".format(byte).encode())
+            file.write("{:02x}".format(byte).encode())
             if n > 0 and n % 16 == 15:
                 file.write(b"\n")
             elif n > 0 and n % 8 == 7:

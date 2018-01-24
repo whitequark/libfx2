@@ -28,7 +28,7 @@ class FX2Device:
         self._context = usb1.USBContext()
         self._device = self._context.openByVendorIDAndProductID(vid, pid)
         if self._device is None:
-            raise FX2DeviceError("Device {04x}:{04x} not found".format(vid, pid))
+            raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
 
         self._eeprom_size = None
