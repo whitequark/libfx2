@@ -17,12 +17,18 @@ DEFAUTOISRS += \
 	EP2EF EP4EF EP6EF EP8EF \
 	EP2FF EP4FF EP6FF EP8FF GPIFDONE GPIFWF
 
-OBJECTS = \
-	autovec.rel \
+OBJECTS_fx2 = delay.rel
+
+OBJECTS_fx2isrs = autovec.rel \
 	$(patsubst %,defisr_%.rel,$(DEFISRS)) \
 	$(patsubst %,defautoisr_%.rel,$(DEFAUTOISRS))
 
-fx2isrs.lib: $(addprefix build/,$(OBJECTS))
+all: fx2.lib fx2isrs.lib
+
+fx2.lib: $(addprefix build/,$(OBJECTS_fx2))
+	$(SDAR) $@ $^
+
+fx2isrs.lib: $(addprefix build/,$(OBJECTS_fx2isrs))
 	$(SDAR) $@ $^
 
 build/%.rel: %.c
@@ -36,8 +42,6 @@ build/defisr_%.rel: defisr.c
 
 build/defautoisr_%.rel: defautoisr.c
 	$(SDCC) -c -o $@ $< -DISRNAME=isr_$*
-
-all: fx2isrs.lib
 
 clean:
 	@rm -f build/* *.lib

@@ -668,10 +668,11 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from register CPUCS
  * @{
  */
-#define _8051RES     (1<<1) ///< Bit 1
-#define _CLKOE       (1<<2) ///< Bit 2
-#define _CLKINV      (1<<3) ///< Bit 3
-#define _CLKSPD0     (1<<4) ///< Bit 4
+#define _8051RES     (1<<0) ///< Bit 0
+#define _CLKOE       (1<<1) ///< Bit 1
+#define _CLKINV      (1<<2) ///< Bit 2
+#define _CLKSPD0     (1<<3) ///< Bit 3
+#define _CLKSPD1     (1<<4) ///< Bit 4
 #define _PORTCSTB    (1<<5) ///< Bit 5
 /**@}*/
 
@@ -679,9 +680,10 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from register IFCONFIG
  * @{
  */
-#define _IFCFG0      (1<<1) ///< Bit 1
-#define _IFCFG1      (1<<2) ///< Bit 2
-#define _GSTATE      (1<<3) ///< Bit 3
+#define _IFCFG0      (1<<0) ///< Bit 0
+#define _IFCFG1      (1<<1) ///< Bit 1
+#define _GSTATE      (1<<2) ///< Bit 2
+#define _ASYNC       (1<<3) ///< Bit 3
 #define _IFCLKPOL    (1<<4) ///< Bit 4
 #define _IFCLKOE     (1<<5) ///< Bit 5
 #define _3048MHZ     (1<<6) ///< Bit 6

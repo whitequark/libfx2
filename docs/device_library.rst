@@ -6,4 +6,4 @@ Device-side library reference
 
    fx2regs_h
    fx2ints_h
-   fx2_h
+   fx2delay_h

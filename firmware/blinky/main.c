@@ -1,4 +1,5 @@
-#include <fx2.h>
+#include <fx2regs.h>
+#include <fx2ints.h>
 
 // Register an interrupt handler for TIMER0 overflow
 void isr_TF0() __interrupt(_INT_TF0) {
