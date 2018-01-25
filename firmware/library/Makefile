@@ -17,7 +17,7 @@ DEFAUTOISRS += \
 	EP2EF EP4EF EP6EF EP8EF \
 	EP2FF EP4FF EP6FF EP8FF GPIFDONE GPIFWF
 
-OBJECTS_fx2 = xmemcpy.rel delay.rel
+OBJECTS_fx2 = xmemcpy.rel delay.rel i2c.rel eeprom.rel
 
 OBJECTS_fx2isrs = autovec.rel \
 	$(patsubst %,defisr_%.rel,$(DEFISRS)) \

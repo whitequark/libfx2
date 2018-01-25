@@ -21,8 +21,10 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 breathe_projects_source = {
     'libfx2': (
         '../firmware/library/include', [
-            'fx2regs.h', 'fx2ints.h', 'fx2lib.h', 'fx2delay.h', 'fx2usb.h',
             'usb.h',
+            'fx2regs.h', 'fx2ints.h', 'fx2lib.h',
+            'fx2delay.h', 'fx2i2c.h', 'fx2eeprom.h',
+            'fx2usb.h',
         ]
     )
 }
