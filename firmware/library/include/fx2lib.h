@@ -4,6 +4,11 @@
 #include <stdint.h>
 
 /**
+ * A macro that returns the statically known size of the array.
+ */
+#define ARRAYSIZE(x) (sizeof(x)/sizeof((x)[0]))
+
+/**
  * 0.5KB of general purpose scratch RAM.
  */
 __xdata __at(0xe000) uint8_t scratch[512];

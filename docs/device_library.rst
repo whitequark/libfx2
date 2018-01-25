@@ -9,3 +9,4 @@ Device-side library reference
    fx2ints_h
    fx2lib_h
    fx2delay_h
+   fx2usb_h

@@ -23,12 +23,18 @@ OBJECTS_fx2isrs = autovec.rel \
 	$(patsubst %,defisr_%.rel,$(DEFISRS)) \
 	$(patsubst %,defautoisr_%.rel,$(DEFAUTOISRS))
 
-all: fx2.lib fx2isrs.lib
+OBJECTS_fx2usb = usb.rel \
+	defusbdesc.rel defusbconfig.rel defusbiface.rel defusbhalt.rel defusbsetup.rel
+
+all: fx2.lib fx2isrs.lib fx2usb.lib
 
 fx2.lib: $(addprefix build/,$(OBJECTS_fx2))
 	$(SDAR) $@ $^
 
 fx2isrs.lib: $(addprefix build/,$(OBJECTS_fx2isrs))
+	$(SDAR) $@ $^
+
+fx2usb.lib: $(addprefix build/,$(OBJECTS_fx2usb))
 	$(SDAR) $@ $^
 
 build/%.rel: %.c

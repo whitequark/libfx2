@@ -21,14 +21,15 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 breathe_projects_source = {
     'libfx2': (
         '../firmware/library/include', [
-            'fx2regs.h', 'fx2ints.h', 'fx2lib.h', 'fx2delay.h',
-            'usb.h'
+            'fx2regs.h', 'fx2ints.h', 'fx2lib.h', 'fx2delay.h', 'fx2usb.h',
+            'usb.h',
         ]
     )
 }
 breathe_default_project = 'libfx2'
 breathe_doxygen_config_options = {
     'EXTRACT_ALL':            'YES',
+    'OPTIMIZE_OUTPUT_FOR_C':  'YES',
     'SORT_MEMBER_DOCS':       'NO',
     'ENABLE_PREPROCESSING':   'YES',
     'MACRO_EXPANSION':        'YES',
