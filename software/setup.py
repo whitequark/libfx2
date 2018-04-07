@@ -44,7 +44,7 @@ setup(
     },
     classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: 0-clause BSD License',
+        'License :: OSI Approved', # ' :: 0-clause BSD License', (not in PyPI)
         'Topic :: Software Development :: Embedded Systems',
         'Topic :: System :: Hardware',
     ],
