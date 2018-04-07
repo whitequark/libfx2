@@ -50,3 +50,6 @@ load: $(TARGET).ihex
 	$(FX2LOAD) $<
 
 .PHONY: all clean load
+
+.SUFFIXES:
+MAKEFLAGS += -r
