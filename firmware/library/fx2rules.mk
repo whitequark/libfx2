@@ -30,6 +30,10 @@ $(TARGET).ihex: $(OBJECTS)
 	$(SDCC) -o build/$@ $^
 	@cp build/$@ $@
 
+$(patsubst %,$(LIBFX2)/%.lib,$(LIBRARIES)): \
+		$(wildcard $(LIBFX2)/*.c $(LIBFX2)/*.asm $(LIBFX2)/include/*.h)
+	$(MAKE) -C $(LIBFX2)
+
 -include build/*.d
 build/%.rel: %.c
 	@mkdir -p $(dir $@)
