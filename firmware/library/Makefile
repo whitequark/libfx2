@@ -27,6 +27,7 @@ OBJECTS_fx2usb = usb.rel \
 	defusbdesc.rel defusbconfig.rel defusbiface.rel defusbhalt.rel defusbsetup.rel
 
 all: fx2.lib fx2isrs.lib fx2usb.lib
+	@touch .stamp
 
 fx2.lib: $(addprefix build/,$(OBJECTS_fx2))
 	$(SDAR) $@ $^
