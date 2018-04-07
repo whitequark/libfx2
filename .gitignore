@@ -1,7 +1,11 @@
-__pycache__/
-*.egg-info
+# C build products
 build/
-*.pyc
 *.bin
 *.lib
 *.ihex
+
+# Python build products
+__pycache__/
+*.pyc
+*.egg-info
+dist/

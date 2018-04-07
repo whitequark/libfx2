@@ -81,7 +81,10 @@ def get_argparser():
         help="data input/output format")
     parser.add_argument(
         "-S", "--stage2", metavar="FILENAME", type=argparse.FileType("rb"),
-        help="load the second stage bootloader before any further action")
+        help="load the specified second stage bootloader before any further action")
+    parser.add_argument(
+        "-B", "--bootloader", action="store_true",
+        help="load the second stage bootloader provided with fx2tool")
 
     subparsers = parser.add_subparsers(dest="action", metavar="COMMAND")
     subparsers.required = True
@@ -298,6 +301,7 @@ def load(device, fmt, firmware):
 
 
 def main():
+    resource_dir = os.path.dirname(os.path.abspath(__file__))
     args = get_argparser().parse_args()
 
     try:
@@ -306,7 +310,10 @@ def main():
     except FX2DeviceError as e:
         raise SystemExit(e)
 
-    if args.stage2:
+    if args.bootloader:
+        bootloader_ihex = os.path.join(resource_dir, "bootloader.ihex")
+        load(device, "auto", open(bootloader_ihex))
+    elif args.stage2:
         load(device, "auto", args.stage2)
 
     if args.action == "load":
