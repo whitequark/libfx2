@@ -27,7 +27,7 @@ class Fx2BdistEgg(bdist_egg):
 
 setup(
     name="fx2",
-    version="0.1",
+    version="0.2",
     author="whitequark",
     author_email="whitequark@whitequark.org",
     url="https://github.com/whitequark/libfx2",
