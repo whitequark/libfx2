@@ -32,8 +32,6 @@ class FX2Device:
             raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
 
-        self._eeprom_size = None
-
     def _control_read(self, request_type, request, value, index, length,
                       timeout=None):
         if timeout is None:
