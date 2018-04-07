@@ -68,6 +68,12 @@ usb_descriptor_set = {
   .strings         = usb_strings,
 };
 
+enum {
+  USB_REQ_CYPRESS_RW_EEPROM_SB = 0xA2,
+  USB_REQ_CYPRESS_RENUMERATE   = 0xA8,
+  USB_REQ_CYPRESS_RW_EEPROM_DB = 0xA9,
+};
+
 volatile enum {
   REQ_NONE = 0,
   REQ_RENUMERATE,
@@ -82,17 +88,17 @@ bool     arg_eeprom_dbyte;
 
 bool handle_usb_request(__xdata struct usb_req_setup *req) {
   if(req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT &&
-     req->bRequest == 0xA8) {
+     req->bRequest == USB_REQ_CYPRESS_RENUMERATE) {
     request = REQ_RENUMERATE;
     return true;
   }
 
   if((req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN ||
       req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
-     (req->bRequest == 0xA2 ||
-      req->bRequest == 0xA9)) {
+     (req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_SB ||
+      req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_DB)) {
     arg_eeprom_read  = (req->bmRequestType & USB_DIR_IN);
-    arg_eeprom_dbyte = (req->bRequest == 0xA9);
+    arg_eeprom_dbyte = (req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_DB);
     arg_eeprom_addr  = req->wValue;
     arg_eeprom_len   = req->wLength;
     arg_eeprom_chip  = arg_eeprom_dbyte ? 0x51 : 0x50;

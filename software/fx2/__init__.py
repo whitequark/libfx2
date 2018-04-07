@@ -7,10 +7,10 @@ __all__ = ['FX2Device', 'FX2DeviceError']
 VID_CYPRESS = 0x04B4
 PID_FX2     = 0x8613
 
-CMD_RW_RAM       = 0xA0
-CMD_RW_EEPROM_SB = 0xA2
-CMD_RENUM        = 0xA8
-CMD_RW_EEPROM_DB = 0xA9
+REQ_RW_RAM       = 0xA0
+REQ_RW_EEPROM_SB = 0xA2
+REQ_RENUMERATE   = 0xA8
+REQ_RW_EEPROM_DB = 0xA9
 
 
 class FX2DeviceError(Exception):
@@ -53,17 +53,17 @@ class FX2Device:
         """
         if addr & 1: # unaligned
             return self._control_read(usb1.REQUEST_TYPE_VENDOR,
-                                      CMD_RW_RAM, addr, 0, length + 1)[1:]
+                                      REQ_RW_RAM, addr, 0, length + 1)[1:]
         else:
             return self._control_read(usb1.REQUEST_TYPE_VENDOR,
-                                      CMD_RW_RAM, addr, 0, length)
+                                      REQ_RW_RAM, addr, 0, length)
 
     def write_ram(self, addr, data):
         """
         Write ``data`` to ``addr`` to internal RAM.
         Note that not all memory can be addressed this way; consult the TRM.
         """
-        self._control_write(usb1.REQUEST_TYPE_VENDOR, CMD_RW_RAM, addr, 0, data)
+        self._control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RW_RAM, addr, 0, data)
 
     def cpu_reset(self, is_reset):
         """Bring CPU in or out of reset."""
@@ -72,9 +72,9 @@ class FX2Device:
     @staticmethod
     def _eeprom_cmd(addr_width):
         if addr_width == 1:
-            return CMD_RW_EEPROM_SB
+            return REQ_RW_EEPROM_SB
         elif addr_width == 2:
-            return CMD_RW_EEPROM_DB
+            return REQ_RW_EEPROM_DB
         else:
             raise ValueError("Address width {addr_width} is not supported"
                              .format(addr_width=addr_width))
@@ -91,4 +91,4 @@ class FX2Device:
 
     def reenumerate(self):
         """Trigger re-enumeration."""
-        self._control_write(usb1.REQUEST_TYPE_VENDOR, CMD_RENUM, 0, 0, [])
+        self._control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RENUMERATE, 0, 0, [])
