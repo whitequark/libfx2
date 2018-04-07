@@ -25,7 +25,8 @@ class FX2Device:
     or raises a :exc:`FX2DeviceError`.
     """
     def __init__(self, vid=VID_CYPRESS, pid=PID_FX2):
-        self._timeout = 1000
+        self.timeout = 1000
+
         self._context = usb1.USBContext()
         try:
             self._device = self._context.openByVendorIDAndProductID(vid, pid)
@@ -35,17 +36,23 @@ class FX2Device:
             raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
 
-    def _control_read(self, request_type, request, value, index, length,
-                      timeout=None):
+    def control_read(self, bmRequestType, bRequest, wValue, wIndex, wLength,
+                     timeout=None):
+        """
+        Issue an USB control read request with timeout defaulting to ``self.timeout``.
+        """
         if timeout is None:
-            timeout = self._timeout
-        return self._device.controlRead(request_type, request, value, index, length, timeout)
+            timeout = self.timeout
+        return self._device.controlRead(bmRequestType, bRequest, wValue, wIndex, wLength, timeout)
 
-    def _control_write(self, request_type, request, value, index, data,
+    def control_write(self, bmRequestType, bRequest, wValue, wIndex, data,
                       timeout=None):
+        """
+        Issue an USB control write request with timeout defaulting to ``self.timeout``.
+        """
         if timeout is None:
-            timeout = self._timeout
-        self._device.controlWrite(request_type, request, value, index, data, timeout)
+            timeout = self.timeout
+        self._device.controlWrite(bmRequestType, bRequest, wValue, wIndex, data, timeout)
 
     def read_ram(self, addr, length):
         """
@@ -53,18 +60,18 @@ class FX2Device:
         Note that not all memory can be addressed this way; consult the TRM.
         """
         if addr & 1: # unaligned
-            return self._control_read(usb1.REQUEST_TYPE_VENDOR,
-                                      REQ_RW_RAM, addr, 0, length + 1)[1:]
+            return self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                     REQ_RW_RAM, addr, 0, length + 1)[1:]
         else:
-            return self._control_read(usb1.REQUEST_TYPE_VENDOR,
-                                      REQ_RW_RAM, addr, 0, length)
+            return self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                     REQ_RW_RAM, addr, 0, length)
 
     def write_ram(self, addr, data):
         """
         Write ``data`` to ``addr`` to internal RAM.
         Note that not all memory can be addressed this way; consult the TRM.
         """
-        self._control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RW_RAM, addr, 0, data)
+        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RW_RAM, addr, 0, data)
 
     def cpu_reset(self, is_reset):
         """Bring CPU in or out of reset."""
@@ -80,16 +87,16 @@ class FX2Device:
             raise ValueError("Address width {addr_width} is not supported"
                              .format(addr_width=addr_width))
 
-    def read_eeprom(self, addr, length, addr_width):
+    def read_boot_eeprom(self, addr, length, addr_width):
         """Read ``length`` bytes at ``addr`` from boot EEPROM."""
-        return self._control_read(usb1.REQUEST_TYPE_VENDOR,
-                                  self._eeprom_cmd(addr_width), addr, 0, length)
+        return self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                 self._eeprom_cmd(addr_width), addr, 0, length)
 
-    def write_eeprom(self, addr, data, addr_width):
+    def write_boot_eeprom(self, addr, data, addr_width):
         """Write ``data`` to ``addr`` in boot EEPROM."""
-        self._control_write(usb1.REQUEST_TYPE_VENDOR,
-                            self._eeprom_cmd(addr_width), addr, 0, data)
+        self.control_write(usb1.REQUEST_TYPE_VENDOR,
+                           self._eeprom_cmd(addr_width), addr, 0, data)
 
     def reenumerate(self):
         """Trigger re-enumeration."""
-        self._control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RENUMERATE, 0, 0, [])
+        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RENUMERATE, 0, 0, [])

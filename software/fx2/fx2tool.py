@@ -334,14 +334,14 @@ def main():
 
         elif args.action == "read_eeprom":
             device.cpu_reset(False)
-            data = device.read_eeprom(args.address, args.length, args.address_width)
+            data = device.read_boot_eeprom(args.address, args.length, args.address_width)
             output_data(args.format, args.file, data, args.address)
 
         elif args.action == "write_eeprom":
             data = input_data(args.format, args.file, args.data, args.offset)
             device.cpu_reset(False)
             for address, chunk in data:
-                device.write_eeprom(address, chunk, args.address_width)
+                device.write_boot_eeprom(address, chunk, args.address_width)
 
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:
