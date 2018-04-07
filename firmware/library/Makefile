@@ -38,9 +38,11 @@ fx2usb.lib: $(addprefix build/,$(OBJECTS_fx2usb))
 	$(SDAR) $@ $^
 
 build/%.rel: %.c
+	@mkdir -p $(dir $@)
 	$(SDCC) -c -o $@ $<
 
 build/%.rel: %.asm
+	@mkdir -p $(dir $@)
 	$(SDAS) $@ $<
 
 build/defisr_%.rel: defisr.c
