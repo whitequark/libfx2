@@ -5,6 +5,7 @@ import re
 import collections
 import argparse
 import textwrap
+import usb1
 
 from . import VID_CYPRESS, PID_FX2, FX2Device, FX2DeviceError
 
@@ -310,36 +311,49 @@ def main():
     except FX2DeviceError as e:
         raise SystemExit(e)
 
-    if args.bootloader:
-        bootloader_ihex = os.path.join(resource_dir, "bootloader.ihex")
-        load(device, "auto", open(bootloader_ihex))
-    elif args.stage2:
-        load(device, "auto", args.stage2)
+    try:
+        if args.bootloader:
+            bootloader_ihex = os.path.join(resource_dir, "bootloader.ihex")
+            load(device, "auto", open(bootloader_ihex))
+        elif args.stage2:
+            load(device, "auto", args.stage2)
 
-    if args.action == "load":
-        load(device, args.format, args.firmware)
+        if args.action == "load":
+            load(device, args.format, args.firmware)
 
-    elif args.action == "read_ram":
-        device.cpu_reset(True)
-        data = device.read_ram(args.address, args.length)
-        output_data(args.format, args.file, data, args.address)
+        elif args.action == "read_ram":
+            device.cpu_reset(True)
+            data = device.read_ram(args.address, args.length)
+            output_data(args.format, args.file, data, args.address)
 
-    elif args.action == "write_ram":
-        data = input_data(args.format, args.file, args.data, args.offset)
-        device.cpu_reset(True)
-        for address, chunk in data:
-            device.write_ram(address, chunk)
+        elif args.action == "write_ram":
+            data = input_data(args.format, args.file, args.data, args.offset)
+            device.cpu_reset(True)
+            for address, chunk in data:
+                device.write_ram(address, chunk)
 
-    elif args.action == "read_eeprom":
-        device.cpu_reset(False)
-        data = device.read_eeprom(args.address, args.length, args.address_width)
-        output_data(args.format, args.file, data, args.address)
+        elif args.action == "read_eeprom":
+            device.cpu_reset(False)
+            data = device.read_eeprom(args.address, args.length, args.address_width)
+            output_data(args.format, args.file, data, args.address)
 
-    elif args.action == "write_eeprom":
-        data = input_data(args.format, args.file, args.data, args.offset)
-        device.cpu_reset(False)
-        for address, chunk in data:
-            device.write_eeprom(address, chunk, args.address_width)
+        elif args.action == "write_eeprom":
+            data = input_data(args.format, args.file, args.data, args.offset)
+            device.cpu_reset(False)
+            for address, chunk in data:
+                device.write_eeprom(address, chunk, args.address_width)
+
+    except usb1.USBErrorPipe:
+        if args.action in ["read_eeprom", "write_eeprom"]:
+            raise SystemExit("Command not acknowledged (wrong address width?)")
+        else:
+            raise SystemExit("Command not acknowledged")
+
+    except usb1.USBErrorTimeout:
+        if args.action in ["read_eeprom", "write_eeprom"]:
+            raise SystemExit("Command timeout (bootloader not loaded?)")
+        else:
+            raise SystemExit("Command timeout")
 
 
 if __name__ == "__main__":
