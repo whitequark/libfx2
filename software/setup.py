@@ -30,9 +30,16 @@ setup(
     version="0.2",
     author="whitequark",
     author_email="whitequark@whitequark.org",
-    url="https://github.com/whitequark/libfx2",
-    description="A Python library for interacting with Cypress EZ-USB FX2 series chips",
-    #long_description=open("README.md").read(),
+    description="A Python package for interacting with Cypress EZ-USB FX2 series chips",
+    long_description="""
+The *fx2* Python package allows interacting with Cypress EZ-USB FX2 series microcontrollers.
+It provides:
+
+  * *fx2*, a Python library for interacting with the bootloader,
+  * *fx2tool*, a tool for programming and debugging the chips.
+
+See the documentation for details.
+""",
     license="0-clause BSD License",
     install_requires=["libusb1"],
     packages=find_packages(),
@@ -51,5 +58,10 @@ setup(
     cmdclass={
         "build_ext": Fx2BuildExt,
         "bdist_egg": Fx2BdistEgg,
+    },
+    project_urls={
+        "Documentation": "https://libfx2.readthedocs.io/",
+        "Source Code": "https://github.com/whitequark/libfx2",
+        "Bug Tracker": "https://github.com/whitequark/libfx2/issues",
     }
 )
