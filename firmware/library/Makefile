@@ -53,6 +53,6 @@ build/defautoisr_%.rel: defautoisr.c
 	$(SDCC) -c -o $@ $< -DISRNAME=isr_$*
 
 clean:
-	@rm -f build/* *.lib
+	@rm -rf build/ .stamp *.lib
 
 .PHONY: all clean
