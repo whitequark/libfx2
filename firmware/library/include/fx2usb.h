@@ -65,9 +65,9 @@ void usb_init(bool reconnect);
   } while(0)
 
 /**
- * Acknowledge an EP0 OUT transfer.
+ * Acknowledge an EP0 SETUP or OUT transfer.
  */
-#define SETUP_EP0_ACK() \
+#define ACK_EP0() \
   do { EP0CS = _HSNAK; } while(0)
 
 /**
@@ -104,10 +104,9 @@ struct usb_descriptor_set {
  * Helper function for returning descriptors from a set of C structure definitions.
  * This function relaxes all hardware restrictions on descriptor layout by
  * copying the requested descriptor(s) into the scratch RAM.
- * Returns `true` and sets up an EP0 IN transfer if a descriptor is found,
- * returns `false` otherwise.
+ * Sets up an EP0 IN transfer if a descriptor is found, stalls EP0 otherwise.
  */
-bool usb_serve_descriptor(const struct usb_descriptor_set *set,
+void usb_serve_descriptor(const struct usb_descriptor_set *set,
                           enum usb_descriptor type, uint8_t index);
 
 /**
@@ -128,49 +127,49 @@ extern bool usb_remote_wakeup;
  * from a global `const struct usb_descriptor_set usb_descriptor_set = { ... };`.
  * See `usb_serve_descriptor`.
  */
-bool handle_usb_get_descriptor(enum usb_descriptor type, uint8_t index);
+void handle_usb_get_descriptor(enum usb_descriptor type, uint8_t index);
 
 /**
  * Callback for the standard Set Configuration request.
- * This callback has a default implementation that returns `true`
- * and acknowledges the transfer if `value == 0` and `false` otherwise.
+ * This callback has a default implementation that acknowledges the transfer
+ * if `value == 0` and stalls EP0 otherwise.
  */
-bool handle_usb_set_configuration(uint8_t value);
+void handle_usb_set_configuration(uint8_t value);
 
 /**
  * Callback for the standard Get Configuration request.
- * This callback has a default implementation that returns `true` and
- * sets up an EP0 IN transfer with configuration value `0`.
+ * This callback has a default implementation that sets up an EP0 IN transfer
+ * with configuration value `0`.
  */
-bool handle_usb_get_configuration();
+void handle_usb_get_configuration();
 
 /**
  * Callback for the standard Set Interface request.
- * This callback has a default implementation that returns `true`
- * and acknowledges the transfer if `value == 0` and `false` otherwise.
+ * This callback has a default implementation that acknowledges the transfer
+ * if `value == 0` and stalls EP0 otherwise.
  */
-bool handle_usb_set_interface(uint8_t index, uint8_t value);
+void handle_usb_set_interface(uint8_t index, uint8_t value);
 
 /**
  * Callback for the standard Get Interface request.
- * This callback has a default implementation that returns `true` and
- * sets up an EP0 IN transfer with alternate setting number `0`.
+ * This callback has a default implementation that sets up an EP0 IN transfer
+ * with alternate setting number `0`.
  */
-bool handle_usb_get_interface(uint8_t index);
+void handle_usb_get_interface(uint8_t index);
 
 /**
  * Callback for the standard Clear Feature - Endpoint - Endpoint Halt request.
- * This callback has a default implementation that returns `true`
- * and acknowledges the transfer.
+ * This callback has a default implementation that acknowledges the transfer
+ * and returns `true`.
  * The data toggle and the stall bit are reset by the interrupt handler
- * if the callback returns `true`.
+ * if the handler returns `true`.
  */
 bool handle_usb_clear_endpoint_halt(uint8_t index);
 
 /**
  * Callback for non-standard setup requests.
- * This callback has a default implementation that returns `false`.
+ * This callback has a default implementation that stalls EP0.
  */
-bool handle_usb_request(__xdata struct usb_req_setup *request);
+void handle_usb_setup(__xdata struct usb_req_setup *request);
 
 #endif

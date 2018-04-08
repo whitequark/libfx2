@@ -69,44 +69,79 @@ usb_descriptor_set = {
 };
 
 enum {
-  USB_REQ_CYPRESS_RW_EEPROM_SB = 0xA2,
-  USB_REQ_CYPRESS_RENUMERATE   = 0xA8,
-  USB_REQ_CYPRESS_RW_EEPROM_DB = 0xA9,
+  USB_REQ_CYPRESS_EEPROM_SB  = 0xA2,
+  USB_REQ_CYPRESS_RENUMERATE = 0xA8,
+  USB_REQ_CYPRESS_EEPROM_DB  = 0xA9,
 };
 
-volatile enum {
-  REQ_NONE = 0,
-  REQ_RENUMERATE,
-  REQ_EEPROM,
-} request;
+// We perform lengthy operations in the main loop to avoid hogging the interrupt.
+// This flag is used for synchronization between the main loop and the ISR;
+// to allow new SETUP requests to arrive while the previous one is still being
+// handled (with all data received), the flag should be reset as soon as
+// the entire SETUP request is parsed.
+volatile bool pending_setup;
 
-uint8_t  arg_eeprom_chip;
-bool     arg_eeprom_read;
-uint16_t arg_eeprom_addr;
-uint16_t arg_eeprom_len;
-bool     arg_eeprom_dbyte;
+void handle_usb_setup(__xdata struct usb_req_setup *req) {
+  req;
+  if(pending_setup) {
+    STALL_EP0();
+  } else {
+    pending_setup = true;
+  }
+}
 
-bool handle_usb_request(__xdata struct usb_req_setup *req) {
+void handle_pending_usb_setup() {
+  __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
+
   if(req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT &&
      req->bRequest == USB_REQ_CYPRESS_RENUMERATE) {
-    request = REQ_RENUMERATE;
-    return true;
+    pending_setup = false;
+
+    USBCS |= _DISCON;
+    delay_ms(10);
+    USBCS &= ~_DISCON;
+
+    return;
   }
 
   if((req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN ||
       req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
-     (req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_SB ||
-      req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_DB)) {
-    arg_eeprom_read  = (req->bmRequestType & USB_DIR_IN);
-    arg_eeprom_dbyte = (req->bRequest == USB_REQ_CYPRESS_RW_EEPROM_DB);
-    arg_eeprom_addr  = req->wValue;
-    arg_eeprom_len   = req->wLength;
-    arg_eeprom_chip  = arg_eeprom_dbyte ? 0x51 : 0x50;
-    request = REQ_EEPROM;
-    return true;
+     (req->bRequest == USB_REQ_CYPRESS_EEPROM_SB ||
+      req->bRequest == USB_REQ_CYPRESS_EEPROM_DB)) {
+    bool     arg_read  = (req->bmRequestType & USB_DIR_IN);
+    bool     arg_dbyte = (req->bRequest == USB_REQ_CYPRESS_EEPROM_DB);
+    uint8_t  arg_chip  = arg_dbyte ? 0x51 : 0x50;
+    uint16_t arg_addr  = req->wValue;
+    uint16_t arg_len   = req->wLength;
+    pending_setup = false;
+
+    while(arg_len > 0) {
+      uint8_t len = arg_len < 64 ? arg_len : 64;
+
+      if(arg_read) {
+        while(EP0CS & _BUSY);
+        if(!eeprom_read(arg_chip, arg_addr, EP0BUF, len, arg_dbyte)) {
+          STALL_EP0();
+          break;
+        }
+        SETUP_EP0_BUF(len);
+      } else {
+        SETUP_EP0_BUF(0);
+        while(EP0CS & _BUSY);
+        if(!eeprom_write(arg_chip, arg_addr, EP0BUF, len, arg_dbyte)) {
+          STALL_EP0();
+          break;
+        }
+      }
+
+      arg_len  -= len;
+      arg_addr += len;
+    }
+
+    return;
   }
 
-  return false;
+  STALL_EP0();
 }
 
 int main() {
@@ -114,39 +149,7 @@ int main() {
   usb_init(false);
 
   while(1) {
-    switch(request) {
-      case REQ_RENUMERATE:
-        USBCS |= _DISCON;
-        delay_ms(10);
-        USBCS &= ~_DISCON;
-
-        request = REQ_NONE;
-        break;
-
-      case REQ_EEPROM:
-        while(arg_eeprom_len > 0) {
-          uint8_t len = arg_eeprom_len < 64 ? arg_eeprom_len : 64;
-
-          if(arg_eeprom_read) {
-            while(EP0CS & _BUSY);
-            if(!eeprom_read(arg_eeprom_chip, arg_eeprom_addr, EP0BUF, len,
-                            arg_eeprom_dbyte))
-              STALL_EP0();
-            SETUP_EP0_BUF(len);
-          } else {
-            SETUP_EP0_BUF(0);
-            while(EP0CS & _BUSY);
-            if(!eeprom_write(arg_eeprom_chip, arg_eeprom_addr, EP0BUF, len,
-                             arg_eeprom_dbyte))
-              STALL_EP0();
-          }
-
-          arg_eeprom_len  -= len;
-          arg_eeprom_addr += len;
-        }
-
-        request = REQ_NONE;
-        break;
-    }
+    if(pending_setup)
+      handle_pending_usb_setup();
   }
 }
