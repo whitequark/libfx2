@@ -154,7 +154,7 @@ static const struct usb_desc_langid
 usb_langid = {
   .bLength          = sizeof(struct usb_desc_langid) + sizeof(uint16_t) * 1,
   .bDescriptorType  = USB_DESC_STRING,
-  .wLANGID          = { 0x0000 },
+  .wLANGID          = { /* English (United States) */ 0x0409 },
 };
 
 bool usb_serve_descriptor(const struct usb_descriptor_set *set,
