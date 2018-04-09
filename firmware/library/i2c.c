@@ -25,9 +25,13 @@ bool i2c_start(uint8_t chip) {
   return i2c_wait(/*need_ack=*/true);
 }
 
-void i2c_stop() {
-  I2CS = _STOP;
+bool i2c_stop() {
+  I2CS  = _STOP;
   while(I2CS & _STOP);
+
+  if(I2CS & _BERR)
+    return false;
+  return true;
 }
 
 bool i2c_write(uint8_t *buf, uint16_t len) {
@@ -67,6 +71,8 @@ bool i2c_read(uint8_t *buf, uint16_t len) {
   }
 
   while(I2CS & _STOP);
+  if(I2CS & _BERR)
+    return false;
 
 end:
   return i == len;

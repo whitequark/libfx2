@@ -43,7 +43,8 @@ bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool 
       goto stop;
     if(!i2c_write(xfer_bytes, 2 + double_byte))
       goto stop;
-    i2c_stop();
+    if(!i2c_stop())
+      return false;
 
     addr++;
   }
