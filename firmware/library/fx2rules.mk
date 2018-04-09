@@ -26,11 +26,9 @@ OBJECTS 	 = \
 
 all: $(TARGET).ihex
 
-$(TARGET).ihex: $(OBJECTS)
+$(TARGET).ihex: $(OBJECTS) $(LIBFX2)/.stamp
 	$(SDCC) -o build/$@ $(OBJECTS)
 	@cp build/$@ $@
-
-$(patsubst %,$(LIBFX2)/%.lib,$(LIBRARIES)): $(LIBFX2)/.stamp
 
 $(LIBFX2)/.stamp: $(wildcard $(LIBFX2)/*.c $(LIBFX2)/*.asm $(LIBFX2)/include/*.h)
 	$(MAKE) -C $(LIBFX2)
