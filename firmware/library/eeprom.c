@@ -18,7 +18,7 @@ bool eeprom_read(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool d
   if(!i2c_start((chip << 1) | 1))
     goto stop;
   if(!i2c_read(buf, len))
-    goto stop;
+    return false;
   return true;
 
 stop:
