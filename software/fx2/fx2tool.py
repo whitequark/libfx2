@@ -249,6 +249,7 @@ def input_data(fmt, file, data, offset):
         RE_HDR = re.compile(rb":([0-9a-f]{8})", re.I)
         RE_WS  = re.compile(rb"\s*")
 
+        bank_bias = 0  # Support Record Type 04
         resoff = 0
         resbuf = []
         res = []
@@ -270,25 +271,35 @@ def input_data(fmt, file, data, offset):
                 raise SystemExit("Invalid record data at offset {}".format(pos))
             if sum(rechdr + recdata + [recsum]) & 0xff != 0:
                 raise SystemExit("Invalid record checksum at offset {}".format(pos))
-            if rectype not in [0x00, 0x01]:
+            if rectype not in [0x00, 0x01, 0x04]:
                 raise SystemExit("Unknown record type at offset {}".format(pos))
+
             if rectype == 0x01:
                 break
+            elif rectype == 0x04:
+                res.append((offset + resoff + bank_bias, resbuf))
 
-            recoff = (recoffh << 8) | recoffl
-            if resoff + len(resbuf) == recoff:
-                resbuf += recdata
+                # If we switch banks, we know there is a discontinuity, so
+                # make no assumption about previous position or buffer contents.
+                resoff = 0
+                resbuf = []
+                bank_bias = ((recdata[0] << 8) | recdata[1]) << 16
             else:
-                if len(resbuf) > 0:
-                    res.append((offset + resoff, resbuf))
-                resoff  = recoff
-                resbuf  = recdata
+                recoff = (recoffh << 8) | recoffl
+                if resoff + len(resbuf) == recoff:
+                    resbuf += recdata
+                else:
+                    if len(resbuf) > 0:
+                        res.append((offset + resoff + bank_bias, resbuf))
+                    resoff  = recoff
+                    resbuf  = recdata
 
             match = RE_WS.match(data, match.end(0) + len(recdatahex))
             pos = match.end(0)
 
+        # Handle last record that was seen before Record Type 0x01.
         if len(resbuf) > 0:
-            res.append((offset + resoff, resbuf))
+            res.append((offset + resoff + bank_bias, resbuf))
 
         return res
 
