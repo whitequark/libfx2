@@ -8,6 +8,7 @@ import textwrap
 import usb1
 
 from . import VID_CYPRESS, PID_FX2, FX2Device, FX2DeviceError
+from .format import input_data, output_data
 
 
 class VID_PID(collections.namedtuple("VID_PID", "vid pid")):
@@ -166,152 +167,6 @@ def get_argparser():
     return parser
 
 
-def autodetect_format(file):
-    basename, extname = os.path.splitext(file.name)
-    if extname in [".hex", ".ihex", ".ihx"]:
-        return "ihex"
-    elif extname in [".bin"]:
-        return "bin"
-    elif file.isatty():
-        return "hex"
-    else:
-        raise SystemExit("Specify file format explicitly")
-
-
-def output_data(fmt, file, data, offset):
-    if isinstance(file, io.TextIOWrapper):
-        file = file.buffer
-
-    if fmt == "auto":
-        fmt = autodetect_format(file)
-
-    if fmt == "bin":
-        file.write(data)
-
-    elif fmt == "hex":
-        n = 0
-        for n, byte in enumerate(data):
-            file.write("{:02x}".format(byte).encode())
-            if n > 0 and n % 16 == 15:
-                file.write(b"\n")
-            elif n > 0 and n % 8 == 7:
-                file.write(b"  ")
-            else:
-                file.write(b" ")
-        if n % 16 != 15:
-            file.write(b"\n")
-
-    elif fmt == "ihex":
-        pos = 0
-        while pos < len(data):
-            recoff  = offset + pos
-            recdata = data[pos:pos + 0x10]
-            record  = [
-                len(recdata),
-                (recoff >> 8) & 0xff,
-                (recoff >> 0) & 0xff,
-                0x00,
-                *list(recdata)
-            ]
-            record.append((~sum(record) + 1) & 0xff)
-            file.write(b":")
-            file.write(bytes(record).hex().encode())
-            file.write(b"\n")
-            pos += len(recdata)
-        file.write(b":00000001ff\n")
-
-
-def input_data(fmt, file, data, offset):
-    if isinstance(file, io.TextIOWrapper):
-        file = file.buffer
-
-    if file is None:
-        fmt = "hex"
-        data = data.encode()
-    else:
-        data = file.read()
-
-    if fmt == "auto":
-        fmt = autodetect_format(file)
-
-    if fmt == "bin":
-        return [(offset, data)]
-
-    elif fmt == "hex":
-        try:
-            hexdata = re.sub(r"\s*", "", data.decode())
-            bindata = bytes.fromhex(hexdata)
-        except ValueError as e:
-            raise SystemExit("Invalid hexadecimal data")
-        return [(offset, bindata)]
-
-    elif fmt == "ihex":
-        RE_HDR = re.compile(rb":([0-9a-f]{8})", re.I)
-        RE_WS  = re.compile(rb"\s*")
-
-        bank_bias = 0  # Support Record Type 04
-        resoff = 0
-        resbuf = []
-        res = []
-
-        pos = 0
-        while pos < len(data):
-            match = RE_HDR.match(data, pos)
-            if match is None:
-                raise SystemExit("Invalid record header at offset {}".format(pos))
-            *rechdr, = bytes.fromhex(match.group(1).decode())
-            reclen, recoffh, recoffl, rectype = rechdr
-
-            recdatahex = data[match.end(0):match.end(0)+(reclen+1)*2]
-            if len(recdatahex) < (reclen + 1) * 2:
-                raise SystemExit("Truncated record at offset {}".format(pos))
-            try:
-                *recdata, recsum = bytes.fromhex(recdatahex.decode())
-            except ValueError:
-                raise SystemExit("Invalid record data at offset {}".format(pos))
-            if sum(rechdr + recdata + [recsum]) & 0xff != 0:
-                raise SystemExit("Invalid record checksum at offset {}".format(pos))
-            if rectype not in [0x00, 0x01, 0x04]:
-                raise SystemExit("Unknown record type at offset {}".format(pos))
-
-            if rectype == 0x01:
-                break
-            elif rectype == 0x04:
-                res.append((offset + resoff + bank_bias, resbuf))
-
-                # If we switch banks, we know there is a discontinuity, so
-                # make no assumption about previous position or buffer contents.
-                resoff = 0
-                resbuf = []
-                bank_bias = ((recdata[0] << 8) | recdata[1]) << 16
-            else:
-                recoff = (recoffh << 8) | recoffl
-                if resoff + len(resbuf) == recoff:
-                    resbuf += recdata
-                else:
-                    if len(resbuf) > 0:
-                        res.append((offset + resoff + bank_bias, resbuf))
-                    resoff  = recoff
-                    resbuf  = recdata
-
-            match = RE_WS.match(data, match.end(0) + len(recdatahex))
-            pos = match.end(0)
-
-        # Handle last record that was seen before Record Type 0x01.
-        if len(resbuf) > 0:
-            res.append((offset + resoff + bank_bias, resbuf))
-
-        return res
-
-
-def load(device, fmt, firmware):
-    data = input_data(fmt, firmware, None, 0)
-    device.cpu_reset(True)
-    for address, chunk in data:
-        device.write_ram(address, chunk)
-    device.cpu_reset(False)
-
-
 def main():
     resource_dir = os.path.dirname(os.path.abspath(__file__))
     args = get_argparser().parse_args()
@@ -325,20 +180,20 @@ def main():
     try:
         if args.bootloader:
             bootloader_ihex = os.path.join(resource_dir, "bootloader.ihex")
-            load(device, "auto", open(bootloader_ihex))
+            device.load_ram(input_data(open(bootloader_ihex)))
         elif args.stage2:
-            load(device, "auto", args.stage2)
+            device.load_ram(input_data(args.stage2))
 
         if args.action == "load":
-            load(device, args.format, args.firmware)
+            device.load_ram(input_data(args.firmware, args.format))
 
         elif args.action == "read_ram":
             device.cpu_reset(True)
             data = device.read_ram(args.address, args.length)
-            output_data(args.format, args.file, data, args.address)
+            output_data(args.file, data, args.format, args.address)
 
         elif args.action == "write_ram":
-            data = input_data(args.format, args.file, args.data, args.offset)
+            data = input_data(args.file or args.data, args.format, args.offset)
             device.cpu_reset(True)
             for address, chunk in data:
                 device.write_ram(address, chunk)
@@ -346,10 +201,10 @@ def main():
         elif args.action == "read_eeprom":
             device.cpu_reset(False)
             data = device.read_boot_eeprom(args.address, args.length, args.address_width)
-            output_data(args.format, args.file, data, args.address)
+            output_data(args.file, data, args.format, args.address)
 
         elif args.action == "write_eeprom":
-            data = input_data(args.format, args.file, args.data, args.offset)
+            data = input_data(args.file or args.data, args.format, args.offset)
             device.cpu_reset(False)
             for address, chunk in data:
                 device.write_boot_eeprom(address, chunk, args.address_width)
@@ -365,6 +220,9 @@ def main():
             raise SystemExit("Command timeout (bootloader not loaded?)")
         else:
             raise SystemExit("Command timeout")
+
+    except ValueError as e:
+        raise SystemExit(str(e))
 
 
 if __name__ == "__main__":

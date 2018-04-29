@@ -7,9 +7,16 @@ Host-side library reference
 
       .. automethod:: read_ram
       .. automethod:: write_ram
+      .. automethod:: load_ram
       .. automethod:: cpu_reset
       .. automethod:: read_boot_eeprom
       .. automethod:: write_boot_eeprom
       .. automethod:: reenumerate
 
    .. autoexception:: FX2DeviceError
+
+.. automodule:: fx2.format
+
+   .. autofunction:: autodetect
+   .. autofunction:: input_data
+   .. autofunction:: output_data

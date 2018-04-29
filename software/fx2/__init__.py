@@ -77,6 +77,16 @@ class FX2Device:
         """Bring CPU in or out of reset."""
         self.write_ram(0xE600, [1 if is_reset else 0])
 
+    def load_ram(self, chunks):
+        """
+        Write ``chunks``, a list of ``(address, data)`` pairs, to internal RAM,
+        and start the CPU core. See also ``write_ram``.
+        """
+        self.cpu_reset(True)
+        for address, data in chunks:
+            self.write_ram(address, data)
+        self.cpu_reset(False)
+
     @staticmethod
     def _eeprom_cmd(addr_width):
         if addr_width == 1:
@@ -88,15 +98,27 @@ class FX2Device:
                              .format(addr_width=addr_width))
 
     def read_boot_eeprom(self, addr, length, addr_width):
-        """Read ``length`` bytes at ``addr`` from boot EEPROM."""
+        """
+        Read ``length`` bytes at ``addr`` from boot EEPROM.
+
+        Requires the second stage bootloader.
+        """
         return self.control_read(usb1.REQUEST_TYPE_VENDOR,
                                  self._eeprom_cmd(addr_width), addr, 0, length)
 
     def write_boot_eeprom(self, addr, data, addr_width):
-        """Write ``data`` to ``addr`` in boot EEPROM."""
+        """
+        Write ``data`` to ``addr`` in boot EEPROM.
+
+        Requires the second stage bootloader or a compatible firmware.
+        """
         self.control_write(usb1.REQUEST_TYPE_VENDOR,
                            self._eeprom_cmd(addr_width), addr, 0, data)
 
     def reenumerate(self):
-        """Trigger re-enumeration."""
+        """
+        Trigger re-enumeration.
+
+        Requires the second stage bootloader or a compatible firmware.
+        """
         self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RENUMERATE, 0, 0, [])
