@@ -73,24 +73,31 @@ void delay_4c(uint16_t count);
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; } while(0)
 #elif SYNCDELAYLEN == 10
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 11
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 12
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 13
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 14
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 15
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; } while(0)
 #elif SYNCDELAYLEN == 16
+#define SYNCDELAY() \
   do { _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; \
        _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; _NOP; } while(0)
 #endif
