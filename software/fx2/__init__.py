@@ -31,7 +31,7 @@ class FX2Device:
         try:
             self._device = self._context.openByVendorIDAndProductID(vid, pid)
         except usb1.USBErrorAccess:
-            raise GlasgowDeviceError("Cannot access device {:04x}:{:04x}".format(vid, pid))
+            raise FX2DeviceError("Cannot access device {:04x}:{:04x}".format(vid, pid))
         if self._device is None:
             raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
