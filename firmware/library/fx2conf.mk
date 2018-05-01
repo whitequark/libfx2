@@ -24,6 +24,7 @@ SDCCFLAGS  = \
 	--xram-loc  $(CODE_SIZE) \
 	--xram-size $(XRAM_SIZE) \
 	--std-sdcc99 \
+	$(CFLAGS) \
 	-I$(LIBFX2)/include \
 	-L$(LIBFX2)
 ifeq ($(V),1)
