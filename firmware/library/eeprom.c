@@ -42,7 +42,6 @@ bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool 
     }
     xfer_bytes[1 + double_byte] = buf[i];
 
-    started = false;
     for(j = 0; timeout == 0 || j < timeout; j++) {
       started = i2c_start(chip << 1);
       if(started)
