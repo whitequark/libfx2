@@ -1,6 +1,14 @@
 #ifndef FX2I2C_H
 #define FX2I2C_H
 
+#if !defined(__SDCC_MODEL_HUGE)
+#pragma callee_saves i2c_wait
+#pragma callee_saves i2c_start
+#pragma callee_saves i2c_stop
+#pragma callee_saves i2c_write
+#pragma callee_saves i2c_read
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 

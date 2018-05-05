@@ -30,12 +30,11 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
   src;
   length;
   __asm
-    push _DPH0
-    push _DPL0
     push _DPH1
     push _DPL1
     push _DPS
 
+    // Read length.
     GET_PARM(r4, r5, _xmemcpy_PARM_2)
     GET_PARM(r6, r7, _xmemcpy_PARM_3)
 
@@ -77,7 +76,5 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
     pop  _DPS
     pop  _DPL1
     pop  _DPH1
-    pop  _DPL0
-    pop  _DPH0
   __endasm;
 }

@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#if !defined(__SDCC_MODEL_HUGE)
+#pragma callee_saves eeprom_read
+#pragma callee_saves eeprom_write
+#endif
+
 /**
  * This function reads `len` bytes at memory address `addr` from EEPROM chip
  * with bus address `chip` to `buf`. It writes two address bytes if `double_byte` is true.
