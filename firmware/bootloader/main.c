@@ -51,7 +51,7 @@ usb_interfaces[] = {
   }
 };
 
-const char *
+const char *const
 usb_strings[] = {
   "whitequark@whitequark.org",
   "Cypress FX2 series bootloader",
