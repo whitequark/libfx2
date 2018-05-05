@@ -3,8 +3,7 @@
 #include <fx2delay.h>
 #include <fx2eeprom.h>
 
-const struct usb_desc_device
-usb_device = {
+usb_desc_device_c usb_device = {
   .bLength              = sizeof(struct usb_desc_device),
   .bDescriptorType      = USB_DESC_DEVICE,
   .bcdUSB               = 0x0200,
@@ -21,8 +20,7 @@ usb_device = {
   .bNumConfigurations   = 1,
 };
 
-const struct usb_desc_configuration
-usb_configs[] = {
+usb_desc_configuration_c usb_configs[] = {
   {
     .bLength              = sizeof(struct usb_desc_configuration),
     .bDescriptorType      = USB_DESC_CONFIGURATION,
@@ -36,8 +34,7 @@ usb_configs[] = {
   }
 };
 
-const struct usb_desc_interface
-usb_interfaces[] = {
+usb_desc_interface_c usb_interfaces[] = {
   {
     .bLength              = sizeof(struct usb_desc_interface),
     .bDescriptorType      = USB_DESC_INTERFACE,
@@ -51,14 +48,12 @@ usb_interfaces[] = {
   }
 };
 
-const char *const
-usb_strings[] = {
+const char *const usb_strings[] = {
   "whitequark@whitequark.org",
   "Cypress FX2 series bootloader",
 };
 
-const struct usb_descriptor_set
-usb_descriptor_set = {
+usb_descriptor_set_c usb_descriptor_set = {
   .device          = &usb_device,
   .config_count    = ARRAYSIZE(usb_configs),
   .configs         = usb_configs,
