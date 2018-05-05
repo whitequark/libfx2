@@ -164,6 +164,11 @@ def get_argparser():
     add_eeprom_args(p_write_eeprom)
     add_write_args(p_write_eeprom)
 
+    p_reenumerate = subparsers.add_parser("reenumerate",
+        formatter_class=TextHelpFormatter,
+        help="re-enumerate",
+        description="Simulates device disconnection and reconnection.")
+
     return parser
 
 
@@ -208,6 +213,9 @@ def main():
             device.cpu_reset(False)
             for address, chunk in data:
                 device.write_boot_eeprom(address, chunk, args.address_width)
+
+        elif args.action == "reenumerate":
+            device.reenumerate()
 
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:
