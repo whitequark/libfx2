@@ -136,6 +136,10 @@ print("#define _SBIT(addr)  static __sbit __at (addr)")
 print("#define _IOR(addr)   static __xdata __at (addr) volatile uint8_t")
 print("#define _IOR16(addr) static __xdata __at (addr) volatile uint16_t")
 print("#endif")
+print()
+print("// Register _XPAGE must be defined at a location that sets the upper")
+print("// address byte of movx using \\@rN for non-small memory models to work.")
+print("_SFR(0x92) _XPAGE;")
 
 
 for reg in sorted(regnames.keys()):

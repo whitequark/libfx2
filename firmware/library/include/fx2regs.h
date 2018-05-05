@@ -13,6 +13,10 @@
 #define _IOR16(addr) static __xdata __at (addr) volatile uint16_t
 #endif
 
+// Register _XPAGE must be defined at a location that sets the upper
+// address byte of movx using \@rN for non-small memory models to work.
+_SFR(0x92) _XPAGE;
+
 // Special Function Registers (SFRs)
 
 _SFR(0x80) IOA; ///< Register 0x80: Port A
