@@ -82,6 +82,9 @@ void usb_init(bool reconnect);
  */
 __xdata volatile uint8_t *EPnCS_for_n(uint8_t n);
 
+typedef __code const char *__code const
+  usb_ascii_string_c;
+
 /**
  * A group of USB descriptors for a single device.
  * The interface and endpoint descriptors are laid out linearly,
@@ -97,7 +100,7 @@ struct usb_descriptor_set {
   uint8_t                   endpoint_count;
   usb_desc_endpoint_c      *endpoints;
   uint8_t                   string_count;
-  const char *const        *strings;
+  usb_ascii_string_c       *strings;
 };
 
 typedef __code const struct usb_descriptor_set

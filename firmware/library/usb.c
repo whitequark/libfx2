@@ -182,7 +182,7 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
   } else if(type == USB_DESC_STRING && index == 0) {
     APPEND(&usb_langid);
   } else if(type == USB_DESC_STRING && index - 1 < set->string_count) {
-    const char *string = set->strings[index - 1];
+    __code const char *string = set->strings[index - 1];
     *buf++ = 2;               // bLength
     *buf++ = USB_DESC_STRING; // bDescriptorType
     while(*string) {
