@@ -31,7 +31,7 @@ bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool 
   uint8_t xfer_bytes[3];
   uint16_t i;
   uint8_t j;
-  bool started;
+  bool started = false;
 
   for(i = 0; i < len; i++) {
     if(double_byte) {

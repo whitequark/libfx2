@@ -1,0 +1,7 @@
+dist: trusty
+sudo: required
+language: c
+before_script:
+- sudo apt install sdcc
+script:
+- make -C firmware CFLAGS=--Werror SDAR="sdcclib r"

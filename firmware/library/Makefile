@@ -1,6 +1,6 @@
-SDCC = sdcc -mmcs51 -Iinclude
-SDAS = sdas8051 -plo
-SDAR = sdar rc
+SDCC  = sdcc -mmcs51 --std-sdcc99 -Iinclude $(CFLAGS)
+SDAS  = sdas8051 -plo
+SDAR ?= sdar rc
 
 # core interrupts
 DEFISRS  = \
@@ -62,7 +62,7 @@ endef
 $(foreach model,$(MODELS),$(eval $(call make-model,$(model))))
 
 clean:
-	@rm -rf build/ .stamp *.lib
+	@rm -rf build/ lib/ .stamp *.lib
 
 .PHONY: all clean
 

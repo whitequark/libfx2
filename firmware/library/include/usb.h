@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+// Disable 'type of variable X is struct with flexible array field' as it fires
+// on usb_desc_langid and usb_desc_string.
+#pragma disable_warning 219
+
 enum usb_direction {
   USB_DIR_OUT       = 0b00000000,
   USB_DIR_IN        = 0b10000000,
