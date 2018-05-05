@@ -11,5 +11,6 @@ Contents:
    getting_started
    commands
    host_library
+   build_system
    device_library
    faq

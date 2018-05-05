@@ -17,6 +17,8 @@ DEFAUTOISRS += \
 	EP2EF EP4EF EP6EF EP8EF \
 	EP2FF EP4FF EP6FF EP8FF GPIFDONE GPIFWF
 
+MODELS = small medium large huge
+
 OBJECTS_fx2 = xmemcpy.rel delay.rel i2c.rel eeprom.rel
 
 OBJECTS_fx2isrs = autovec.rel \
@@ -26,33 +28,43 @@ OBJECTS_fx2isrs = autovec.rel \
 OBJECTS_fx2usb = usb.rel \
 	defusbdesc.rel defusbconfig.rel defusbiface.rel defusbhalt.rel defusbsetup.rel
 
-all: fx2.lib fx2isrs.lib fx2usb.lib
+LIBRARIES = fx2 fx2isrs fx2usb
+
+all::
 	@touch .stamp
 
-fx2.lib: $(addprefix build/,$(OBJECTS_fx2))
-	$(SDAR) $@ $^
+define make-library
+lib/$1/$2.lib: $(addprefix build/$1/,$(OBJECTS_$2))
+	@mkdir -p $$(dir $$@)
+	$(SDAR) $$@ $$^
+endef
 
-fx2isrs.lib: $(addprefix build/,$(OBJECTS_fx2isrs))
-	$(SDAR) $@ $^
+define make-model
+all:: $(addprefix lib/$1/,fx2.lib fx2isrs.lib fx2usb.lib)
 
-fx2usb.lib: $(addprefix build/,$(OBJECTS_fx2usb))
-	$(SDAR) $@ $^
+$(foreach library,$(LIBRARIES),$(eval $(call make-library,$1,$(library))))
 
-build/%.rel: %.c
-	@mkdir -p $(dir $@)
-	$(SDCC) -c -o $@ $<
+build/$1/%.rel: %.c
+	@mkdir -p $$(dir $$@)
+	$(SDCC) --model-$1 -c -o $$@ $$<
 
-build/%.rel: %.asm
-	@mkdir -p $(dir $@)
-	$(SDAS) $@ $<
+build/$1/%.rel: %.asm
+	@mkdir -p $$(dir $$@)
+	$(SDAS) $$@ $$<
 
-build/defisr_%.rel: defisr.c
-	$(SDCC) -c -o $@ $< -DISRNAME=isr_$* -DINTNAME=_INT_$*
+build/$1/defisr_%.rel: defisr.c
+	$(SDCC) --model-$1 -c -o $$@ $$< -DISRNAME=isr_$$* -DINTNAME=_INT_$$*
 
-build/defautoisr_%.rel: defautoisr.c
-	$(SDCC) -c -o $@ $< -DISRNAME=isr_$*
+build/$1/defautoisr_%.rel: defautoisr.c
+	$(SDCC) --model-$1 -c -o $$@ $$< -DISRNAME=isr_$$*
+endef
+
+$(foreach model,$(MODELS),$(eval $(call make-model,$(model))))
 
 clean:
 	@rm -rf build/ .stamp *.lib
 
 .PHONY: all clean
+
+.SUFFIXES:
+MAKEFLAGS += -r

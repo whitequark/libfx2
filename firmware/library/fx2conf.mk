@@ -3,14 +3,13 @@
 
 # -- Configuration start --
 
-# VID:PID pair used in $(FX2LOAD).
 VID       ?= 04B4
 PID       ?= 8613
 
-# Linker segment sizes.
-# Must always add to at most 0x4000, unless off-chip RAM is used.
+MODEL     ?= small
 CODE_SIZE ?= 0x3e00
 XRAM_SIZE ?= 0x0200
+CFLAGS    ?=
 
 # -- Configuration end --
 
@@ -24,9 +23,10 @@ SDCCFLAGS  = \
 	--xram-loc  $(CODE_SIZE) \
 	--xram-size $(XRAM_SIZE) \
 	--std-sdcc99 \
+	--model-$(MODEL) \
 	$(CFLAGS) \
 	-I$(LIBFX2)/include \
-	-L$(LIBFX2)
+	-L$(LIBFX2)/lib/$(MODEL)
 ifeq ($(V),1)
 SDCCFLAGS += -V
 endif

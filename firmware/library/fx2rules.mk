@@ -22,7 +22,7 @@ LIBRARIES ?= fx2isrs
 
 OBJECTS 	 = \
 	$(patsubst %,build/%.rel,$(SOURCES)) \
-	$(patsubst %,$(LIBFX2)/%.lib,$(LIBRARIES))
+	$(patsubst %,$(LIBFX2)/lib/$(MODEL)/%.lib,$(LIBRARIES))
 
 all: $(TARGET).ihex
 
