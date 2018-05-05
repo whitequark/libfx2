@@ -119,6 +119,9 @@ struct usb_desc_device {
   uint8_t bNumConfigurations;
 };
 
+typedef __code const struct usb_desc_device
+  usb_desc_device_c;
+
 struct usb_desc_device_qualifier {
   uint8_t bLength;
   uint8_t bDescriptorType;
@@ -131,6 +134,9 @@ struct usb_desc_device_qualifier {
   uint8_t bReserved;
 };
 
+typedef __code const struct usb_desc_device_qualifier
+  usb_desc_device_qualifier_c;
+
 struct usb_desc_configuration {
   uint8_t bLength;
   uint8_t bDescriptorType;
@@ -141,6 +147,9 @@ struct usb_desc_configuration {
   uint8_t bmAttributes;
   uint8_t bMaxPower;
 };
+
+typedef __code const struct usb_desc_configuration
+  usb_desc_configuration_c;
 
 struct usb_desc_interface {
   uint8_t bLength;
@@ -154,6 +163,9 @@ struct usb_desc_interface {
   uint8_t iInterface;
 };
 
+typedef __code const struct usb_desc_interface
+  usb_desc_interface_c;
+
 struct usb_desc_endpoint {
   uint8_t bLength;
   uint8_t bDescriptorType;
@@ -163,16 +175,25 @@ struct usb_desc_endpoint {
   uint8_t bInterval;
 };
 
+typedef __code const struct usb_desc_endpoint
+  usb_desc_endpoint_c;
+
 struct usb_desc_langid {
   uint8_t bLength;
   uint8_t bDescriptorType;
   uint16_t wLANGID[];
 };
 
+typedef __code const struct usb_desc_langid
+  usb_desc_langid_c;
+
 struct usb_desc_string {
   uint8_t bLength;
   uint8_t bDescriptorType;
   uint8_t bString[];
 };
+
+typedef __code const struct usb_desc_string
+  usb_desc_string_c;
 
 #endif

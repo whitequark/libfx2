@@ -140,14 +140,13 @@ void isr_SUDAV() __interrupt {
   USBIRQ = _SUDAV;
 }
 
-static const struct usb_desc_langid
-usb_langid = {
+static usb_desc_langid_c usb_langid = {
   .bLength          = sizeof(struct usb_desc_langid) + sizeof(uint16_t) * 1,
   .bDescriptorType  = USB_DESC_STRING,
   .wLANGID          = { /* English (United States) */ 0x0409 },
 };
 
-void usb_serve_descriptor(const struct usb_descriptor_set *set,
+void usb_serve_descriptor(usb_descriptor_set_c *set,
                           enum usb_descriptor type, uint8_t index) {
 #define APPEND(desc) \
     do { \
@@ -164,17 +163,17 @@ void usb_serve_descriptor(const struct usb_descriptor_set *set,
     uint8_t liface, lendp;
 
     for(nconfig = 0; nconfig < set->config_count; nconfig++) {
-      const struct usb_desc_configuration *config = &set->configs[nconfig];
+      usb_desc_configuration_c *config = &set->configs[nconfig];
       if(nconfig == index)
         APPEND(config);
 
       for(liface = 0; liface < config->bNumInterfaces; liface++) {
-        const struct usb_desc_interface *interface = &set->interfaces[niface++];
+        usb_desc_interface_c *interface = &set->interfaces[niface++];
         if(nconfig == index)
           APPEND(interface);
 
         for(lendp = 0; lendp < interface->bNumEndpoints; lendp++) {
-          const struct usb_desc_endpoint *endpoint = &set->endpoints[nendp++];
+          usb_desc_endpoint_c *endpoint = &set->endpoints[nendp++];
           if(nconfig == index)
             APPEND(endpoint);
         }

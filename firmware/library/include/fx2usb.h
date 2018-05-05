@@ -89,16 +89,19 @@ __xdata volatile uint8_t *EPnCS_for_n(uint8_t n);
  * interfaces 0(b) and 1(b), the `interfaces` array would contain 0(a), 0(b), 1(b).
  */
 struct usb_descriptor_set {
-  const struct usb_desc_device        *device;
-  uint8_t                              config_count;
-  const struct usb_desc_configuration *configs;
-  uint8_t                              interface_count;
-  const struct usb_desc_interface     *interfaces;
-  uint8_t                              endpoint_count;
-  const struct usb_desc_endpoint      *endpoints;
-  uint8_t                              string_count;
-  const char *                  const *strings;
+  usb_desc_device_c        *device;
+  uint8_t                   config_count;
+  usb_desc_configuration_c *configs;
+  uint8_t                   interface_count;
+  usb_desc_interface_c     *interfaces;
+  uint8_t                   endpoint_count;
+  usb_desc_endpoint_c      *endpoints;
+  uint8_t                   string_count;
+  const char *const        *strings;
 };
+
+typedef __code const struct usb_descriptor_set
+  usb_descriptor_set_c;
 
 /**
  * Helper function for returning descriptors from a set of C structure definitions.
@@ -106,7 +109,7 @@ struct usb_descriptor_set {
  * copying the requested descriptor(s) into the scratch RAM.
  * Sets up an EP0 IN transfer if a descriptor is found, stalls EP0 otherwise.
  */
-void usb_serve_descriptor(const struct usb_descriptor_set *set,
+void usb_serve_descriptor(usb_descriptor_set_c *set,
                           enum usb_descriptor type, uint8_t index);
 
 /**
