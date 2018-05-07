@@ -34,7 +34,7 @@ bool i2c_stop() {
   return true;
 }
 
-bool i2c_write(uint8_t *buf, uint16_t len) {
+bool i2c_write(const uint8_t *buf, uint16_t len) {
   uint16_t i = 0;
 
   if(len == 0)

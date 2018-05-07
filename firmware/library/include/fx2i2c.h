@@ -45,7 +45,7 @@ bool i2c_stop();
  * This function writes `len` bytes from `buf` to the I2C bus.
  * See `i2c_wait` for description of return value.
  */
-bool i2c_write(uint8_t *buf, uint16_t len);
+bool i2c_write(const uint8_t *buf, uint16_t len);
 
 /**
  * This function reads `len` bytes to `buf` from the I2C bus, responds with NAK
