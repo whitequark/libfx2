@@ -15,7 +15,8 @@
 
 // Register _XPAGE must be defined at a location that sets the upper
 // address byte of movx using \@rN for non-small memory models to work.
-_SFR(0x92) _XPAGE;
+// This should *not* be declared as `static`.
+__sfr __at(0x92) _XPAGE;
 
 // Special Function Registers (SFRs)
 
