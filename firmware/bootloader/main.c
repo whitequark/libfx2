@@ -27,7 +27,7 @@ usb_desc_configuration_c usb_configs[] = {
     .wTotalLength         = sizeof(struct usb_desc_configuration) +
                             sizeof(struct usb_desc_interface),
     .bNumInterfaces       = 1,
-    .bConfigurationValue  = 0,
+    .bConfigurationValue  = 1,
     .iConfiguration       = 0,
     .bmAttributes         = USB_ATTR_RESERVED_1,
     .bMaxPower            = 50,
