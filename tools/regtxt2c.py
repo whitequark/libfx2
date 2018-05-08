@@ -139,7 +139,8 @@ print("#endif")
 print()
 print("// Register _XPAGE must be defined at a location that sets the upper")
 print("// address byte of movx using \\@rN for non-small memory models to work.")
-print("_SFR(0x92) _XPAGE;")
+print("// This should *not* be declared as `static`.")
+print("__sfr __at(0x92) _XPAGE;")
 
 
 for reg in sorted(regnames.keys()):
