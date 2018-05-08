@@ -19,7 +19,7 @@ DEFAUTOISRS += \
 
 MODELS = small medium large huge
 
-OBJECTS_fx2 = xmemcpy.rel delay.rel i2c.rel eeprom.rel
+OBJECTS_fx2 = xmemcpy.rel delay.rel syncdelay.rel i2c.rel eeprom.rel
 
 OBJECTS_fx2isrs = autovec.rel \
 	$(patsubst %,defisr_%.rel,$(DEFISRS)) \

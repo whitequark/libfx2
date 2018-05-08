@@ -16,6 +16,7 @@
 // Register _XPAGE must be defined at a location that sets the upper
 // address byte of movx using \@rN for non-small memory models to work.
 // This should *not* be declared as `static`.
+/// Alias of `MPAGE` used internally by sdcc.
 __sfr __at(0x92) _XPAGE;
 
 // Special Function Registers (SFRs)

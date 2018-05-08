@@ -43,8 +43,12 @@ breathe_doxygen_config_options = {
         '_SBIT(addr)="volatile sbit_t"',
         '_IOR(addr)="volatile ior8_t"',
         '_IOR16(addr)="volatile ior16_t"',
+        '__sfr="volatile sfr8_t"',
         '__at(x)=',
+        '__idata=',
+        '__pdata=',
         '__xdata=',
+        '__code=',
     ])
 }
 

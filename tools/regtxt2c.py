@@ -140,6 +140,7 @@ print()
 print("// Register _XPAGE must be defined at a location that sets the upper")
 print("// address byte of movx using \\@rN for non-small memory models to work.")
 print("// This should *not* be declared as `static`.")
+print("/// Alias of `MPAGE` used internally by sdcc.")
 print("__sfr __at(0x92) _XPAGE;")
 
 
