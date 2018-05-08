@@ -6,9 +6,11 @@
 
 bool usb_self_powered;
 bool usb_remote_wakeup;
+uint8_t usb_configuration;
 
 void usb_init(bool reconnect) {
   usb_remote_wakeup = false;
+  usb_configuration = 0;
 
   ENABLE_USB_AUTOVEC();
   USBIE  |= _SUDAV;

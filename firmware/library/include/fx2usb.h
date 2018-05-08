@@ -136,16 +136,23 @@ extern bool usb_remote_wakeup;
 void handle_usb_get_descriptor(enum usb_descriptor type, uint8_t index);
 
 /**
+ * Status variable indicating whether the device is in Address state (if the value is 0)
+ * or Configured state (the value corresponds to `bConfigurationValue` field of the
+ * descriptor of the selected configuration).
+ */
+extern uint8_t usb_configuration;
+
+/**
  * Callback for the standard Set Configuration request.
- * This callback has a default implementation that acknowledges the transfer
- * if `value == 0` and stalls EP0 otherwise.
+ * This callback has a default implementation that sets `usb_configuration` to `value`
+ * and acknowledges the transfer if `value` is 0 or 1 and stalls EP0 otherwise.
  */
 void handle_usb_set_configuration(uint8_t value);
 
 /**
  * Callback for the standard Get Configuration request.
  * This callback has a default implementation that sets up an EP0 IN transfer
- * with configuration value `0`.
+ * with value `usb_configuration`.
  */
 void handle_usb_get_configuration();
 

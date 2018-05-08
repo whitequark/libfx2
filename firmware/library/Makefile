@@ -26,7 +26,11 @@ OBJECTS_fx2isrs = autovec.rel \
 	$(patsubst %,defautoisr_%.rel,$(DEFAUTOISRS))
 
 OBJECTS_fx2usb = usb.rel \
-	defusbdesc.rel defusbconfig.rel defusbiface.rel defusbhalt.rel defusbsetup.rel
+	defusbdesc.rel \
+	defusbsetup.rel \
+	defusbsetconfig.rel defusbgetconfig.rel \
+	defusbsetiface.rel defusbgetiface.rel \
+	defusbhalt.rel \
 
 LIBRARIES = fx2 fx2isrs fx2usb
 
