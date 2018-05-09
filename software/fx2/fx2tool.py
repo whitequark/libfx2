@@ -130,15 +130,27 @@ def get_argparser():
 
     p_read_ram = subparsers.add_parser("read_ram",
         formatter_class=TextHelpFormatter,
-        help="read data from \"external\" (__xdata) RAM",
-        description="Reads data from on-chip \"external\" RAM.\n" + ram_note)
+        help="read data from code RAM",
+        description="Reads data from on-chip code RAM.\n" + ram_note)
     add_read_args(p_read_ram)
 
     p_write_ram = subparsers.add_parser("write_ram",
         formatter_class=TextHelpFormatter,
-        help="write data to \"external\" (__xdata) RAM",
-        description="Writes data to on-chip \"external\" RAM.\n" + ram_note)
+        help="write data to code RAM",
+        description="Writes data to on-chip code RAM.\n" + ram_note)
     add_write_args(p_write_ram)
+
+    p_read_xram = subparsers.add_parser("read_xram",
+        formatter_class=TextHelpFormatter,
+        help="read data from code RAM, external RAM, or registers",
+        description="Reads data from RAM using the `movx` instruction.\n" + ram_note)
+    add_read_args(p_read_xram)
+
+    p_write_xram = subparsers.add_parser("write_xram",
+        formatter_class=TextHelpFormatter,
+        help="write data to code RAM, external RAM, or registers",
+        description="Writes data to RAM using the `movx` instruction.\n" + ram_note)
+    add_write_args(p_write_xram)
 
     def add_eeprom_args(parser):
         parser.add_argument(
@@ -202,6 +214,17 @@ def main():
             device.cpu_reset(True)
             for address, chunk in data:
                 device.write_ram(address, chunk)
+
+        elif args.action == "read_xram":
+            device.cpu_reset(False)
+            data = device.read_ext_ram(args.address, args.length)
+            output_data(args.file, data, args.format, args.address)
+
+        elif args.action == "write_xram":
+            data = input_data(args.file or args.data, args.format, args.offset)
+            device.cpu_reset(False)
+            for address, chunk in data:
+                device.write_ext_ram(address, chunk)
 
         elif args.action == "read_eeprom":
             device.cpu_reset(False)

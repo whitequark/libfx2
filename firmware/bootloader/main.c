@@ -65,6 +65,7 @@ usb_descriptor_set_c usb_descriptor_set = {
 
 enum {
   USB_REQ_CYPRESS_EEPROM_SB  = 0xA2,
+  USB_REQ_CYPRESS_EXT_RAM    = 0xA3,
   USB_REQ_CYPRESS_RENUMERATE = 0xA8,
   USB_REQ_CYPRESS_EEPROM_DB  = 0xA9,
 };
@@ -127,6 +128,34 @@ void handle_pending_usb_setup() {
           STALL_EP0();
           break;
         }
+      }
+
+      arg_len  -= len;
+      arg_addr += len;
+    }
+
+    return;
+  }
+
+  if((req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN ||
+      req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
+     req->bRequest == USB_REQ_CYPRESS_EXT_RAM) {
+    bool     arg_read = (req->bmRequestType & USB_DIR_IN);
+    uint16_t arg_addr = req->wValue;
+    uint16_t arg_len  = req->wLength;
+    pending_setup = false;
+
+    while(arg_len > 0) {
+      uint8_t len = arg_len < 64 ? arg_len : 64;
+
+      if(arg_read) {
+        while(EP0CS & _BUSY);
+        xmemcpy(EP0BUF, (__xdata void *)arg_addr, len);
+        SETUP_EP0_BUF(len);
+      } else {
+        SETUP_EP0_BUF(0);
+        while(EP0CS & _BUSY);
+        xmemcpy((__xdata void *)arg_addr, EP0BUF, arg_len);
       }
 
       arg_len  -= len;

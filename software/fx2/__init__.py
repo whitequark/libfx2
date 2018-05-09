@@ -7,10 +7,11 @@ __all__ = ['FX2Device', 'FX2DeviceError']
 VID_CYPRESS = 0x04B4
 PID_FX2     = 0x8613
 
-REQ_RW_RAM       = 0xA0
-REQ_RW_EEPROM_SB = 0xA2
-REQ_RENUMERATE   = 0xA8
-REQ_RW_EEPROM_DB = 0xA9
+REQ_RAM        = 0xA0
+REQ_EEPROM_SB  = 0xA2
+REQ_EXT_RAM    = 0xA3
+REQ_RENUMERATE = 0xA8
+REQ_EEPROM_DB  = 0xA9
 
 
 class FX2DeviceError(Exception):
@@ -61,17 +62,17 @@ class FX2Device:
         """
         if addr & 1: # unaligned
             return self.control_read(usb1.REQUEST_TYPE_VENDOR,
-                                     REQ_RW_RAM, addr, 0, length + 1)[1:]
+                                     REQ_RAM, addr, 0, length + 1)[1:]
         else:
             return self.control_read(usb1.REQUEST_TYPE_VENDOR,
-                                     REQ_RW_RAM, addr, 0, length)
+                                     REQ_RAM, addr, 0, length)
 
     def write_ram(self, addr, data):
         """
         Write ``data`` to ``addr`` to internal RAM.
         Note that not all memory can be addressed this way; consult the TRM.
         """
-        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RW_RAM, addr, 0, data)
+        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RAM, addr, 0, data)
 
     def cpu_reset(self, is_reset):
         """Bring CPU in or out of reset."""
@@ -90,9 +91,9 @@ class FX2Device:
     @staticmethod
     def _eeprom_cmd(addr_width):
         if addr_width == 1:
-            return REQ_RW_EEPROM_SB
+            return REQ_EEPROM_SB
         elif addr_width == 2:
-            return REQ_RW_EEPROM_DB
+            return REQ_EEPROM_DB
         else:
             raise ValueError("Address width {addr_width} is not supported"
                              .format(addr_width=addr_width))
@@ -114,6 +115,24 @@ class FX2Device:
         """
         self.control_write(usb1.REQUEST_TYPE_VENDOR,
                            self._eeprom_cmd(addr_width), addr, 0, data)
+
+    def read_ext_ram(self, addr, length):
+        """
+        Read ``length`` bytes at ``addr`` in RAM using the ``movx`` instruction.
+        Unlike ``read_ram``, this can access the entire address space.
+
+        Requires the second stage bootloader.
+        """
+        return self.control_read(usb1.REQUEST_TYPE_VENDOR, REQ_EXT_RAM, addr, 0, length)
+
+    def write_ext_ram(self, addr, data):
+        """
+        Write ``data`` to ``addr`` in RAM using the ``movx`` instruction.
+        Unlike ``write_ram``, this can access the entire address space.
+
+        Requires the second stage bootloader or a compatible firmware.
+        """
+        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_EXT_RAM, addr, 0, data)
 
     def reenumerate(self):
         """
