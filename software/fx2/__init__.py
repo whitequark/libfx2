@@ -37,23 +37,39 @@ class FX2Device:
             raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
         self._device.setAutoDetachKernelDriver(True)
 
-    def control_read(self, bmRequestType, bRequest, wValue, wIndex, wLength,
+    def control_read(self, request_type, request, value, index, length,
                      timeout=None):
         """
         Issue an USB control read request with timeout defaulting to ``self.timeout``.
         """
         if timeout is None:
             timeout = self.timeout
-        return self._device.controlRead(bmRequestType, bRequest, wValue, wIndex, wLength, timeout)
+        return self._device.controlRead(request_type, request, value, index, length, timeout)
 
-    def control_write(self, bmRequestType, bRequest, wValue, wIndex, data,
+    def control_write(self, request_type, request, value, index, data,
                       timeout=None):
         """
         Issue an USB control write request with timeout defaulting to ``self.timeout``.
         """
         if timeout is None:
             timeout = self.timeout
-        self._device.controlWrite(bmRequestType, bRequest, wValue, wIndex, data, timeout)
+        self._device.controlWrite(request_type, request, value, index, data, timeout)
+
+    def bulk_read(self, endpoint, length, timeout=None):
+        """
+        Issue an USB bulk read request with timeout defaulting to ``self.timeout``.
+        """
+        if timeout is None:
+            timeout = self.timeout
+        return self._device.bulkRead(endpoint, length, timeout)
+
+    def bulk_write(self, endpoint, data, timeout=None):
+        """
+        Issue an USB bulk write request with timeout defaulting to ``self.timeout``.
+        """
+        if timeout is None:
+            timeout = self.timeout
+        self._device.bulkWrite(endpoint, data, timeout)
 
     def read_ram(self, addr, length):
         """
