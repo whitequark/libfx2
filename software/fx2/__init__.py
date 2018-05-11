@@ -24,18 +24,22 @@ class FX2Device:
 
     The initializer of this class locates the device by provided VID:PID pair,
     or raises a :exc:`FX2DeviceError`.
+
+    Attributes
+    ----------
+    usb : usb1.USBDeviceHandle
+        Raw USB device handle.
     """
     def __init__(self, vid=VID_CYPRESS, pid=PID_FX2):
         self.timeout = 1000
 
-        self._context = usb1.USBContext()
         try:
-            self._device = self._context.openByVendorIDAndProductID(vid, pid)
+            self.usb = usb1.USBContext().openByVendorIDAndProductID(vid, pid)
         except usb1.USBErrorAccess:
             raise FX2DeviceError("Cannot access device {:04x}:{:04x}".format(vid, pid))
-        if self._device is None:
+        if self.usb is None:
             raise FX2DeviceError("Device {:04x}:{:04x} not found".format(vid, pid))
-        self._device.setAutoDetachKernelDriver(True)
+        self.usb.setAutoDetachKernelDriver(True)
 
     def control_read(self, request_type, request, value, index, length,
                      timeout=None):
@@ -44,7 +48,7 @@ class FX2Device:
         """
         if timeout is None:
             timeout = self.timeout
-        return self._device.controlRead(request_type, request, value, index, length, timeout)
+        return self.usb.controlRead(request_type, request, value, index, length, timeout)
 
     def control_write(self, request_type, request, value, index, data,
                       timeout=None):
@@ -53,7 +57,7 @@ class FX2Device:
         """
         if timeout is None:
             timeout = self.timeout
-        self._device.controlWrite(request_type, request, value, index, data, timeout)
+        self.usb.controlWrite(request_type, request, value, index, data, timeout)
 
     def bulk_read(self, endpoint, length, timeout=None):
         """
@@ -61,7 +65,7 @@ class FX2Device:
         """
         if timeout is None:
             timeout = self.timeout
-        return self._device.bulkRead(endpoint, length, timeout)
+        return self.usb.bulkRead(endpoint, length, timeout)
 
     def bulk_write(self, endpoint, data, timeout=None):
         """
@@ -69,7 +73,7 @@ class FX2Device:
         """
         if timeout is None:
             timeout = self.timeout
-        self._device.bulkWrite(endpoint, data, timeout)
+        self.usb.bulkWrite(endpoint, data, timeout)
 
     def read_ram(self, addr, length):
         """
