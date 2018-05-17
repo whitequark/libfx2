@@ -33,6 +33,9 @@ bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool 
   uint8_t j;
   bool started = false;
 
+  if(!i2c_start(chip << 1))
+    goto stop;
+
   for(i = 0; i < len; i++) {
     if(double_byte) {
       xfer_bytes[0] = addr >> 8;
@@ -42,25 +45,20 @@ bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool 
     }
     xfer_bytes[1 + double_byte] = buf[i];
 
-    for(j = 0; timeout == 0 || j < timeout; j++) {
-      started = i2c_start(chip << 1);
-      if(started)
-        break;
-    }
-    if(!started)
-      goto stop;
-
     if(!i2c_write(xfer_bytes, 2 + double_byte))
       goto stop;
     if(!i2c_stop())
       return false;
 
+    for(j = 0; timeout == 0 || j < timeout; j++)
+      started = i2c_start(chip << 1);
+    if(!started)
+      break;
+
     addr++;
   }
 
-  return true;
-
 stop:
   i2c_stop();
-  return false;
+  return i == len;
 }
