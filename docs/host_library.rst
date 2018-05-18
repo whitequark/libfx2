@@ -26,3 +26,5 @@ Host-side library reference
    .. autofunction:: autodetect
    .. autofunction:: input_data
    .. autofunction:: output_data
+   .. autofunction:: flatten_data
+   .. autofunction:: diff_data

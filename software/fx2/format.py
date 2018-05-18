@@ -25,15 +25,57 @@ def autodetect(file):
         raise ValueError("Specify file format explicitly")
 
 
+def flatten_data(data):
+    """
+    Flatten a list of ``(addr, chunk)`` pairs, such as that returned by :func:`input_data`,
+    to a flat byte array, such as that accepted by :func:`output_data`.
+    """
+    data_flat = bytearray(max([addr + len(chunk) for (addr, chunk) in data]))
+    for (addr, chunk) in data:
+        data_flat[addr:len(chunk)] = chunk
+    return data_flat
+
+
+def diff_data(old, new):
+    """
+    Compute the difference between ``old`` and ``new`` byte arrays, and return a list
+    of ``(addr, chunk)`` pairs containing only the bytes that are changed between
+    ``new`` and ``old``.
+    """
+    diff   = []
+
+    cpos   = None
+    cchunk = bytearray()
+    for (pos, (oldb, newb)) in enumerate(zip(old, new)):
+        if oldb != newb:
+            if cpos is None:
+                cpos = pos
+            elif cpos + len(cchunk) != pos:
+                diff.append((cpos, bytes(cchunk)))
+                cchunk.clear()
+                cpos = pos
+            cchunk.append(newb)
+    if len(cchunk) > 0:
+        diff.append((cpos, bytes(cchunk)))
+
+    if len(new) > len(old):
+        diff.append((len(old), new[len(old):]))
+
+    return diff
+
+
 def output_data(file, data, fmt="auto", offset=0):
     """
     Write Intel HEX, hexadecimal, or binary ``data`` to ``file``.
 
-    :param offset:
-        Offset the data by specified amount of bytes.
+    :param data:
+        A byte array (``bytes``, ``bytearray`` and ``list`` of ``(addr, chunk)`` pairs
+        are all valid).
     :param fmt:
         ``"ihex"`` for Intel HEX, ``"hex"`` for hexadecimal, ``"bin"`` for binary,
         or ``"auto"`` for autodetection via :func:`autodetect`.
+    :param offset:
+        Offset the data by specified amount of bytes.
     """
 
     if isinstance(file, io.TextIOWrapper):
@@ -43,9 +85,15 @@ def output_data(file, data, fmt="auto", offset=0):
         fmt = autodetect(file)
 
     if fmt == "bin":
+        if isinstance(data, list):
+            data = flatten_data(data)
+
         file.write(data)
 
     elif fmt == "hex":
+        if isinstance(data, list):
+            data = flatten_data(data)
+
         n = 0
         for n, byte in enumerate(data):
             file.write("{:02x}".format(byte).encode())
@@ -59,23 +107,28 @@ def output_data(file, data, fmt="auto", offset=0):
             file.write(b"\n")
 
     elif fmt == "ihex":
-        pos = 0
-        while pos < len(data):
-            recoff  = offset + pos
-            recdata = data[pos:pos + 0x10]
-            record  = [
-                len(recdata),
-                (recoff >> 8) & 0xff,
-                (recoff >> 0) & 0xff,
-                0x00,
-                *list(recdata)
-            ]
-            record.append((~sum(record) + 1) & 0xff)
-            file.write(b":")
-            file.write(bytes(record).hex().encode())
-            file.write(b"\n")
-            pos += len(recdata)
-        file.write(b":00000001ff\n")
+        if not isinstance(data, list):
+            data = [(offset, data)]
+
+        for (addr, chunk) in data:
+            pos = 0
+            while pos < len(chunk):
+                recoff  = addr + pos
+                recdata = chunk[pos:pos + 0x10]
+                record  = [
+                    len(recdata),
+                    (recoff >> 8) & 0xff,
+                    (recoff >> 0) & 0xff,
+                    0x00,
+                    *list(recdata)
+                ]
+                record.append((~sum(record) + 1) & 0xff)
+                file.write(b":")
+                file.write(bytes(record).hex().upper().encode())
+                file.write(b"\n")
+                pos += len(recdata)
+
+        file.write(b":00000001FF\n")
 
 
 def input_data(file_or_data, fmt="auto", offset=0):
@@ -88,11 +141,11 @@ def input_data(file_or_data, fmt="auto", offset=0):
 
     Returns a list of ``(address, data)`` chunks.
 
-    :param offset:
-        Offset the data by specified amount of bytes.
     :param fmt:
         ``"ihex"`` for Intel HEX, ``"hex"`` for hexadecimal, ``"bin"`` for binary,
         or ``"auto"`` for autodetection via :func:`autodetect`.
+    :param offset:
+        Offset the data by specified amount of bytes.
     """
 
     if isinstance(file_or_data, io.TextIOWrapper):
