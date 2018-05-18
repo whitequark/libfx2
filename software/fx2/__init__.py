@@ -2,7 +2,7 @@ import struct
 import usb1
 
 
-__all__ = ['FX2Device', 'FX2DeviceError']
+__all__ = ["FX2Config", "FX2Device", "FX2DeviceError"]
 
 
 VID_CYPRESS = 0x04B4
@@ -20,7 +20,7 @@ REQ_RENUMERATE = 0xA8
 REQ_EEPROM_DB  = 0xA9
 
 
-class FX2Configuration:
+class FX2Config:
     """
     Cypress FX2 EEPROM configuration data.
 
@@ -103,7 +103,7 @@ class FX2Configuration:
         Parse configuration from an image loaded from an EEPROM.
 
         Returns ``None`` if the EEPROM image is empty (the EEPROM was erased),
-        :class:`FX2Configuration` if it contains a valid configuration, or
+        :class:`FX2Config` if it contains a valid configuration, or
         raises :class:`ValueError` if it does not.
         """
         if data[0] == 0xFF:

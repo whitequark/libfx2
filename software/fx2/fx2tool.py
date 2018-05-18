@@ -7,7 +7,7 @@ import argparse
 import textwrap
 import usb1
 
-from . import VID_CYPRESS, PID_FX2, FX2Configuration, FX2Device, FX2DeviceError
+from . import VID_CYPRESS, PID_FX2, FX2Config, FX2Device, FX2DeviceError
 from .format import input_data, output_data, diff_data
 
 
@@ -343,7 +343,7 @@ def main():
             else:
                 firmware = []
 
-            config = FX2Configuration(args.vendor_id, args.product_id, args.device_id,
+            config = FX2Config(args.vendor_id, args.product_id, args.device_id,
                                       args.disconnect, args.i2c_400khz)
             for address, chunk in firmware:
                 config.append(address, chunk)
@@ -352,7 +352,7 @@ def main():
             device.write_boot_eeprom(0, image, args.address_width)
 
             image = device.read_boot_eeprom(0, len(image), args.address_width)
-            if FX2Configuration.decode(image) != config:
+            if FX2Config.decode(image) != config:
                 raise SystemExit("Verification failed")
 
         elif args.action == "update":
@@ -367,7 +367,7 @@ def main():
 
             old_image = read_entire_boot_eeprom(device, args.address_width)
 
-            config = FX2Configuration.decode(old_image)
+            config = FX2Config.decode(old_image)
             if args.vendor_id  is not None:
                 config.vendor_id  = args.vendor_id
             if args.product_id is not None:
@@ -389,7 +389,7 @@ def main():
                 device.write_boot_eeprom(addr, chunk, args.address_width)
 
             new_image = device.read_boot_eeprom(0, len(new_image), args.address_width)
-            if FX2Configuration.decode(new_image) != config:
+            if FX2Config.decode(new_image) != config:
                 raise SystemExit("Verification failed")
 
         elif args.action == "dump":
@@ -397,7 +397,7 @@ def main():
 
             image = read_entire_boot_eeprom(device, args.address_width)
 
-            config = FX2Configuration.decode(image)
+            config = FX2Config.decode(image)
             print("USB VID:    {:04x}\n"
                   "    PID:    {:04x}\n"
                   "    DID:    {:04x}\n"

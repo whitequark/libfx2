@@ -3,7 +3,7 @@ Host-side library reference
 
 .. automodule:: fx2
 
-   .. autoclass:: FX2Configuration
+   .. autoclass:: FX2Config
 
       .. automethod:: append
       .. automethod:: encode
