@@ -7,8 +7,8 @@ import argparse
 import textwrap
 import usb1
 
-from . import VID_CYPRESS, PID_FX2, FX2Device, FX2DeviceError
-from .format import input_data, output_data
+from . import VID_CYPRESS, PID_FX2, FX2Configuration, FX2Device, FX2DeviceError
+from .format import input_data, output_data, diff_data
 
 
 class VID_PID(collections.namedtuple("VID_PID", "vid pid")):
@@ -47,6 +47,12 @@ class TextHelpFormatter(argparse.HelpFormatter):
 
 
 def get_argparser():
+    def usb_id(arg):
+        if re.match(r"^([0-9a-f]{1,4})$", arg, re.I) and int(arg, 16) not in (0x0000, 0xffff):
+            return int(arg, 16)
+        else:
+            raise argparse.ArgumentTypeError("{} is not an USB ID".format(arg))
+
     def vid_pid(arg):
         try:
             return VID_PID.parse(arg)
@@ -179,9 +185,98 @@ def get_argparser():
     p_reenumerate = subparsers.add_parser("reenumerate",
         formatter_class=TextHelpFormatter,
         help="re-enumerate",
-        description="Simulates device disconnection and reconnection.")
+        description="Simulates device disconnection and reconnection.\n" + bootloader_note)
+
+    p_program = subparsers.add_parser("program",
+        formatter_class=TextHelpFormatter,
+        help="program USB IDs or firmware",
+        description="Writes USB VID, PID, and DID, and if specified, firmware, "
+        "into boot EEPROM.\n" + bootloader_note)
+    add_eeprom_args(p_program)
+    p_program.add_argument(
+        "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id, default=VID_CYPRESS,
+        help="USB vendor ID (default: %(default)04x)")
+    p_program.add_argument(
+        "-P", "--pid", dest="product_id", metavar="ID", type=usb_id, default=PID_FX2,
+        help="USB product ID (default: %(default)04x)")
+    p_program.add_argument(
+        "-D", "--did", dest="device_id", metavar="ID", type=usb_id, default=0x0000,
+        help="USB device ID (default: %(default)04x)")
+    p_program.add_argument(
+        "-N", "--disconnect", dest="disconnect", default=False, action="store_true",
+        help="do not automatically enumerate on startup")
+    p_program.add_argument(
+        "-F", "--fast", dest="i2c_400khz", default=False, action="store_true",
+        help="use 400 kHz clock for loading firmware via I2C")
+    p_program.add_argument(
+        "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("rb"),
+        help="read firmware from the specified file")
+
+    p_update = subparsers.add_parser("update",
+        formatter_class=TextHelpFormatter,
+        help="update USB IDs or firmware",
+        description="Writes USB VID, PID, and DID, and if specified, firmware, "
+        "into boot EEPROM, without changing any omitted parameters.\n" + bootloader_note)
+    add_eeprom_args(p_update)
+    p_update.add_argument(
+        "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id,
+        help="USB vendor ID")
+    p_update.add_argument(
+        "-P", "--pid", dest="product_id", metavar="ID", type=usb_id,
+        help="USB product ID")
+    p_update.add_argument(
+        "-D", "--did", dest="device_id", metavar="ID", type=usb_id,
+        help="USB device ID")
+    p_update.add_argument(
+        "-N", "--disconnect", default=None, dest="disconnect", action="store_true",
+        help="do not automatically enumerate on startup")
+    p_update.add_argument(
+        "-E", "--no-disconnect", default=None, dest="disconnect", action="store_false",
+        help="do automatically enumerate on startup")
+    p_update.add_argument(
+        "-F", "--fast", dest="i2c_400khz", action="store_true",
+        help="use 400 kHz clock for loading firmware via I2C")
+    p_update.add_argument(
+        "-S", "--slow", dest="i2c_400khz", action="store_false",
+        help="use 100 kHz clock for loading firmware via I2C")
+    p_update.add_argument(
+        "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("rb"),
+        help="read firmware from the specified file")
+    p_update.add_argument(
+        "-n", "--no-firmware", default=False, action="store_true",
+        help="remove any firmware present")
+
+    p_dump = subparsers.add_parser("dump",
+        formatter_class=TextHelpFormatter,
+        help="read out USB IDs or firmware",
+        description="Reads USB VID, PID, and DID, and if present, firmware, "
+        "from boot EEPROM.\n" + bootloader_note)
+    add_eeprom_args(p_dump)
+    p_dump.add_argument(
+        "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("wb"),
+        help="write firmware to the specified file")
 
     return parser
+
+
+def read_entire_boot_eeprom(device, address_width):
+    # We don't know how large the EEPROM is, so we use a heuristic tailored
+    # for the C2 load: if we detect a chunk identical to the first chunk
+    # *or* chunk consisting only of erased bytes, we stop.
+    addr = 0
+    data = bytearray()
+    while addr < 0x10000: # never larger than 64k
+        chunk = device.read_boot_eeprom(addr, 0x100, address_width)
+        if addr == 0:
+            first_chunk = chunk
+        elif chunk == first_chunk:
+            break
+        if re.match(rb"\xff{256}", chunk):
+            break
+        else:
+            data += chunk
+            addr += len(chunk)
+    return data
 
 
 def main():
@@ -239,6 +334,86 @@ def main():
 
         elif args.action == "reenumerate":
             device.reenumerate()
+
+        elif args.action == "program":
+            device.cpu_reset(False)
+
+            if args.firmware:
+                firmware = input_data(args.firmware, args.format)
+            else:
+                firmware = []
+
+            config = FX2Configuration(args.vendor_id, args.product_id, args.device_id,
+                                      args.disconnect, args.i2c_400khz)
+            for address, chunk in firmware:
+                config.append(address, chunk)
+            image = config.encode()
+
+            device.write_boot_eeprom(0, image, args.address_width)
+
+            image = device.read_boot_eeprom(0, len(image), args.address_width)
+            if FX2Configuration.decode(image) != config:
+                raise SystemExit("Verification failed")
+
+        elif args.action == "update":
+            device.cpu_reset(False)
+
+            if args.firmware:
+                firmware = input_data(args.firmware, args.format)
+            elif args.no_firmware:
+                firmware = []
+            else:
+                firmware = None
+
+            old_image = read_entire_boot_eeprom(device, args.address_width)
+
+            config = FX2Configuration.decode(old_image)
+            if args.vendor_id  is not None:
+                config.vendor_id  = args.vendor_id
+            if args.product_id is not None:
+                config.product_id = args.product_id
+            if args.device_id  is not None:
+                config.device_id  = args.device_id
+            if args.disconnect is not None:
+                config.disconnect = args.disconnect
+            if args.i2c_400khz is not None:
+                config.i2c_400khz = args.i2c_400khz
+            if firmware is not None:
+                config.firmware = []
+                for (addr, chunk) in firmware:
+                    config.append(addr, chunk)
+
+            new_image = config.encode()
+
+            for (addr, chunk) in diff_data(old_image, new_image):
+                device.write_boot_eeprom(addr, chunk, args.address_width)
+
+            new_image = device.read_boot_eeprom(0, len(new_image), args.address_width)
+            if FX2Configuration.decode(new_image) != config:
+                raise SystemExit("Verification failed")
+
+        elif args.action == "dump":
+            device.cpu_reset(False)
+
+            image = read_entire_boot_eeprom(device, args.address_width)
+
+            config = FX2Configuration.decode(image)
+            print("USB VID:    {:04x}\n"
+                  "    PID:    {:04x}\n"
+                  "    DID:    {:04x}\n"
+                  "Disconnect: {}\n"
+                  "I2C clock:  {}\n"
+                  "Firmware:   {}"
+                  .format(config.vendor_id,
+                          config.product_id,
+                          config.device_id,
+                          "enabled" if config.disconnect else "disabled",
+                          "400 kHz" if config.i2c_400khz else "100 kHz",
+                          "present" if len(config.firmware) > 0 else "absent"),
+                  file=sys.stderr)
+
+            if args.firmware and len(config.firmware) > 0:
+                output_data(args.firmware, config.firmware, args.format)
 
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:
