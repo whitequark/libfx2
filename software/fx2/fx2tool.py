@@ -398,22 +398,25 @@ def main():
             image = read_entire_boot_eeprom(device, args.address_width)
 
             config = FX2Config.decode(image)
-            print("USB VID:    {:04x}\n"
-                  "    PID:    {:04x}\n"
-                  "    DID:    {:04x}\n"
-                  "Disconnect: {}\n"
-                  "I2C clock:  {}\n"
-                  "Firmware:   {}"
-                  .format(config.vendor_id,
-                          config.product_id,
-                          config.device_id,
-                          "enabled" if config.disconnect else "disabled",
-                          "400 kHz" if config.i2c_400khz else "100 kHz",
-                          "present" if len(config.firmware) > 0 else "absent"),
-                  file=sys.stderr)
+            if not config:
+                print("Device erased")
+            else:
+                print("USB VID:    {:04x}\n"
+                      "    PID:    {:04x}\n"
+                      "    DID:    {:04x}\n"
+                      "Disconnect: {}\n"
+                      "I2C clock:  {}\n"
+                      "Firmware:   {}"
+                      .format(config.vendor_id,
+                              config.product_id,
+                              config.device_id,
+                              "enabled" if config.disconnect else "disabled",
+                              "400 kHz" if config.i2c_400khz else "100 kHz",
+                              "present" if len(config.firmware) > 0 else "absent"),
+                      file=sys.stderr)
 
-            if args.firmware and len(config.firmware) > 0:
-                output_data(args.firmware, config.firmware, args.format)
+                if args.firmware and len(config.firmware) > 0:
+                    output_data(args.firmware, config.firmware, args.format)
 
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:
