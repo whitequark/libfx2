@@ -29,14 +29,14 @@ stop:
 bool eeprom_write(uint8_t chip, uint16_t addr, uint8_t *buf, uint16_t len, bool double_byte,
                   uint8_t timeout) {
   uint8_t xfer_bytes[3];
-  uint16_t i;
+  uint16_t i = 0;
   uint8_t j;
   bool started = false;
 
   if(!i2c_start(chip << 1))
     goto stop;
 
-  for(i = 0; i < len; i++) {
+  for(; i < len; i++) {
     if(double_byte) {
       xfer_bytes[0] = addr >> 8;
       xfer_bytes[1] = addr & 0xff;
