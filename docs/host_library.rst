@@ -3,6 +3,12 @@ Host-side library reference
 
 .. automodule:: fx2
 
+   .. autoclass:: FX2Configuration
+
+      .. automethod:: append
+      .. automethod:: encode
+      .. automethod:: decode
+
    .. autoclass:: FX2Device
 
       .. automethod:: read_ram
