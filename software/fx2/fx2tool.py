@@ -239,10 +239,11 @@ def get_argparser():
     p_update.add_argument(
         "-S", "--slow", dest="i2c_400khz", action="store_false",
         help="use 100 kHz clock for loading firmware via I2C")
-    p_update.add_argument(
+    g_update_firmware = p_update.add_mutually_exclusive_group()
+    g_update_firmware.add_argument(
         "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("rb"),
         help="read firmware from the specified file")
-    p_update.add_argument(
+    g_update_firmware.add_argument(
         "-n", "--no-firmware", default=False, action="store_true",
         help="remove any firmware present")
 
