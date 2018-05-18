@@ -262,23 +262,35 @@ class FX2Device:
             raise ValueError("Address width {addr_width} is not supported"
                              .format(addr_width=addr_width))
 
-    def read_boot_eeprom(self, addr, length, addr_width):
+    def read_boot_eeprom(self, addr, length, addr_width, chunk_size=0x100):
         """
-        Read ``length`` bytes at ``addr`` from boot EEPROM.
+        Read ``length`` bytes at ``addr`` from boot EEPROM in ``chunk_size``d chunks.
 
         Requires the second stage bootloader.
         """
-        return self.control_read(usb1.REQUEST_TYPE_VENDOR,
-                                 self._eeprom_cmd(addr_width), addr, 0, length)
+        data = bytearray()
+        while length > 0:
+            chunk_length = min(length, chunk_size)
+            data += self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                      self._eeprom_cmd(addr_width), addr, 0, chunk_length)
+            addr += chunk_length
+            length -= chunk_length
+        return data
 
-    def write_boot_eeprom(self, addr, data, addr_width):
+    def write_boot_eeprom(self, addr, data, addr_width, chunk_size=0x10):
         """
-        Write ``data`` to ``addr`` in boot EEPROM.
+        Write ``data`` to ``addr`` in boot EEPROM in ``chunk_size``d chunks.
+        Writing EEPROM may be much slower than reading (depending on the specific EEPROM IC),
+        so the chunk size should be small or timeout large or both.
 
         Requires the second stage bootloader or a compatible firmware.
         """
-        self.control_write(usb1.REQUEST_TYPE_VENDOR,
-                           self._eeprom_cmd(addr_width), addr, 0, data)
+        while len(data) > 0:
+            chunk_length = min(len(data), chunk_size)
+            self.control_write(usb1.REQUEST_TYPE_VENDOR,
+                               self._eeprom_cmd(addr_width), addr, 0, data[:chunk_length])
+            addr += chunk_length
+            data = data[chunk_length:]
 
     def read_ext_ram(self, addr, length):
         """
