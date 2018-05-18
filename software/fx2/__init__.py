@@ -98,13 +98,17 @@ class FX2Config:
         return data
 
     @classmethod
-    def decode(cls, data):
+    def decode(cls, data, partial=False):
         """
         Parse configuration from an image loaded from an EEPROM.
 
         Returns ``None`` if the EEPROM image is empty (the EEPROM was erased),
         :class:`FX2Config` if it contains a valid configuration, or
         raises :class:`ValueError` if it does not.
+
+        If ``partial`` is ``True``, only requires any data records present
+        to be complete; if it is ``False``, it is an error unless the image
+        contains the final data record.
         """
         if data[0] == 0xFF:
             return None
@@ -128,14 +132,14 @@ class FX2Config:
 
         if has_firmware:
             offset = 8
-            while True:
+            while not partial or offset < len(data):
                 if offset + 4 > len(data):
                     raise ValueError("Truncated data record")
 
                 length, addr = struct.unpack_from(">HH", data, offset)
                 offset += 4
 
-                if (length & 0x8000) != 0:
+                if length & 0x8000:
                     break
 
                 if offset + length > len(data):
