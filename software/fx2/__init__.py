@@ -56,8 +56,8 @@ class FX2Config:
         on device startup.
         """
         first, last = addr, addr + len(chunk)
-        assert (first >= 0x0000 and last <= 0x3FFF or
-                first >= 0xE000 and last <= 0xE1FF)
+        assert (first >= 0x0000 and last <= 0x4000 or
+                first >= 0xE000 and last <= 0xE200)
 
         while len(chunk) > 0:
             # Split into 1023-byte chunks, since the hardware is not able to handle
