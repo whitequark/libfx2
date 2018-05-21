@@ -1,3 +1,4 @@
+import math
 import sys
 import os
 import io
@@ -64,6 +65,13 @@ def get_argparser():
             return int(arg, 0)
         except ValueError:
             raise argparse.ArgumentTypeError("{} is not an integer".format(arg))
+
+    def power_of_two(arg):
+        size = int_with_base(arg)
+        size_log = math.log2(size)
+        if int(size_log) != size_log:
+            raise argparse.ArgumentTypeError("{} is not a power of 2".format(size))
+        return int(size_log)
 
     parser = argparse.ArgumentParser(
         formatter_class=TextHelpFormatter,
@@ -163,6 +171,11 @@ def get_argparser():
             "-W", "--address-width", metavar="WIDTH", type=int, choices=[1, 2], default=2,
             help="EEPROM address width in bytes")
 
+    def add_eeprom_write_args(parser):
+        parser.add_argument(
+            "-p", "--page-size", metavar="SIZE", type=power_of_two, default=1,
+            help="power-of-two EEPROM page size (default: %(default)d)")
+
     bootloader_note = textwrap.dedent("""
     An appropriate second stage bootloader must be loaded for this command to work,
     see the --stage2 option. The format of the bootloader firmware file is auto-detected.
@@ -181,6 +194,7 @@ def get_argparser():
         description="Writes data to boot EEPROM.\n" + bootloader_note)
     add_eeprom_args(p_write_eeprom)
     add_write_args(p_write_eeprom)
+    add_eeprom_write_args(p_write_eeprom)
 
     p_reenumerate = subparsers.add_parser("reenumerate",
         formatter_class=TextHelpFormatter,
@@ -193,6 +207,7 @@ def get_argparser():
         description="Writes USB VID, PID, and DID, and if specified, firmware, "
         "into boot EEPROM.\n" + bootloader_note)
     add_eeprom_args(p_program)
+    add_eeprom_write_args(p_program)
     p_program.add_argument(
         "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id, default=VID_CYPRESS,
         help="USB vendor ID (default: %(default)04x)")
@@ -218,6 +233,7 @@ def get_argparser():
         description="Writes USB VID, PID, and DID, and if specified, firmware, "
         "into boot EEPROM, without changing any omitted parameters.\n" + bootloader_note)
     add_eeprom_args(p_update)
+    add_eeprom_write_args(p_update)
     p_update.add_argument(
         "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id,
         help="USB vendor ID")
@@ -331,7 +347,9 @@ def main():
             data = input_data(args.file or args.data, args.format, args.offset)
             device.cpu_reset(False)
             for address, chunk in data:
-                device.write_boot_eeprom(address, chunk, args.address_width)
+                device.write_boot_eeprom(address, chunk, args.address_width,
+                                         chunk_size=min(args.page_size * 4, 64),
+                                         page_size=args.page_size)
 
         elif args.action == "reenumerate":
             device.reenumerate()
@@ -350,7 +368,9 @@ def main():
                 config.append(address, chunk)
             image = config.encode()
 
-            device.write_boot_eeprom(0, image, args.address_width)
+            device.write_boot_eeprom(0, image, args.address_width,
+                                     chunk_size=min(args.page_size * 4, 64),
+                                     page_size=args.page_size)
 
             image = device.read_boot_eeprom(0, len(image), args.address_width)
             if FX2Config.decode(image) != config:
@@ -387,7 +407,9 @@ def main():
             new_image = config.encode()
 
             for (addr, chunk) in diff_data(old_image, new_image):
-                device.write_boot_eeprom(addr, chunk, args.address_width)
+                device.write_boot_eeprom(addr, chunk, args.address_width,
+                                         chunk_size=min(args.page_size * 4, 64),
+                                         page_size=args.page_size)
 
             new_image = device.read_boot_eeprom(0, len(new_image), args.address_width)
             if FX2Config.decode(new_image) != config:

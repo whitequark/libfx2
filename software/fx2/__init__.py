@@ -18,6 +18,7 @@ REQ_EEPROM_SB  = 0xA2
 REQ_EXT_RAM    = 0xA3
 REQ_RENUMERATE = 0xA8
 REQ_EEPROM_DB  = 0xA9
+REQ_PAGE_SIZE  = 0xB0
 
 
 class FX2Config:
@@ -268,7 +269,7 @@ class FX2Device:
 
     def read_boot_eeprom(self, addr, length, addr_width, chunk_size=0x100):
         """
-        Read ``length`` bytes at ``addr`` from boot EEPROM in ``chunk_size``d chunks.
+        Read ``length`` bytes at ``addr`` from boot EEPROM in ``chunk_size`` chunks.
 
         Requires the second stage bootloader.
         """
@@ -281,14 +282,18 @@ class FX2Device:
             length -= chunk_length
         return data
 
-    def write_boot_eeprom(self, addr, data, addr_width, chunk_size=0x10):
+    def write_boot_eeprom(self, addr, data, addr_width, chunk_size=0x10, page_size=0):
         """
-        Write ``data`` to ``addr`` in boot EEPROM in ``chunk_size``d chunks.
-        Writing EEPROM may be much slower than reading (depending on the specific EEPROM IC),
-        so the chunk size should be small or timeout large or both.
+        Write ``data`` to ``addr`` in boot EEPROM that has ``2 ** page_size`` byte pages
+        in ``chunk_size`` chunks.
+
+        Writing EEPROM is much slower than reading; for best performance, specify  ``page_size``
+        per EEPROM datasheet, and set ``chunk_size`` to a small multiple of ``2 ** page_size``.
+        Otherwise, timeouts may occur.
 
         Requires the second stage bootloader or a compatible firmware.
         """
+        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_PAGE_SIZE, page_size, 0, [])
         while len(data) > 0:
             chunk_length = min(len(data), chunk_size)
             self.control_write(usb1.REQUEST_TYPE_VENDOR,

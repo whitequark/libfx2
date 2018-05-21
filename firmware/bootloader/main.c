@@ -68,6 +68,7 @@ enum {
   USB_REQ_CYPRESS_EXT_RAM    = 0xA3,
   USB_REQ_CYPRESS_RENUMERATE = 0xA8,
   USB_REQ_CYPRESS_EEPROM_DB  = 0xA9,
+  USB_REQ_LIBFX2_PAGE_SIZE   = 0xB0,
 };
 
 // We perform lengthy operations in the main loop to avoid hogging the interrupt.
@@ -86,6 +87,14 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
   }
 }
 
+// The EEPROM write cycle time is the same for a single byte or a single page;
+// it is therefore far more efficient to write EEPROMs in entire pages.
+// Unfortunately, there is no way to discover page size if it is not known
+// beforehand. We play it safe and write individual bytes unless the page size
+// was set explicitly via a libfx2-specific request, such that Cypress vendor
+// requests A2/A9 work the same as in Cypress libraries by default.
+uint8_t page_size = 0; // log2(page size in bytes)
+
 void handle_pending_usb_setup() {
   __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
 
@@ -97,6 +106,15 @@ void handle_pending_usb_setup() {
     delay_ms(10);
     USBCS &= ~_DISCON;
 
+    return;
+  }
+
+  if(req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT &&
+     req->bRequest == USB_REQ_LIBFX2_PAGE_SIZE) {
+    page_size = req->wValue;
+    pending_setup = false;
+
+    ACK_EP0();
     return;
   }
 
@@ -124,7 +142,8 @@ void handle_pending_usb_setup() {
       } else {
         SETUP_EP0_BUF(0);
         while(EP0CS & _BUSY);
-        if(!eeprom_write(arg_chip, arg_addr, EP0BUF, len, arg_dbyte, /*timeout=*/166)) {
+        if(!eeprom_write(arg_chip, arg_addr, EP0BUF, len, arg_dbyte, page_size,
+                         /*timeout=*/166)) {
           STALL_EP0();
           break;
         }
