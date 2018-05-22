@@ -250,10 +250,10 @@ def get_argparser():
         "-E", "--no-disconnect", default=None, dest="disconnect", action="store_false",
         help="do automatically enumerate on startup")
     p_update.add_argument(
-        "-F", "--fast", dest="i2c_400khz", action="store_true",
+        "-F", "--fast", default=None, dest="i2c_400khz", action="store_true",
         help="use 400 kHz clock for loading firmware via I2C")
     p_update.add_argument(
-        "-S", "--slow", dest="i2c_400khz", action="store_false",
+        "-S", "--slow", default=None, dest="i2c_400khz", action="store_false",
         help="use 100 kHz clock for loading firmware via I2C")
     g_update_firmware = p_update.add_mutually_exclusive_group()
     g_update_firmware.add_argument(
