@@ -45,8 +45,8 @@ void usb_init(bool reconnect);
     uint16_t tmpaddr = (uint16_t)(addr), \
              tmplength = (uint16_t)(length); \
     SUDPTRCTL = 0; \
-    EP0BCH = length >> 8; \
-    EP0BCL = length & 0xff; \
+    EP0BCH = tmplength >> 8; \
+    EP0BCL = tmplength & 0xff; \
     SUDPTRH = tmpaddr >> 8; \
     SUDPTRL = tmpaddr & 0xff; \
     EP0CS = _HSNAK; \
