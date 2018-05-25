@@ -61,7 +61,14 @@ void isr_SUDAV() __interrupt {
   __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
   bool handled = false;
 
-    // Get Descriptor
+  // The sdcc prologue/epilogue only save/restore DPH0/DPL0, but if DPS is 1, then we would
+  // in fact modify DPH1/DPL1 when loading dptr with mov dptr.
+__asm
+  push _DPS
+  mov  _DPS, #0
+__endasm;
+
+  // Get Descriptor
   if(req->bRequest == USB_REQ_GET_DESCRIPTOR &&
      req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
     enum usb_descriptor type = (enum usb_descriptor)(req->wValue >> 8);
@@ -140,6 +147,10 @@ void isr_SUDAV() __interrupt {
 
   CLEAR_USB_IRQ();
   USBIRQ = _SUDAV;
+
+__asm
+  pop  _DPS
+__endasm;
 }
 
 static usb_desc_langid_c usb_langid = {
