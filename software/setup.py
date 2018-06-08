@@ -3,6 +3,7 @@ from os import path
 from setuptools import setup, find_packages
 from setuptools.command.build_ext import build_ext
 from setuptools.command.bdist_egg import bdist_egg
+from setuptools.command.sdist import sdist
 
 from distutils.spawn import spawn
 from distutils.dir_util import mkpath
@@ -25,9 +26,16 @@ class Fx2BdistEgg(bdist_egg):
         bdist_egg.run(self)
 
 
+class Fx2Sdist(sdist):
+    def run(self):
+        # Make sure the included ihex files are up to date.
+        self.run_command("build_ext")
+        sdist.run(self)
+
+
 setup(
     name="fx2",
-    version="0.2",
+    version="0.3",
     author="whitequark",
     author_email="whitequark@whitequark.org",
     description="A Python package for interacting with Cypress EZ-USB FX2 series chips",
@@ -58,6 +66,7 @@ See the documentation for details.
     cmdclass={
         "build_ext": Fx2BuildExt,
         "bdist_egg": Fx2BdistEgg,
+        "sdist": Fx2Sdist,
     },
     project_urls={
         "Documentation": "https://libfx2.readthedocs.io/",
