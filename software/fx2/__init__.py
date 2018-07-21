@@ -1,5 +1,7 @@
 import struct
 import usb1
+import select
+from . import poll_wrapper
 
 
 __all__ = ["FX2Config", "FX2Device", "FX2DeviceError"]
@@ -181,7 +183,9 @@ class FX2Device:
         self.timeout = 1000
 
         try:
-            self.usb = usb1.USBContext().openByVendorIDAndProductID(vendor_id, product_id)
+            self.usb_context = usb1.USBContext()
+            self.usb_poller = None
+            self.usb = self.usb_context.openByVendorIDAndProductID(vendor_id, product_id)
         except usb1.USBErrorAccess:
             raise FX2DeviceError("Cannot access device {:04x}:{:04x}"
                                  .format(vendor_id, product_id))
@@ -223,6 +227,35 @@ class FX2Device:
         if timeout is None:
             timeout = self.timeout
         self.usb.bulkWrite(endpoint, data, timeout)
+
+    def create_poller(self, poller):
+        """
+        Integrate waiting for USB transfers into an event loop, by taking an object
+        conforming to the Python ``poll`` interface and returning another conforming
+        to the same interface.
+
+        Note that if ``create_poller`` is called more than once, events will only be
+        delivered to the last returned poller instance.
+        """
+        return usb1.USBPoller(self.usb_context, poll_wrapper.wrap_poller_for_libusb(poller))
+
+    def get_poller(self):
+        """
+        Return a poller instance associated with this device, creating it using
+        ``create_poller(select.poll())`` if necessary.
+        """
+        if self.usb_poller is None:
+            self.usb_poller = self.create_poller(select.poll())
+        return self.usb_poller
+
+    def poll(self, timeout=None):
+        """
+        Wait for USB transfers, as well as any other events registered on the poller
+        returned by ``get_poller()``, with timeout defaulting to ``self.timeout``.
+        """
+        if timeout is None:
+            timeout = self.timeout
+        return self.get_poller().poll(timeout)
 
     def read_ram(self, addr, length):
         """

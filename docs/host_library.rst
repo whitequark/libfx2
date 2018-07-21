@@ -11,6 +11,14 @@ Host-side library reference
 
    .. autoclass:: FX2Device
 
+      .. automethod:: control_read
+      .. automethod:: control_write
+      .. automethod:: bulk_read
+      .. automethod:: bulk_write
+      .. automethod:: create_poller
+      .. automethod:: get_poller
+      .. automethod:: poll
+
       .. automethod:: read_ram
       .. automethod:: write_ram
       .. automethod:: load_ram
