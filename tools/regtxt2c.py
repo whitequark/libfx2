@@ -204,7 +204,7 @@ for _, bitgroup in sorted([(regaddrs[next(iter(bitgroups[bitgroup]))], bitgroup)
     print(  " * @{")
     print(  " */")
     for bitname in bitnames:
-        print(f"#define _{bitname:10}  (1<<{bitpos[bitname]}) ///< Bit {bitpos[bitname]}")
+        print(f"#define _{bitname:10}  (1u<<{bitpos[bitname]}) ///< Bit {bitpos[bitname]}")
     print(  "/**@}*/")
     print()
 
