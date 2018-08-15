@@ -239,13 +239,13 @@ class FX2Device:
         """
         return usb1.USBPoller(self.usb_context, poll_wrapper.wrap_poller_for_libusb(poller))
 
-    def get_poller(self):
+    def get_poller(self, lower=lambda: select.poll()):
         """
         Return a poller instance associated with this device, creating it using
-        ``create_poller(select.poll())`` if necessary.
+        ``create_poller(lower())`` if necessary.
         """
         if self.usb_poller is None:
-            self.usb_poller = self.create_poller(select.poll())
+            self.usb_poller = self.create_poller(lower())
         return self.usb_poller
 
     def poll(self, timeout=None):

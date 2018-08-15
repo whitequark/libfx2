@@ -1,7 +1,9 @@
 import select
 
 
-_cls_select_poll = type(select.poll())
+_cls_select_poll = None
+if hasattr(select, "poll"):
+    _cls_select_poll = type(select.poll())
 
 
 class poll_wrapper:
@@ -28,7 +30,7 @@ class poll_wrapper:
 # timeout argument (in milliseconds) and the one expected by USBPoller
 # (in seconds).
 def wrap_poller_for_libusb(poller):
-    if isinstance(poller, _cls_select_poll):
+    if _cls_select_poll is not None and isinstance(poller, _cls_select_poll):
         return poll_wrapper(poller)
     else:
         return poller
