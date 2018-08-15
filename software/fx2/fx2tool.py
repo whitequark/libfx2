@@ -456,6 +456,9 @@ def main():
     except ValueError as e:
         raise SystemExit(str(e))
 
+    finally:
+        device.usb_context.close()
+
 
 if __name__ == "__main__":
     main()

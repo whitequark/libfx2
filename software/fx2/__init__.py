@@ -192,7 +192,11 @@ class FX2Device:
         if self.usb is None:
             raise FX2DeviceError("Device {:04x}:{:04x} not found"
                                  .format(vendor_id, product_id))
-        self.usb.setAutoDetachKernelDriver(True)
+
+        try:
+            self.usb.setAutoDetachKernelDriver(True)
+        except usb1.USBErrorNotSupported:
+            pass
 
     def control_read(self, request_type, request, value, index, length,
                      timeout=None):
