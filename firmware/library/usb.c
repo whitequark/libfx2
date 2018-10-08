@@ -84,11 +84,11 @@ __endasm;
     handle_usb_get_configuration();
     // Set Interface
   } else if(req->bRequest == USB_REQ_SET_INTERFACE &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_OUT) {
+            req->bmRequestType == USB_RECIP_IFACE|USB_DIR_OUT) {
     handle_usb_set_interface((uint8_t)req->wIndex, (uint8_t)req->wValue);
     // Get Interface
   } else if(req->bRequest == USB_REQ_GET_INTERFACE &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
+            req->bmRequestType == USB_RECIP_IFACE|USB_DIR_IN) {
     handle_usb_get_interface((uint8_t)req->wIndex);
     // Set Feature - Device
   } else if(req->bRequest == USB_REQ_SET_FEATURE &&
