@@ -140,35 +140,35 @@ void handle_usb_get_descriptor(enum usb_descriptor type, uint8_t index);
  * or Configured state (the value corresponds to `bConfigurationValue` field of the
  * descriptor of the selected configuration).
  */
-extern uint8_t usb_configuration;
+extern uint8_t usb_config_value;
 
 /**
  * Callback for the standard Set Configuration request.
- * This callback has a default implementation that sets `usb_configuration` to `value`
- * and acknowledges the transfer if `value` is 0 or 1 and stalls EP0 otherwise.
+ * This callback has a default implementation that sets `usb_config_value` to `config_value`
+ * and acknowledges the transfer if `config_value` is 0 or 1 and stalls EP0 otherwise.
  */
-void handle_usb_set_configuration(uint8_t value);
+void handle_usb_set_configuration(uint8_t config_value);
 
 /**
  * Callback for the standard Get Configuration request.
  * This callback has a default implementation that sets up an EP0 IN transfer
- * with value `usb_configuration`.
+ * with value `usb_config_value`.
  */
 void handle_usb_get_configuration();
 
 /**
  * Callback for the standard Set Interface request.
  * This callback has a default implementation that acknowledges the transfer
- * if `value == 0` and stalls EP0 otherwise.
+ * if `alt_setting == 0` and stalls EP0 otherwise.
  */
-void handle_usb_set_interface(uint8_t index, uint8_t value);
+void handle_usb_set_interface(uint8_t interface, uint8_t alt_setting);
 
 /**
  * Callback for the standard Get Interface request.
  * This callback has a default implementation that sets up an EP0 IN transfer
  * with alternate setting number `0`.
  */
-void handle_usb_get_interface(uint8_t index);
+void handle_usb_get_interface(uint8_t interface);
 
 /**
  * Callback for the standard Clear Feature - Endpoint - Endpoint Halt request.
@@ -177,7 +177,7 @@ void handle_usb_get_interface(uint8_t index);
  * The data toggle and the stall bit are reset by the interrupt handler
  * if the handler returns `true`.
  */
-bool handle_usb_clear_endpoint_halt(uint8_t index);
+bool handle_usb_clear_endpoint_halt(uint8_t endpoint);
 
 /**
  * Callback for non-standard setup requests.
