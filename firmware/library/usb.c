@@ -77,7 +77,11 @@ __endasm;
     // Set Configuration
   } else if(req->bRequest == USB_REQ_SET_CONFIGURATION &&
             req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_OUT) {
-    handle_usb_set_configuration((uint8_t)req->wValue);
+    if(handle_usb_set_configuration((uint8_t)req->wValue)) {
+      ACK_EP0();
+    } else {
+      STALL_EP0();
+    }
     // Get Configuration
   } else if(req->bRequest == USB_REQ_GET_CONFIGURATION &&
             req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
@@ -85,7 +89,11 @@ __endasm;
     // Set Interface
   } else if(req->bRequest == USB_REQ_SET_INTERFACE &&
             req->bmRequestType == USB_RECIP_IFACE|USB_DIR_OUT) {
-    handle_usb_set_interface((uint8_t)req->wIndex, (uint8_t)req->wValue);
+    if(handle_usb_set_interface((uint8_t)req->wIndex, (uint8_t)req->wValue)) {
+      ACK_EP0();
+    } else {
+      STALL_EP0();
+    }
     // Get Interface
   } else if(req->bRequest == USB_REQ_GET_INTERFACE &&
             req->bmRequestType == USB_RECIP_IFACE|USB_DIR_IN) {
@@ -211,3 +219,29 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
   SETUP_EP0_IN_DESC(scratch);
 }
 #undef APPEND
+
+void usb_reset_data_toggles(usb_descriptor_set_c *set, uint8_t interface_num,
+                            uint8_t alt_setting) {
+  uint8_t nconfig = 0, niface = 0, nendp = 0;
+  uint8_t liface, lendp;
+
+  for(nconfig = 0; nconfig < set->config_count; nconfig++) {
+    usb_desc_configuration_c *config = &set->configs[nconfig];
+
+    for(liface = 0; liface < config->bNumInterfaces; liface++) {
+      usb_desc_interface_c *interface = &set->interfaces[niface++];
+
+      for(lendp = 0; lendp < interface->bNumEndpoints; lendp++) {
+        usb_desc_endpoint_c *endpoint = &set->endpoints[nendp++];
+
+        if(config->bConfigurationValue == usb_config_value &&
+           (interface_num == 0xff || interface_num == interface->bInterfaceNumber) &&
+           (alt_setting == 0xff || alt_setting == interface->bAlternateSetting)) {
+          TOGCTL  =  (endpoint->bEndpointAddress & 0x0f) |
+                    ((endpoint->bEndpointAddress & 0x80) >> 3);
+          TOGCTL |= _R;
+        }
+      }
+    }
+  }
+}

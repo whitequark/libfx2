@@ -116,6 +116,17 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
                           enum usb_descriptor type, uint8_t index);
 
 /**
+ * Helper function for resetting the endpoint data toggles for a subset of endpoints defined
+ * by the configuration value or interface number and alternate setting, which is necessary when
+ * processing a Set Configuration or Set Interface request. This function resets
+ * the endpoint toggles for the configuration value `usb_config_value`, and
+ * (if `interface == 0xff && alt_setting == 0xff`) all endpoints, or (otherwise)
+ * all endpoints assigned to interface with fields
+ * `bInterfaceNumber == interface && bAlternateSetting == alt_setting`.
+ */
+void usb_reset_data_toggles(usb_descriptor_set_c *set, uint8_t interface, uint8_t alt_setting);
+
+/**
  * Status variable indicating whether the device is currently self-powered.
  * The value of this variable is returned via the standard Get Status - Device request.
  */
@@ -145,9 +156,12 @@ extern uint8_t usb_config_value;
 /**
  * Callback for the standard Set Configuration request.
  * This callback has a default implementation that sets `usb_config_value` to `config_value`
- * and acknowledges the transfer if `config_value` is 0 or 1 and stalls EP0 otherwise.
+ * and returns `true` if `config_value` is 0 or 1, and returns `false` otherwise.
+ *
+ * The default implementation resets the data toggles using `usb_reset_data_toggles` and
+ * the global descriptor set; see `handle_usb_get_descriptor`.
  */
-void handle_usb_set_configuration(uint8_t config_value);
+bool handle_usb_set_configuration(uint8_t config_value);
 
 /**
  * Callback for the standard Get Configuration request.
@@ -158,10 +172,13 @@ void handle_usb_get_configuration();
 
 /**
  * Callback for the standard Set Interface request.
- * This callback has a default implementation that acknowledges the transfer
- * if `alt_setting == 0` and stalls EP0 otherwise.
+ * This callback has a default implementation that returns `true` if `alt_setting == 0`,
+ * and returns `false` otherwise.
+ *
+ * The default implementation resets the data toggles using `usb_reset_data_toggles` and
+ * the global descriptor set; see `handle_usb_get_descriptor`.
  */
-void handle_usb_set_interface(uint8_t interface, uint8_t alt_setting);
+bool handle_usb_set_interface(uint8_t interface, uint8_t alt_setting);
 
 /**
  * Callback for the standard Get Interface request.
@@ -174,6 +191,7 @@ void handle_usb_get_interface(uint8_t interface);
  * Callback for the standard Clear Feature - Endpoint - Endpoint Halt request.
  * This callback has a default implementation that acknowledges the transfer
  * and returns `true`.
+ *
  * The data toggle and the stall bit are reset by the interrupt handler
  * if the handler returns `true`.
  */
