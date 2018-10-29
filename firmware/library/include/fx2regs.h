@@ -863,6 +863,18 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
 /**@}*/
 
 /**
+ * \name Bits from registers IBNIE, IBNIRQ
+ * @{
+ */
+#define _IBNI_EP0    (1u<<0) ///< Bit 0
+#define _IBNI_EP1    (1u<<1) ///< Bit 1
+#define _IBNI_EP2    (1u<<2) ///< Bit 2
+#define _IBNI_EP4    (1u<<3) ///< Bit 3
+#define _IBNI_EP6    (1u<<4) ///< Bit 4
+#define _IBNI_EP8    (1u<<5) ///< Bit 5
+/**@}*/
+
+/**
  * \name Bits from registers NAKIE, NAKIRQ
  * @{
  */
@@ -886,10 +898,14 @@ _IOR(0xfc00) EP8FIFOBUF[512]; ///< Register 0xFC00: 512 byte EP 8 / slave FIFO b
  * \name Bits from registers EPIE, EPIRQ
  * @{
  */
-#define _EP0IN       (1u<<0) ///< Bit 0
-#define _EP0OUT      (1u<<1) ///< Bit 1
-#define _EP1IN       (1u<<2) ///< Bit 2
-#define _EP1OUT      (1u<<3) ///< Bit 3
+#define _EPI_EP0IN   (1u<<0) ///< Bit 0
+#define _EPI_EP0OUT  (1u<<1) ///< Bit 1
+#define _EPI_EP1IN   (1u<<2) ///< Bit 2
+#define _EPI_EP1OUT  (1u<<3) ///< Bit 3
+#define _EPI_EP2     (1u<<4) ///< Bit 4
+#define _EPI_EP4     (1u<<5) ///< Bit 5
+#define _EPI_EP6     (1u<<6) ///< Bit 6
+#define _EPI_EP8     (1u<<7) ///< Bit 7
 /**@}*/
 
 /**

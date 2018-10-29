@@ -11,3 +11,5 @@ Aside from typos and general reformatting, the following adjustments were done m
   * in `TMOD`, added `_0` and `_1` suffixes for high and low nibble bits
   * in `PORTECFG`, renamed `INT6` to `INT6EX`
   * in `EPnGPIFPFSTOP`, renamed `FIFOnFLAG` to `FIFOFLAG`
+  * in `EPIE` and `EPIRQ`, added `EPI_` prefixes for all bits
+  * in `IBNIE` and `IBNIRQ`, added `IBNI_` prefixes for all bits
