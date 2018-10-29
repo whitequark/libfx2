@@ -1,7 +1,7 @@
 fx2usb.h
 ========
 
-The ``fx2usb.h`` header contains USB support code for the Cypress FX2 series. When using this header, the ``fx2usb`` and ``fx2`` libraries must be linked in.
+The ``fx2usb.h`` header contains USB support code for the Cypress FX2 series. When using this header, the ``fx2`` and ``fx2usb`` libraries must be linked in.
 
 Callback resolution
 -------------------

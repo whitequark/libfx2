@@ -165,6 +165,8 @@ enum {
   USB_IFACE_CLASS_VENDOR        = 0xff,
   USB_IFACE_SUBCLASS_VENDOR     = 0xff,
   USB_IFACE_PROTOCOL_VENDOR     = 0xff,
+
+  USB_IFACE_CLASS_MASS_STORAGE  = 0x08,
 };
 
 struct usb_desc_interface {

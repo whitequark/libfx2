@@ -32,7 +32,9 @@ OBJECTS_fx2usb = usb.rel \
 	defusbsetiface.rel defusbgetiface.rel \
 	defusbhalt.rel \
 
-LIBRARIES = fx2 fx2isrs fx2usb
+OBJECTS_fx2usbmassstor = usbmassstor.rel
+
+LIBRARIES = fx2 fx2isrs fx2usb fx2usbmassstor
 
 all::
 	@touch .stamp
@@ -44,7 +46,7 @@ lib/$1/$2.lib: $(addprefix build/$1/,$(OBJECTS_$2))
 endef
 
 define make-model
-all:: $(addprefix lib/$1/,fx2.lib fx2isrs.lib fx2usb.lib)
+all:: $(addprefix lib/$1/,$(addsuffix .lib,$(LIBRARIES)))
 
 $(foreach library,$(LIBRARIES),$(eval $(call make-library,$1,$(library))))
 

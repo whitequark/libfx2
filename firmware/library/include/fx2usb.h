@@ -2,9 +2,9 @@
 #define FX2USB_H
 
 #include <stdbool.h>
-#include <usb.h>
 #include <fx2regs.h>
 #include <fx2ints.h>
+#include <usb.h>
 
 /**
  * Initialize the firmware USB stack. This performs the following:
