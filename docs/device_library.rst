@@ -5,7 +5,7 @@ Device-side library reference
    :maxdepth: 1
 
    usb_h
-   usbms_h
+   usbmicrosoft_h
    fx2regs_h
    fx2ints_h
    fx2lib_h

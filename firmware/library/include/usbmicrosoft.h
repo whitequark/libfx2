@@ -1,5 +1,5 @@
-#ifndef USBMS_H
-#define USBMS_H
+#ifndef USBMICROSOFT_H
+#define USBMICROSOFT_H
 
 #include <usb.h>
 
