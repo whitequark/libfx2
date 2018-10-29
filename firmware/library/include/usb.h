@@ -102,6 +102,16 @@ struct usb_req_setup {
   uint16_t wLength;
 };
 
+enum {
+  USB_DEV_CLASS_PER_INTERFACE     = 0x00,
+  USB_DEV_SUBCLASS_PER_INTERFACE  = 0x00,
+  USB_DEV_PROTOCOL_PER_INTERFACE  = 0x00,
+
+  USB_DEV_CLASS_VENDOR            = 0xff,
+  USB_DEV_SUBCLASS_VENDOR         = 0xff,
+  USB_DEV_PROTOCOL_VENDOR         = 0xff,
+};
+
 struct usb_desc_device {
   uint8_t bLength;
   uint8_t bDescriptorType;
@@ -150,6 +160,12 @@ struct usb_desc_configuration {
 
 typedef __code const struct usb_desc_configuration
   usb_desc_configuration_c;
+
+enum {
+  USB_IFACE_CLASS_VENDOR        = 0xff,
+  USB_IFACE_SUBCLASS_VENDOR     = 0xff,
+  USB_IFACE_PROTOCOL_VENDOR     = 0xff,
+};
 
 struct usb_desc_interface {
   uint8_t bLength;
