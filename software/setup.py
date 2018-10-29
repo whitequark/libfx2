@@ -17,9 +17,10 @@ class Fx2BuildExt(build_ext):
         try:
             firmware_dir = path.join("..", "firmware")
             spawn(["make", "-C", path.join(firmware_dir, "library")], dry_run=self.dry_run)
-            spawn(["make", "-C", path.join(firmware_dir, "bootloader")], dry_run=self.dry_run)
+            spawn(["make", "-C", path.join(firmware_dir, "boot-cypress")], dry_run=self.dry_run)
 
-            bootloader_ihex = path.join("..", "firmware", "bootloader", "build", "bootloader.ihex")
+            bootloader_ihex = path.join("..", "firmware", "boot-cypress",
+                                        "build", "boot-cypress.ihex")
             self.copy_file(bootloader_ihex, "fx2")
         except DistutilsExecError as e:
             if os.access(path.join("fx2", "bootloader.ihex"), os.R_OK):

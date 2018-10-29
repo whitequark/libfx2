@@ -50,7 +50,7 @@ usb_desc_interface_c usb_interfaces[] = {
 
 usb_ascii_string_c usb_strings[] = {
   "whitequark@whitequark.org",
-  "Cypress FX2 series bootloader",
+  "FX2 series Cypress-class bootloader",
 };
 
 usb_descriptor_set_c usb_descriptor_set = {
@@ -189,7 +189,7 @@ void handle_pending_usb_setup() {
 
 int main() {
   CPUCS = _CLKOE|_CLKSPD1;
-  usb_init(false);
+  usb_init(/*reconnect=*/false);
 
   while(1) {
     if(pending_setup)
