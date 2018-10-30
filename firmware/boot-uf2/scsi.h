@@ -63,6 +63,15 @@ struct scsi_inquiry_data {
   uint8_t  product_revision_level[4];
 };
 
+// Command PREVENT ALLOW MEDIUM REMOVAL
+
+struct scsi_prevent_allow_medium_removal {
+  uint8_t  __reserved0[3];
+  uint8_t  prevent:1;
+  uint8_t  __reserved1:7;
+  uint8_t  control;
+};
+
 // Command READ CAPACITY
 
 struct scsi_read_capacity {
@@ -103,6 +112,9 @@ enum scsi_operation_code {
   SCSI_OPERATION_TEST_UNIT_READY  = 0x00,
   SCSI_OPERATION_REQUEST_SENSE    = 0x03,
   SCSI_OPERATION_INQUIRY          = 0x12,
+  SCSI_OPERATION_MODE_SENSE_6     = 0x1A,
+  SCSI_OPERATION_PREVENT_ALLOW_MEDIUM_REMOVAL
+                                  = 0x1E,
   SCSI_OPERATION_READ_CAPACITY    = 0x25,
   SCSI_OPERATION_READ_10          = 0x28,
   SCSI_OPERATION_WRITE_10         = 0x2A,
@@ -117,6 +129,8 @@ struct scsi_command {
     struct scsi_read_capacity     read_capacity;
     struct scsi_read_10           read_10;
     struct scsi_write_10          write_10;
+    struct scsi_prevent_allow_medium_removal
+                                  prevent_allow_medium_removal;
   };
 };
 

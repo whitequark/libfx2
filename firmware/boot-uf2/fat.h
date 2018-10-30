@@ -26,6 +26,14 @@ struct fat16_boot_sector {
   uint8_t  signature[2];
 };
 
+#define FAT_TIME(h, m, s) (((h) << 11)|((m) << 5)|((s >> 1)))
+#define FAT_DATE(y, m, d) ((((uint16_t)(y) - 1980) << 9)|((m) << 5)|(d))
+
+struct fat_timestamp {
+  uint16_t time;
+  uint16_t date;
+};
+
 struct fat_directory_entry {
   uint8_t  filename_ext[11];
   uint8_t  read_only:1;
@@ -35,15 +43,10 @@ struct fat_directory_entry {
   uint8_t  subdirectory:1;
   uint8_t  archive:1;
   uint8_t  _reserved0:2;
-  uint8_t  _reserved1[8];
-  struct {
-    uint16_t secondsx2:5;
-    uint16_t minutes:6;
-    uint16_t hours:5;
-    uint16_t day:5;
-    uint16_t month:4;
-    uint16_t year:7; // since 1980
-  } timestamp;
+  uint8_t  _reserved1[2];
+  struct fat_timestamp create;
+  uint8_t  _reserved2[4];
+  struct fat_timestamp modify;
   uint16_t first_cluster;
   uint32_t size;
 };

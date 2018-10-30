@@ -18,28 +18,31 @@ bool uf2_scsi_command(uint8_t lun, __xdata uint8_t *buffer, uint8_t length) __re
   // since this is already handled on the USB MSC BBB level.
 
          if(command->op_code == SCSI_OPERATION_TEST_UNIT_READY &&
-            length == sizeof(command->op_code) + sizeof(command->test_unit_ready)) {
+            length >= sizeof(command->op_code) + sizeof(command->test_unit_ready)) {
     goto success;
   } else if(command->op_code == SCSI_OPERATION_REQUEST_SENSE &&
-            length == sizeof(command->op_code) + sizeof(command->request_sense)) {
+            length >= sizeof(command->op_code) + sizeof(command->request_sense)) {
     if(command->request_sense.desc == 0) {
       goto success;
     }
   } else if(command->op_code == SCSI_OPERATION_INQUIRY &&
-            length == sizeof(command->op_code) + sizeof(command->inquiry)) {
+            length >= sizeof(command->op_code) + sizeof(command->inquiry)) {
     if(command->inquiry.evpd == 0 && command->inquiry.page_code == 0) {
       goto success;
     }
+  } else if(command->op_code == SCSI_OPERATION_PREVENT_ALLOW_MEDIUM_REMOVAL &&
+            length >= sizeof(command->op_code) + sizeof(command->prevent_allow_medium_removal)) {
+    goto success;
   } else if(command->op_code == SCSI_OPERATION_READ_CAPACITY &&
-            length == sizeof(command->op_code) + sizeof(command->read_capacity)) {
+            length >= sizeof(command->op_code) + sizeof(command->read_capacity)) {
     goto success;
   } else if(command->op_code == SCSI_OPERATION_READ_10 &&
-            length == sizeof(command->op_code) + sizeof(command->read_10)) {
+            length >= sizeof(command->op_code) + sizeof(command->read_10)) {
     block_index = bswap32(command->read_10.logical_block_address);
     blocks_left = bswap32(command->read_10.transfer_length);
     goto success;
   } else if(command->op_code == SCSI_OPERATION_WRITE_10 &&
-            length == sizeof(command->op_code) + sizeof(command->write_10)) {
+            length >= sizeof(command->op_code) + sizeof(command->write_10)) {
     block_index = bswap32(command->write_10.logical_block_address);
     blocks_left = bswap32(command->write_10.transfer_length);
     goto success;
@@ -106,6 +109,10 @@ bool uf2_scsi_data_in(uint8_t lun, __xdata uint8_t *buffer, uint16_t length) __r
     // It would be more fitting to use RBC here, but Windows does not understand
     // how to talk to that (even though RBC is basically boneless SBC...)
     data->peripheral_device_type = 0x00;
+
+    // We're a removable device. Without this flag, Windows will refuse to mount
+    // the device as a flat filesystem, and will instead demand to have it partitioned.
+    data->rmb = true;
 
     // Our identification.
     xmemcpy(data->t10_vendor_identification, (__xdata void *)"Qi-Hardw",          8);

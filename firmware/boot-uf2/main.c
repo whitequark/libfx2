@@ -113,17 +113,19 @@ static bool firmware_write(uint32_t address, __xdata uint8_t *data, uint16_t len
 // (The overhead of the bootloader is smaller than that, since much of the USB machinery
 // can be shared between the bootloader and the application.)
 uf2_configuration_c uf2_config = {
-  // Provide a virtual mass storage device of 8 MiB in size. Using a device that is
-  // too small will result in broken filesystem being generated, and a device that is
-  // too large will result in slower operations (mounting, etc). 8 MiB is a good number.
-  .total_sectors  = 2 * 8192,
+  // Provide a virtual mass storage device of 32 MiB in size. Using a device that is
+  // too small will result in broken filesystem being generated (in particular, below
+  // a certain cluster count, the filesystm gets interpreted as FAT12 instead of FAT16),
+  // and a device that is too large will result in slower operations (mounting, etc).
+  // 32 MiB is a good number.
+  .total_sectors  = 2 * 32768,
   // Replace the Model: and Board-ID: fields with ones specific for your board.
   // Note that Board-ID: field should be machine-readable.
   // The INFO_UF2.TXT file can be up to 512 bytes in size.
   .info_uf2_txt   =
-    "UF2 Bootloader for Cypress FX2\n"
-    "Model: Generic Developer Board with 16Kx8 EEPROM\n"
-    "Board-ID: FX2-Generic_16Kx8-v0\n",
+    "UF2 Bootloader for Cypress FX2\r\n"
+    "Model: Generic Developer Board with 16Kx8 EEPROM\r\n"
+    "Board-ID: FX2-Generic_16Kx8-v0\r\n",
   // Replace the URL with a hyperlink to a document describing your board.
   .index_htm      =
     "<meta http-equiv=\"refresh\" content=\"0; url=https://github.com/whitequark/libfx2/\">",

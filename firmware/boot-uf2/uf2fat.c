@@ -58,29 +58,26 @@ static void fill_entry(__xdata struct fat_directory_entry *entry,
                        uint16_t first_cluster, uint32_t size) {
   xmemcpy(entry->filename_ext, (__xdata void *)filename_ext, 11);
   entry->read_only = read_only;
-  entry->timestamp.year  = 89;
-  entry->timestamp.month = 4;
-  entry->timestamp.day   = 20;
-  entry->timestamp.hours = 8;
-  entry->timestamp.minutes = 4;
-  entry->timestamp.secondsx2 = 1;
+  entry->create.date = FAT_DATE(2069, 4, 20);
+  entry->modify.date = entry->create.date;
+  entry->modify.time = entry->create.time;
   entry->first_cluster = first_cluster;
   entry->size = size;
 }
 
 static __code const char *status_txt =
-  "Blocks accepted: 0x????\n"
-  "       rejected: 0x????\n"
-  "        ignored: 0x????\n"
-  "        flashed: 0x????\n"
-  "         failed: 0x????\n"
-  "\n"
-  "Key:\n"
-  "- accepted: valid magic and parameters\n"
-  "- rejected: valid magic but not parameters\n"
-  "-  ignored: invalid magic (usually filesystem metadata)\n"
-  "-  flashed: successfully written to NVM\n"
-  "-   failed: timeout writing to NVM\n";
+  "Blocks accepted: 0x????\r\n"
+  "       rejected: 0x????\r\n"
+  "        ignored: 0x????\r\n"
+  "        flashed: 0x????\r\n"
+  "         failed: 0x????\r\n"
+  "\r\n"
+  "Key:\r\n"
+  "- accepted: valid magic and parameters\r\n"
+  "- rejected: valid magic but not parameters\r\n"
+  "-  ignored: invalid magic (usually filesystem metadata)\r\n"
+  "-  flashed: successfully written to NVM\r\n"
+  "-   failed: timeout writing to NVM\r\n";
 
 static __code const char *hex =
   "0123456789ABCDEF";
@@ -100,14 +97,14 @@ static void fill_hex(__xdata uint8_t *buffer, uint16_t stat) {
 
 static void fill_status(__xdata uint8_t *buffer) {
   xmemcpy(buffer, (__xdata void *)status_txt, strlen(status_txt));
-  fill_hex(&buffer[24 * 0 + 19], stat_accepted);
-  fill_hex(&buffer[24 * 1 + 19], stat_rejected);
-  fill_hex(&buffer[24 * 2 + 19], stat_ignored);
-  fill_hex(&buffer[24 * 3 + 19], stat_flashed);
-  fill_hex(&buffer[24 * 4 + 19], stat_failed);
+  fill_hex(&buffer[25 * 0 + 19], stat_accepted);
+  fill_hex(&buffer[25 * 1 + 19], stat_rejected);
+  fill_hex(&buffer[25 * 2 + 19], stat_ignored);
+  fill_hex(&buffer[25 * 3 + 19], stat_flashed);
+  fill_hex(&buffer[25 * 4 + 19], stat_failed);
 }
 
-bool uf2_fat_read(uint16_t lba, __xdata uint8_t *data) {
+bool uf2_fat_read(uint32_t lba, __xdata uint8_t *data) {
   if(lba == 0) {
     // Boot sector.
     __xdata struct fat16_boot_sector *boot =
@@ -115,19 +112,22 @@ bool uf2_fat_read(uint16_t lba, __xdata uint8_t *data) {
     xmemclr(data, BYTES_PER_SECTOR);
 
     xmemcpy(boot->oem_name_version, (__xdata void *)"MSWIN4.1",     8);
-    boot->bytes_per_sector    = BYTES_PER_SECTOR;
-    boot->sectors_per_cluster = 1;
-    boot->reserved_sectors    = FAT_OFFSET;
-    boot->fat_copies          = 1;
-    boot->root_entries        = ROOT_ENTRIES;
-    boot->media_descriptor    = 0xf8;
-    boot->sectors_per_fat     = FAT_SECTORS;
-    boot->total_sectors       = uf2_config.total_sectors;
-    boot->extended_signature  = 0x29;
+    boot->jump_to_bootstrap[0]  = 0xeb;
+    boot->jump_to_bootstrap[1]  = 0x3c;
+    boot->jump_to_bootstrap[2]  = 0x90;
+    boot->bytes_per_sector      = BYTES_PER_SECTOR;
+    boot->sectors_per_cluster   = 1;
+    boot->reserved_sectors      = FAT_OFFSET;
+    boot->fat_copies            = 1;
+    boot->root_entries          = ROOT_ENTRIES;
+    boot->media_descriptor      = 0xf8;
+    boot->sectors_per_fat       = FAT_SECTORS;
+    boot->total_sectors         = uf2_config.total_sectors;
+    boot->extended_signature    = 0x29;
     xmemcpy(boot->volume_label,     (__xdata void *)"CYPRESS UF2",  11);
     xmemcpy(boot->filesystem_type,  (__xdata void *)"FAT16   ",     8);
-    boot->signature[0]        = 0x55;
-    boot->signature[1]        = 0xaa;
+    boot->signature[0]          = 0x55;
+    boot->signature[1]          = 0xaa;
 
     return true;
   }
@@ -223,7 +223,8 @@ bool uf2_fat_read(uint16_t lba, __xdata uint8_t *data) {
                                    block->payload_size))
         return false;
     } else {
-      xmemclr(data, BYTES_PER_SECTOR);
+      // Just return some garbage, to make things faster. It's not allocated anyway,
+      // so it should not matter what we return here.
     }
 
     return true;
@@ -232,7 +233,7 @@ bool uf2_fat_read(uint16_t lba, __xdata uint8_t *data) {
   return false;
 }
 
-bool uf2_fat_write(uint16_t lba, __xdata const uint8_t *data) {
+bool uf2_fat_write(uint32_t lba, __xdata const uint8_t *data) {
   if(lba >= DATA_OFFSET && lba < DATA_OFFSET + DATA_SECTORS) {
     __xdata const struct uf2_block *block = (__xdata struct uf2_block *)data;
     if(!(block->magic_start_0 == UF2_MAGIC_START_0 &&
