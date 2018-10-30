@@ -4,6 +4,8 @@ build/
 *.bin
 *.lib
 *.ihex
+*.uf2
+*.UF2
 
 # Python build products
 __pycache__/

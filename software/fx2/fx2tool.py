@@ -3,6 +3,7 @@ import sys
 import os
 import io
 import re
+import struct
 import collections
 import argparse
 import textwrap
@@ -201,6 +202,23 @@ def get_argparser():
         help="re-enumerate",
         description="Simulates device disconnection and reconnection.\n" + bootloader_note)
 
+    def add_program_args(parser):
+        parser.add_argument(
+            "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id, default=VID_CYPRESS,
+            help="USB vendor ID (default: %(default)04x)")
+        parser.add_argument(
+            "-P", "--pid", dest="product_id", metavar="ID", type=usb_id, default=PID_FX2,
+            help="USB product ID (default: %(default)04x)")
+        parser.add_argument(
+            "-D", "--did", dest="device_id", metavar="ID", type=usb_id, default=0x0000,
+            help="USB device ID (default: %(default)04x)")
+        parser.add_argument(
+            "-N", "--disconnect", dest="disconnect", default=False, action="store_true",
+            help="do not automatically enumerate on startup")
+        parser.add_argument(
+            "-F", "--fast", dest="i2c_400khz", default=False, action="store_true",
+            help="use 400 kHz clock for loading firmware via I2C")
+
     p_program = subparsers.add_parser("program",
         formatter_class=TextHelpFormatter,
         help="program USB IDs or firmware",
@@ -208,21 +226,7 @@ def get_argparser():
         "into boot EEPROM.\n" + bootloader_note)
     add_eeprom_args(p_program)
     add_eeprom_write_args(p_program)
-    p_program.add_argument(
-        "-V", "--vid", dest="vendor_id", metavar="ID", type=usb_id, default=VID_CYPRESS,
-        help="USB vendor ID (default: %(default)04x)")
-    p_program.add_argument(
-        "-P", "--pid", dest="product_id", metavar="ID", type=usb_id, default=PID_FX2,
-        help="USB product ID (default: %(default)04x)")
-    p_program.add_argument(
-        "-D", "--did", dest="device_id", metavar="ID", type=usb_id, default=0x0000,
-        help="USB device ID (default: %(default)04x)")
-    p_program.add_argument(
-        "-N", "--disconnect", dest="disconnect", default=False, action="store_true",
-        help="do not automatically enumerate on startup")
-    p_program.add_argument(
-        "-F", "--fast", dest="i2c_400khz", default=False, action="store_true",
-        help="use 400 kHz clock for loading firmware via I2C")
+    add_program_args(p_program)
     p_program.add_argument(
         "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("rb"),
         help="read firmware from the specified file")
@@ -230,7 +234,7 @@ def get_argparser():
     p_update = subparsers.add_parser("update",
         formatter_class=TextHelpFormatter,
         help="update USB IDs or firmware",
-        description="Writes USB VID, PID, and DID, and if specified, firmware, "
+        description="Writes USB VID, PID, DID, boot options, and if specified, firmware, "
         "into boot EEPROM, without changing any omitted parameters.\n" + bootloader_note)
     add_eeprom_args(p_update)
     add_eeprom_write_args(p_update)
@@ -266,12 +270,26 @@ def get_argparser():
     p_dump = subparsers.add_parser("dump",
         formatter_class=TextHelpFormatter,
         help="read out USB IDs or firmware",
-        description="Reads USB VID, PID, and DID, and if present, firmware, "
+        description="Reads USB VID, PID, DID, boot options, and if present, firmware, "
         "from boot EEPROM.\n" + bootloader_note)
     add_eeprom_args(p_dump)
     p_dump.add_argument(
         "-f", "--firmware", metavar="FILENAME", type=argparse.FileType("wb"),
         help="write firmware to the specified file")
+
+    p_uf2 = subparsers.add_parser("uf2",
+        formatter_class=TextHelpFormatter,
+        help="prepare UF2 firmware update images",
+        description="Assembles USB VID, PID, DID, boot options and firmware "
+        "into an image that can be flashed into the boot EEPROM using "
+        "the UF2 firmware update protocol.")
+    add_program_args(p_uf2)
+    p_uf2.add_argument(
+        "firmware_file", metavar="FIRMWARE-FILE", type=argparse.FileType("rb"),
+        help="read firmware from the specified file")
+    p_uf2.add_argument(
+        "uf2_file", metavar="UF2-FILE", type=argparse.FileType("wb"),
+        help="write UF2 firmware update image to the specified file")
 
     return parser
 
@@ -300,18 +318,22 @@ def main():
     resource_dir = os.path.dirname(os.path.abspath(__file__))
     args = get_argparser().parse_args()
 
-    try:
-        vid, pid = args.device
-        device = FX2Device(vid, pid)
-    except FX2DeviceError as e:
-        raise SystemExit(e)
+    if args.action in ("uf2",):
+        device = None
+    else:
+        try:
+            vid, pid = args.device
+            device = FX2Device(vid, pid)
+        except FX2DeviceError as e:
+            raise SystemExit(e)
 
     try:
-        if args.bootloader:
-            bootloader_ihex = os.path.join(resource_dir, "boot-cypress.ihex")
-            device.load_ram(input_data(open(bootloader_ihex)))
-        elif args.stage2:
-            device.load_ram(input_data(args.stage2))
+        if device is not None:
+            if args.bootloader:
+                bootloader_ihex = os.path.join(resource_dir, "boot-cypress.ihex")
+                device.load_ram(input_data(open(bootloader_ihex)))
+            elif args.stage2:
+                device.load_ram(input_data(args.stage2))
 
         if args.action == "load":
             device.load_ram(input_data(args.firmware, args.format))
@@ -363,7 +385,7 @@ def main():
                 firmware = []
 
             config = FX2Config(args.vendor_id, args.product_id, args.device_id,
-                                      args.disconnect, args.i2c_400khz)
+                               args.disconnect, args.i2c_400khz)
             for address, chunk in firmware:
                 config.append(address, chunk)
             image = config.encode()
@@ -441,6 +463,45 @@ def main():
                 if args.firmware and len(config.firmware) > 0:
                     output_data(args.firmware, config.firmware, args.format)
 
+        elif args.action == "uf2":
+            config = FX2Config(args.vendor_id, args.product_id, args.device_id,
+                               args.disconnect, args.i2c_400khz)
+            for address, chunk in input_data(args.firmware_file, args.format):
+                config.append(address, chunk)
+            image = config.encode()
+
+            UF2_MAGIC_START_0           = 0x0A324655
+            UF2_MAGIC_START_1           = 0x9E5D5157
+            UF2_MAGIC_END               = 0x0AB16F30
+
+            UF2_FLAG_NOT_MAIN_FLASH     = 0x00000001
+            UF2_FLAG_FILE_CONTAINER     = 0x00001000
+            UF2_FLAG_FAMILY_ID_PRESENT  = 0x00002000
+
+            UF2_FAMILY_CYPRESS_FX2      = 0x5a18069b
+
+            block_size = 256
+            num_blocks = (len(image) + block_size - 1) // block_size
+            block_no   = 0
+            while len(image) > 0:
+                uf2_block  = struct.pack("<IIIIIIII",
+                    UF2_MAGIC_START_0,
+                    UF2_MAGIC_START_1,
+                    UF2_FLAG_FAMILY_ID_PRESENT,
+                    block_no * block_size,
+                    block_size,
+                    block_no,
+                    num_blocks,
+                    UF2_FAMILY_CYPRESS_FX2)
+                uf2_block += image[:block_size]
+                uf2_block += b"\x00" * (512 - 4 - len(uf2_block))
+                uf2_block += struct.pack("<I",
+                    UF2_MAGIC_END)
+                args.uf2_file.write(uf2_block)
+
+                image     = image[block_size:]
+                block_no += 1
+
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:
             raise SystemExit("Command not acknowledged (wrong address width?)")
@@ -457,7 +518,8 @@ def main():
         raise SystemExit(str(e))
 
     finally:
-        device.usb_context.close()
+        if device is not None:
+            device.usb_context.close()
 
 
 if __name__ == "__main__":

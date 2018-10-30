@@ -38,3 +38,21 @@ Consider the code of the Cypress bootloader if you want to see how simple USB fu
 .. literalinclude:: ../firmware/boot-cypress/Makefile
    :caption: Makefile
    :language: make
+
+Adding an UF2 bootloader
+------------------------
+
+It is easy to integrate a very versatile and OS-agnostic `UF2 compliant <uf2_>`_ bootloader as *libfx2* provides all necessary infrastructure, and it only needs to be configured for a specific board and integrated into a target application:
+
+.. _uf2: https://github.com/Microsoft/uf2
+
+.. literalinclude:: ../firmware/boot-uf2/main.c
+   :caption: main.c
+   :language: c
+
+.. literalinclude:: ../firmware/boot-uf2/Makefile
+   :caption: Makefile
+   :language: make
+
+The UF2 images suitable for flashing can be generated from Intel HEX firmware images using
+the uf2 subcommand of the :ref:`command-line tool <bootloader-tool>`.
