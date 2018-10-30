@@ -21,4 +21,14 @@ __xdata __at(0xe000) uint8_t scratch[512];
  */
 __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length);
 
+/**
+ * An endianness swap routine for 16-bit integers.
+ */
+uint16_t bswap16(uint16_t value);
+
+/**
+ * An endianness swap routine for 32-bit integers.
+ */
+uint32_t bswap32(uint32_t value);
+
 #endif
