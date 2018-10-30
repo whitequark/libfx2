@@ -1,35 +1,15 @@
 #include <fx2lib.h>
 #include <fx2regs.h>
-
-#if defined(__SDCC_MODEL_SMALL)
-#define GET_PARM(rA, rB, parm) \
-    mov  rA, parm+0 \
-    mov  rB, parm+1
-#elif defined(__SDCC_MODEL_MEDIUM)
-#define HASH #
-#define GET_PARM(rA, rB, parm) \
-    mov  r0, HASH parm \
-    movx a, @r0 \
-    mov  rA, a \
-    inc  r0 \
-    movx a, @r0 \
-    mov  rB, a
-#elif defined(__SDCC_MODEL_LARGE) || defined(__SDCC_MODEL_HUGE)
-#define HASH #
-#define GET_PARM(rA, rB, parm) \
-    mov  dptr, HASH parm \
-    movx a, @dptr \
-    mov  rA, a \
-    inc  dptr \
-    movx a, @dptr \
-    mov  rB, a
-#endif
+#include "asmargs.h"
 
 __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
   dest;
   src;
   length;
   __asm
+    push dpl
+    push dph
+
     // Retrieve arguments.
     // GET_PARM may use dptr, so save that first.
     mov  r2, dpl
@@ -72,5 +52,7 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
       djnz r7, 00001$        ; 4c
 
   00002$:
+    pop  dph
+    pop  dpl
   __endasm;
 }
