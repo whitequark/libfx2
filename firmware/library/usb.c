@@ -188,7 +188,11 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
       if(nconfig == index)
         APPEND(config);
 
-      for(liface = 0; liface < config->bNumInterfaces; liface++) {
+      for(liface = 0;
+          niface < set->interface_count &&
+          (liface == 0 || !(set->interfaces[niface].bInterfaceNumber  == 0 &&
+                            set->interfaces[niface].bAlternateSetting == 0));
+          liface++) {
         usb_desc_interface_c *interface = &set->interfaces[niface++];
         if(nconfig == index)
           APPEND(interface);
