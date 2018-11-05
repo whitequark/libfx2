@@ -24,7 +24,7 @@ breathe_projects_source = {
             'usb.h', 'usbmicrosoft.h', 'usbmassstor.h',
             'fx2regs.h', 'fx2ints.h', 'fx2lib.h',
             'fx2delay.h', 'fx2i2c.h', 'fx2eeprom.h',
-            'fx2usb.h', 'fx2usbmassstor.h',
+            'fx2usb.h', 'fx2usbmassstor.h', 'fx2uf2.h',
         ]
     )
 }

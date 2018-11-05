@@ -15,3 +15,4 @@ Device-side library reference
    fx2eeprom_h
    fx2usb_h
    fx2usbmassstor_h
+   fx2uf2_h

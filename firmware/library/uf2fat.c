@@ -38,8 +38,9 @@ struct uf2_block {
 #define DATA_OFFSET       (ROOT_OFFSET + ROOT_SECTORS)
 #define DATA_SECTORS      (uf2_config.total_sectors - DATA_OFFSET)
 
-#define FIRMWARE_BLOCKS   (uf2_config.firmware_size >> 7)
-#define FIRMWARE_SECTORS  (uf2_config.firmware_size >> 8)
+#define FIRMWARE_SIZE     ((uf2_config.firmware_size + 255) & ~0xff)
+#define FIRMWARE_BLOCKS   (FIRMWARE_SIZE >> 7)
+#define FIRMWARE_SECTORS  (FIRMWARE_SIZE >> 8)
 
 enum clusters {
   CLUSTER_MEDIA_DESCRIPTOR,
@@ -183,7 +184,7 @@ bool uf2_fat_read(uint32_t lba, __xdata uint8_t *data) {
       fill_entry(&root_entry[3], "CURRENT UF2",
                  /*read_only=*/false,
                  /*first_cluster=*/CLUSTER_CURRENT_UF2,
-                 /*size=*/uf2_config.firmware_size * 2);
+                 /*size=*/FIRMWARE_SIZE * 2);
     }
 
     return true;
