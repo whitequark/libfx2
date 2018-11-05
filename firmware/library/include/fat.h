@@ -1,6 +1,8 @@
 #ifndef FAT_H
 #define FAT_H
 
+#include <stdint.h>
+
 struct fat16_boot_sector {
   uint8_t  jump_to_bootstrap[3];
   uint8_t  oem_name_version[8];

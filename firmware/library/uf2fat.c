@@ -1,7 +1,7 @@
-#include <fx2lib.h>
 #include <string.h>
-#include "uf2.h"
-#include "fat.h"
+#include <fx2lib.h>
+#include <fx2uf2.h>
+#include <fat.h>
 
 #define UF2_MAGIC_START_0           0x0A324655
 #define UF2_MAGIC_START_1           0x9E5D5157

@@ -34,7 +34,9 @@ OBJECTS_fx2usb = usb.rel \
 
 OBJECTS_fx2usbmassstor = usbmassstor.rel
 
-LIBRARIES = fx2 fx2isrs fx2usb fx2usbmassstor
+OBJECTS_fx2uf2 = uf2scsi.rel uf2fat.rel
+
+LIBRARIES = fx2 fx2isrs fx2usb fx2usbmassstor fx2uf2
 
 all::
 	@touch .stamp

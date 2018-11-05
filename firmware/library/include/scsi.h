@@ -1,6 +1,8 @@
 #ifndef SCSI_H
 #define SCSI_H
 
+#include <stdint.h>
+
 // Command TEST UNIT READY
 
 struct scsi_test_unit_ready {

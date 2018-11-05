@@ -2,7 +2,7 @@
 #include <fx2delay.h>
 #include <fx2eeprom.h>
 #include <fx2usbmassstor.h>
-#include "uf2.h"
+#include <fx2uf2.h>
 
 usb_desc_device_c usb_device = {
   .bLength              = sizeof(struct usb_desc_device),
@@ -163,7 +163,8 @@ usb_mass_storage_bbb_state_t usb_mass_storage_state = {
 };
 
 int main() {
-  CPUCS = _CLKOE|_CLKSPD1;
+  // Run core at 48 MHz fCLK.
+  CPUCS = _CLKSPD1;
 
   // Use newest chip features.
   REVCTL = _ENH_PKT|_DYN_OUT;

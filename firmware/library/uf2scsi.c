@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <fx2lib.h>
-#include "uf2.h"
-#include "scsi.h"
+#include <fx2uf2.h>
+#include <scsi.h>
 
 static enum scsi_op_code current_op;
 static enum scsi_sense_key sense_key;

@@ -1,6 +1,5 @@
 TARGET    = boot-uf2
-SOURCES   = main uf2scsi uf2fat
-LIBRARIES = fx2 fx2usb fx2usbmassstor fx2isrs
+LIBRARIES = fx2 fx2usb fx2usbmassstor fx2uf2 fx2isrs
 MODEL     = medium
 
 LIBFX2  = ../library
