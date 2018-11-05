@@ -1,4 +1,4 @@
-SUBDIRS = library blinky boot-cypress
+SUBDIRS = library blinky boot-cypress boot-uf2
 
 all:
 	@set -e; for dir in $(SUBDIRS); do $(MAKE) -C $${dir} all; done

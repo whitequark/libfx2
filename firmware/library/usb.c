@@ -180,30 +180,19 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
   if(type == USB_DESC_DEVICE && index == 0) {
     APPEND(set->device);
   } else if(type == USB_DESC_CONFIGURATION && index < set->config_count) {
-    uint8_t nconfig = 0, niface = 0, nendp = 0;
-    uint8_t liface, lendp;
+    usb_configuration_c *config = set->configs[index];
+    __xdata struct usb_desc_configuration *config_desc =
+      (__xdata struct usb_desc_configuration *)buf;
+    const union usb_config_item *config_item = &config->items[0];
 
-    for(nconfig = 0; nconfig < set->config_count; nconfig++) {
-      usb_desc_configuration_c *config = &set->configs[nconfig];
-      if(nconfig == index)
-        APPEND(config);
+    APPEND(&config->desc);
+    do {
+      APPEND(config_item->generic);
+    } while((++config_item)->generic);
 
-      for(liface = 0;
-          niface < set->interface_count &&
-          (liface == 0 || !(set->interfaces[niface].bInterfaceNumber  == 0 &&
-                            set->interfaces[niface].bAlternateSetting == 0));
-          liface++) {
-        usb_desc_interface_c *interface = &set->interfaces[niface++];
-        if(nconfig == index)
-          APPEND(interface);
-
-        for(lendp = 0; lendp < interface->bNumEndpoints; lendp++) {
-          usb_desc_endpoint_c *endpoint = &set->endpoints[nendp++];
-          if(nconfig == index)
-            APPEND(endpoint);
-        }
-      }
-    }
+    // Fix up wTotalLength so we don't need to calculate it explicitly.
+    if(config_desc->wTotalLength == 0)
+      config_desc->wTotalLength = (uint16_t)(buf - scratch);
   } else if(type == USB_DESC_STRING && index == 0) {
     APPEND(&usb_langid);
   } else if(type == USB_DESC_STRING && index - 1 < set->string_count) {
@@ -226,26 +215,26 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
 
 void usb_reset_data_toggles(usb_descriptor_set_c *set, uint8_t interface_num,
                             uint8_t alt_setting) {
-  uint8_t nconfig = 0, niface = 0, nendp = 0;
-  uint8_t liface, lendp;
-
+  uint8_t nconfig;
   for(nconfig = 0; nconfig < set->config_count; nconfig++) {
-    usb_desc_configuration_c *config = &set->configs[nconfig];
+    usb_configuration_c *config = set->configs[nconfig];
+    const union usb_config_item *config_item = &config->items[0];
+    bool use_interface = false;
 
-    for(liface = 0; liface < config->bNumInterfaces; liface++) {
-      usb_desc_interface_c *interface = &set->interfaces[niface++];
+    if(config->desc.bConfigurationValue != usb_config_value)
+      continue;
 
-      for(lendp = 0; lendp < interface->bNumEndpoints; lendp++) {
-        usb_desc_endpoint_c *endpoint = &set->endpoints[nendp++];
+    do {
+      if(config_item->generic->bDescriptorType == USB_DESC_INTERFACE) {
+        use_interface = (config_item->interface->bInterfaceNumber == interface_num &&
+                         config_item->interface->bAlternateSetting == alt_setting);
+      } else if(config_item->generic->bDescriptorType == USB_DESC_ENDPOINT) {
+        if(!use_interface) continue;
 
-        if(config->bConfigurationValue == usb_config_value &&
-           (interface_num == 0xff || interface_num == interface->bInterfaceNumber) &&
-           (alt_setting == 0xff || alt_setting == interface->bAlternateSetting)) {
-          TOGCTL  =  (endpoint->bEndpointAddress & 0x0f) |
-                    ((endpoint->bEndpointAddress & 0x80) >> 3);
-          TOGCTL |= _R;
-        }
+        TOGCTL  =  (config_item->endpoint->bEndpointAddress & 0x0f) |
+                  ((config_item->endpoint->bEndpointAddress & 0x80) >> 3);
+        TOGCTL |= _R;
       }
-    }
+    } while((++config_item)->generic);
   }
 }

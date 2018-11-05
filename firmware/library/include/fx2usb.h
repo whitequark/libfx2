@@ -86,19 +86,33 @@ typedef __code const char *__code const
   usb_ascii_string_c;
 
 /**
+ * An USB configuration descriptor.
+ * The USB configuration descriptor is followed by the interface, endpoint, and functional
+ * descriptors; these are laid out in the way they should be returned in response to
+ * the Get Configuration request.
+ */
+struct usb_configuration {
+  struct usb_desc_configuration desc;
+  union usb_config_item {
+    usb_desc_generic_c     *generic;
+    usb_desc_interface_c   *interface;
+    usb_desc_endpoint_c    *endpoint;
+  } items[];
+};
+
+typedef __code const struct usb_configuration
+  usb_configuration_c;
+
+typedef __code const struct usb_configuration *__code const
+  usb_configuration_set_c;
+
+/**
  * A group of USB descriptors for a single device.
- * The interface and endpoint descriptors are laid out linearly,
- * e.g. if configuration 0 has interfaces 0(a), and configuration 1 has
- * interfaces 0(b) and 1(b), the `interfaces` array would contain 0(a), 0(b), 1(b).
  */
 struct usb_descriptor_set {
   usb_desc_device_c        *device;
   uint8_t                   config_count;
-  usb_desc_configuration_c *configs;
-  uint8_t                   interface_count;
-  usb_desc_interface_c     *interfaces;
-  uint8_t                   endpoint_count;
-  usb_desc_endpoint_c      *endpoints;
+  usb_configuration_set_c  *configs;
   uint8_t                   string_count;
   usb_ascii_string_c       *strings;
 };

@@ -21,71 +21,71 @@ usb_desc_device_c usb_device = {
   .bNumConfigurations   = 1,
 };
 
-usb_desc_configuration_c usb_configs[] = {
+usb_desc_interface_c usb_interface_mass_storage = {
+  .bLength              = sizeof(struct usb_desc_interface),
+  .bDescriptorType      = USB_DESC_INTERFACE,
+  .bInterfaceNumber     = 0,
+  .bAlternateSetting    = 0,
+  .bNumEndpoints        = 2,
+  .bInterfaceClass      = USB_IFACE_CLASS_MASS_STORAGE,
+  .bInterfaceSubClass   = USB_IFACE_SUBCLASS_MASS_STORAGE_SCSI,
+  .bInterfaceProtocol   = USB_IFACE_PROTOCOL_MASS_STORAGE_BBB,
+  .iInterface           = 0,
+};
+
+usb_desc_endpoint_c usb_endpoint_ep2_out = {
+  .bLength              = sizeof(struct usb_desc_endpoint),
+  .bDescriptorType      = USB_DESC_ENDPOINT,
+  .bEndpointAddress     = 2,
+  .bmAttributes         = USB_XFER_BULK,
+  .wMaxPacketSize       = 512,
+  .bInterval            = 0,
+};
+
+usb_desc_endpoint_c usb_endpoint_ep6_in = {
+  .bLength              = sizeof(struct usb_desc_endpoint),
+  .bDescriptorType      = USB_DESC_ENDPOINT,
+  .bEndpointAddress     = 6|USB_DIR_IN,
+  .bmAttributes         = USB_XFER_BULK,
+  .wMaxPacketSize       = 512,
+  .bInterval            = 0,
+};
+
+usb_configuration_c usb_config = {
   {
     .bLength              = sizeof(struct usb_desc_configuration),
     .bDescriptorType      = USB_DESC_CONFIGURATION,
-    .wTotalLength         = sizeof(struct usb_desc_configuration) +
-                            sizeof(struct usb_desc_interface) +
-                            2 * sizeof(struct usb_desc_endpoint),
     .bNumInterfaces       = 1,
     .bConfigurationValue  = 1,
     .iConfiguration       = 0,
     .bmAttributes         = USB_ATTR_RESERVED_1,
     .bMaxPower            = 50,
+  },
+  {
+    { .interface  = &usb_interface_mass_storage },
+    { .endpoint   = &usb_endpoint_ep2_out },
+    { .endpoint   = &usb_endpoint_ep6_in  },
+    { 0 }
   }
 };
 
-usb_desc_interface_c usb_interfaces[] = {
-  {
-    .bLength              = sizeof(struct usb_desc_interface),
-    .bDescriptorType      = USB_DESC_INTERFACE,
-    .bInterfaceNumber     = 0,
-    .bAlternateSetting    = 0,
-    .bNumEndpoints        = 2,
-    .bInterfaceClass      = USB_IFACE_CLASS_MASS_STORAGE,
-    .bInterfaceSubClass   = USB_IFACE_SUBCLASS_MASS_STORAGE_SCSI,
-    .bInterfaceProtocol   = USB_IFACE_PROTOCOL_MASS_STORAGE_BBB,
-    .iInterface           = 0,
-  }
-};
-
-usb_desc_endpoint_c usb_endpoints[] = {
-  {
-    .bLength              = sizeof(struct usb_desc_endpoint),
-    .bDescriptorType      = USB_DESC_ENDPOINT,
-    .bEndpointAddress     = 2,
-    .bmAttributes         = USB_XFER_BULK,
-    .wMaxPacketSize       = 512,
-    .bInterval            = 0,
-  },
-  {
-    .bLength              = sizeof(struct usb_desc_endpoint),
-    .bDescriptorType      = USB_DESC_ENDPOINT,
-    .bEndpointAddress     = 6|USB_DIR_IN,
-    .bmAttributes         = USB_XFER_BULK,
-    .wMaxPacketSize       = 512,
-    .bInterval            = 0,
-  },
+usb_configuration_set_c usb_configs[] = {
+  &usb_config,
 };
 
 usb_ascii_string_c usb_strings[] = {
-  "whitequark@whitequark.org",
-  "FX2 series UF2-class bootloader",
+  [0] = "whitequark@whitequark.org",
+  [1] = "FX2 series UF2-class bootloader",
   // USB MS BBB 4.1.1 requires each device to have an unique serial number that is at least
   // 12 characters long. We cannot satisfy the uniqueness requirement, but we at least provide
   // a serial number in a valid format.
-  "000000000000"
+  [2] = "000000000000",
 };
 
 usb_descriptor_set_c usb_descriptor_set = {
   .device          = &usb_device,
   .config_count    = ARRAYSIZE(usb_configs),
   .configs         = usb_configs,
-  .interface_count = ARRAYSIZE(usb_interfaces),
-  .interfaces      = usb_interfaces,
-  .endpoint_count  = ARRAYSIZE(usb_endpoints),
-  .endpoints       = usb_endpoints,
   .string_count    = ARRAYSIZE(usb_strings),
   .strings         = usb_strings,
 };

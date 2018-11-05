@@ -20,47 +20,49 @@ usb_desc_device_c usb_device = {
   .bNumConfigurations   = 1,
 };
 
-usb_desc_configuration_c usb_configs[] = {
+usb_desc_interface_c usb_interface = {
+  .bLength              = sizeof(struct usb_desc_interface),
+  .bDescriptorType      = USB_DESC_INTERFACE,
+  .bInterfaceNumber     = 0,
+  .bAlternateSetting    = 0,
+  .bNumEndpoints        = 0,
+  .bInterfaceClass      = USB_IFACE_CLASS_VENDOR,
+  .bInterfaceSubClass   = USB_IFACE_SUBCLASS_VENDOR,
+  .bInterfaceProtocol   = USB_IFACE_PROTOCOL_VENDOR,
+  .iInterface           = 0,
+};
+
+usb_configuration_c usb_config = {
   {
     .bLength              = sizeof(struct usb_desc_configuration),
     .bDescriptorType      = USB_DESC_CONFIGURATION,
-    .wTotalLength         = sizeof(struct usb_desc_configuration) +
-                            sizeof(struct usb_desc_interface),
     .bNumInterfaces       = 1,
     .bConfigurationValue  = 1,
     .iConfiguration       = 0,
     .bmAttributes         = USB_ATTR_RESERVED_1,
     .bMaxPower            = 50,
+  },
+  {
+    { .interface = &usb_interface },
+    { 0 }
   }
 };
 
-usb_desc_interface_c usb_interfaces[] = {
-  {
-    .bLength              = sizeof(struct usb_desc_interface),
-    .bDescriptorType      = USB_DESC_INTERFACE,
-    .bInterfaceNumber     = 0,
-    .bAlternateSetting    = 0,
-    .bNumEndpoints        = 0,
-    .bInterfaceClass      = USB_IFACE_CLASS_VENDOR,
-    .bInterfaceSubClass   = USB_IFACE_SUBCLASS_VENDOR,
-    .bInterfaceProtocol   = USB_IFACE_PROTOCOL_VENDOR,
-    .iInterface           = 0,
-  }
+usb_configuration_set_c usb_configs[] = {
+  &usb_config,
 };
 
 usb_ascii_string_c usb_strings[] = {
-  "whitequark@whitequark.org",
-  "FX2 series Cypress-class bootloader",
+  [0] = "whitequark@whitequark.org",
+  [1] = "FX2 series Cypress-class bootloader",
 };
 
 usb_descriptor_set_c usb_descriptor_set = {
-  .device          = &usb_device,
-  .config_count    = ARRAYSIZE(usb_configs),
-  .configs         = usb_configs,
-  .interface_count = ARRAYSIZE(usb_interfaces),
-  .interfaces      = usb_interfaces,
-  .string_count    = ARRAYSIZE(usb_strings),
-  .strings         = usb_strings,
+  .device           = &usb_device,
+  .config_count     = ARRAYSIZE(usb_configs),
+  .configs          = usb_configs,
+  .string_count     = ARRAYSIZE(usb_strings),
+  .strings          = usb_strings,
 };
 
 enum {
