@@ -90,6 +90,15 @@ usb_descriptor_set_c usb_descriptor_set = {
   .strings         = usb_strings,
 };
 
+usb_mass_storage_bbb_state_t usb_mass_storage_state = {
+  .interface    = 0,
+  .max_in_size  = 512,
+
+  .command      = uf2_scsi_command,
+  .data_out     = uf2_scsi_data_out,
+  .data_in      = uf2_scsi_data_in,
+};
+
 static bool firmware_read(uint32_t address, __xdata uint8_t *data, uint16_t length) __reentrant {
   // Only 2-byte EEPROMs are large enough to store any sort of firmware, and the address
   // of a 2-byte boot EEPROM is fixed, so it's safe to hardcode it here.
@@ -136,15 +145,14 @@ uf2_configuration_c uf2_config = {
   .firmware_write = firmware_write,
 };
 
-// We perform lengthy operations in the main loop to avoid hogging the interrupts.
-volatile bool pending_setup;
-volatile bool pending_ep6_in;
-
 void handle_usb_setup(__xdata struct usb_req_setup *req) {
-  req;
-  if(pending_setup) STALL_EP0();
-  pending_setup = true;
+  if(usb_mass_storage_bbb_setup(&usb_mass_storage_state, req))
+    return;
+
+  STALL_EP0();
 }
+
+volatile bool pending_ep6_in;
 
 void isr_IBN() __interrupt {
   pending_ep6_in = true;
@@ -152,15 +160,6 @@ void isr_IBN() __interrupt {
   NAKIRQ = _IBN;
   IBNIRQ = _IBNI_EP6;
 }
-
-usb_mass_storage_bbb_state_t usb_mass_storage_state = {
-  .interface    = 0,
-  .max_in_size  = 512,
-
-  .command      = uf2_scsi_command,
-  .data_out     = uf2_scsi_data_out,
-  .data_in      = uf2_scsi_data_in,
-};
 
 int main() {
   // Run core at 48 MHz fCLK.
@@ -203,15 +202,6 @@ int main() {
   usb_init(/*reconnect=*/true);
 
   while(1) {
-    if(pending_setup) {
-      __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
-
-      if(!usb_mass_storage_bbb_setup(&usb_mass_storage_state, req))
-        STALL_EP0();
-
-      pending_setup = false;
-    }
-
     if(!(EP2CS & _EMPTY)) {
       uint16_t length = (EP2BCH << 8) | EP2BCL;
       if(usb_mass_storage_bbb_bulk_out(&usb_mass_storage_state, EP2FIFOBUF, length)) {
