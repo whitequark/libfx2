@@ -2,7 +2,7 @@
 
 bool usb_mass_storage_bbb_setup(usb_mass_storage_bbb_state_t *state,
                                 __xdata struct usb_req_setup *request) {
-  if(request->bmRequestType == USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_OUT &&
+  if(request->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_OUT) &&
      request->bRequest == USB_REQ_MASS_STORAGE_BOMSR &&
      request->wValue == 0 && request->wIndex == state->interface && request->wLength == 0) {
     state->_state = USB_MASS_STORAGE_BBB_STATE_COMMAND;
@@ -12,7 +12,7 @@ bool usb_mass_storage_bbb_setup(usb_mass_storage_bbb_state_t *state,
 
   // USB MS BBB 3.2 says that "devices that do not support multiple LUNs may STALL this command",
   // but actually doing this appears to crash Linux's USB stack so hard that HC dies. Sigh.
-  if(request->bmRequestType == USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_IN &&
+  if(request->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_IN) &&
      request->bRequest == USB_REQ_MASS_STORAGE_GET_MAX_LUN &&
      request->wValue == 0 && request->wIndex == state->interface && request->wLength == 1) {
     EP0BUF[0] = state->max_lun;

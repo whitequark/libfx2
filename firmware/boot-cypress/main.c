@@ -100,7 +100,7 @@ uint8_t page_size = 0; // log2(page size in bytes)
 void handle_pending_usb_setup() {
   __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
 
-  if(req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT &&
+  if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
      req->bRequest == USB_REQ_CYPRESS_RENUMERATE) {
     pending_setup = false;
 
@@ -111,7 +111,7 @@ void handle_pending_usb_setup() {
     return;
   }
 
-  if(req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT &&
+  if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
      req->bRequest == USB_REQ_LIBFX2_PAGE_SIZE) {
     page_size = req->wValue;
     pending_setup = false;
@@ -120,8 +120,8 @@ void handle_pending_usb_setup() {
     return;
   }
 
-  if((req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN ||
-      req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
+  if((req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN) ||
+      req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT)) &&
      (req->bRequest == USB_REQ_CYPRESS_EEPROM_SB ||
       req->bRequest == USB_REQ_CYPRESS_EEPROM_DB)) {
     bool     arg_read  = (req->bmRequestType & USB_DIR_IN);
@@ -158,8 +158,8 @@ void handle_pending_usb_setup() {
     return;
   }
 
-  if((req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN ||
-      req->bmRequestType == USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
+  if((req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_IN) ||
+      req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT)) &&
      req->bRequest == USB_REQ_CYPRESS_EXT_RAM) {
     bool     arg_read = (req->bmRequestType & USB_DIR_IN);
     uint16_t arg_addr = req->wValue;

@@ -83,24 +83,24 @@ __endasm;
       STALL_EP0();
     }
     // Get Configuration
-  } else if(req->bRequest == USB_REQ_GET_CONFIGURATION &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
+  } else if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_STANDARD|USB_DIR_IN) &&
+            req->bRequest == USB_REQ_GET_CONFIGURATION) {
     handle_usb_get_configuration();
     // Set Interface
-  } else if(req->bRequest == USB_REQ_SET_INTERFACE &&
-            req->bmRequestType == USB_RECIP_IFACE|USB_DIR_OUT) {
+  } else if(req->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_STANDARD|USB_DIR_OUT) &&
+            req->bRequest == USB_REQ_SET_INTERFACE) {
     if(handle_usb_set_interface((uint8_t)req->wIndex, (uint8_t)req->wValue)) {
       ACK_EP0();
     } else {
       STALL_EP0();
     }
     // Get Interface
-  } else if(req->bRequest == USB_REQ_GET_INTERFACE &&
-            req->bmRequestType == USB_RECIP_IFACE|USB_DIR_IN) {
+  } else if(req->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_STANDARD|USB_DIR_IN) &&
+            req->bRequest == USB_REQ_GET_INTERFACE) {
     handle_usb_get_interface((uint8_t)req->wIndex);
     // Set Feature - Device
-  } else if(req->bRequest == USB_REQ_SET_FEATURE &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_OUT) {
+  } else if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_STANDARD|USB_DIR_OUT) &&
+            req->bRequest == USB_REQ_SET_FEATURE) {
     if(req->wValue == USB_FEAT_DEVICE_REMOTE_WAKEUP) {
       usb_remote_wakeup = true;
       ACK_EP0();
@@ -108,23 +108,23 @@ __endasm;
       ACK_EP0();
     }
     // Get Status - Device
-  } else if(req->bRequest == USB_REQ_GET_STATUS &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
+  } else if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_STANDARD|USB_DIR_IN) &&
+            req->bRequest == USB_REQ_GET_STATUS) {
     EP0BUF[0] = (usb_self_powered  << 0) |
                 (usb_remote_wakeup << 1);
     EP0BUF[1] = 0;
     SETUP_EP0_BUF(2);
     // Get Status - Interface
-  } else if(req->bRequest == USB_REQ_GET_STATUS &&
-            req->bmRequestType == USB_RECIP_IFACE|USB_DIR_IN) {
+  } else if(req->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_STANDARD|USB_DIR_IN) &&
+            req->bRequest == USB_REQ_GET_STATUS) {
     EP0BUF[0] = 0;
     EP0BUF[1] = 0;
     SETUP_EP0_BUF(2);
     // Set Feature - Endpoint
     // Clear Feature - Endpoint
-  } else if(((req->bRequest == USB_REQ_SET_FEATURE ||
-              req->bRequest == USB_REQ_CLEAR_FEATURE) &&
-             req->bmRequestType == USB_RECIP_ENDPT|USB_DIR_OUT)) {
+  } else if(req->bmRequestType == (USB_RECIP_ENDPT|USB_TYPE_STANDARD|USB_DIR_OUT) &&
+            (req->bRequest == USB_REQ_SET_FEATURE ||
+             req->bRequest == USB_REQ_CLEAR_FEATURE)) {
     if(req->wValue == USB_FEAT_ENDPOINT_HALT) {
       __xdata volatile uint8_t *EPnCS = EPnCS_for_n(req->wIndex);
       if(EPnCS != 0) {
@@ -141,8 +141,8 @@ __endasm;
       }
     }
     // Get Status - Endpoint
-  } else if(req->bRequest == USB_REQ_GET_STATUS &&
-            req->bmRequestType == USB_RECIP_ENDPT|USB_DIR_IN) {
+  } else if(req->bmRequestType == (USB_RECIP_ENDPT|USB_TYPE_STANDARD|USB_DIR_IN) &&
+            req->bRequest == USB_REQ_GET_STATUS) {
     __xdata volatile uint8_t *EPnCS = EPnCS_for_n(req->wIndex);
     if(EPnCS != 0) {
       EP0BUF[0] = ((*EPnCS & _STALL) != 0);
