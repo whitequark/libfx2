@@ -141,6 +141,9 @@ struct usb_desc_device {
 typedef __code const struct usb_desc_device
   usb_desc_device_c;
 
+typedef __xdata struct usb_desc_device
+  usb_desc_device_t;
+
 struct usb_desc_device_qualifier {
   uint8_t bLength;
   uint8_t bDescriptorType;
@@ -171,11 +174,11 @@ typedef __code const struct usb_desc_configuration
   usb_desc_configuration_c;
 
 enum {
+  USB_IFACE_CLASS_APP_SPECIFIC  = 0xfe,
+
   USB_IFACE_CLASS_VENDOR        = 0xff,
   USB_IFACE_SUBCLASS_VENDOR     = 0xff,
   USB_IFACE_PROTOCOL_VENDOR     = 0xff,
-
-  USB_IFACE_CLASS_MASS_STORAGE  = 0x08,
 };
 
 struct usb_desc_interface {

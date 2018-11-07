@@ -7,6 +7,7 @@ import struct
 import collections
 import argparse
 import textwrap
+import crcmod
 import usb1
 
 from . import VID_CYPRESS, PID_FX2, FX2Config, FX2Device, FX2DeviceError
@@ -291,6 +292,23 @@ def get_argparser():
         "uf2_file", metavar="UF2-FILE", type=argparse.FileType("wb"),
         help="write UF2 firmware update image to the specified file")
 
+    p_dfu = subparsers.add_parser("dfu",
+        formatter_class=TextHelpFormatter,
+        help="prepare DFU firmware update images",
+        description="Assembles USB VID, PID, DID, boot options and firmware "
+        "into an image that can be flashed into the boot EEPROM using "
+        "the standard Device Firmware Update protocol.")
+    add_program_args(p_dfu)
+    p_dfu.add_argument(
+        "--dfu-pid", dest="dfu_product_id", metavar="ID", type=usb_id,
+        help="DFU mode USB product ID (default: firmware product ID plus one)")
+    p_dfu.add_argument(
+        "firmware_file", metavar="FIRMWARE-FILE", type=argparse.FileType("rb"),
+        help="read firmware from the specified file")
+    p_dfu.add_argument(
+        "dfu_file", metavar="UF2-FILE", type=argparse.FileType("wb"),
+        help="write DFU image to the specified file")
+
     return parser
 
 
@@ -501,6 +519,28 @@ def main():
 
                 image     = image[block_size:]
                 block_no += 1
+
+        elif args.action == "dfu":
+            config = FX2Config(args.vendor_id, args.product_id, args.device_id,
+                               args.disconnect, args.i2c_400khz)
+            for address, chunk in input_data(args.firmware_file, args.format):
+                config.append(address, chunk)
+            image = config.encode()
+
+            suffix = struct.pack(">BBBBHHHH",
+                struct.calcsize(">LBBBBHHHH"),
+                0x44, 0x46, 0x55, # ucDfuSignature
+                0x0100, # bcdDFU
+                args.vendor_id,
+                args.dfu_product_id or args.product_id + 1,
+                args.device_id)
+            image += bytes(reversed(suffix))
+
+            crc = crcmod.Crc(poly=0x104c11db7, initCrc=0xffffffff)
+            crc.update(image)
+            image += struct.pack("<L", crc.crcValue)
+
+            args.dfu_file.write(image)
 
     except usb1.USBErrorPipe:
         if args.action in ["read_eeprom", "write_eeprom"]:

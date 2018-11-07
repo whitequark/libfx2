@@ -6,6 +6,7 @@ build/
 *.ihex
 *.uf2
 *.UF2
+*.dfu
 
 # Python build products
 __pycache__/

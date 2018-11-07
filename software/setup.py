@@ -59,7 +59,7 @@ It provides:
 See the documentation for details.
 """,
     license="0-clause BSD License",
-    install_requires=["libusb1"],
+    install_requires=["libusb1", "crcmod"],
     packages=find_packages(),
     package_data={"": ["*.ihex"]},
     entry_points={

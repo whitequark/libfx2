@@ -36,10 +36,6 @@ struct uf2_configuration {
 typedef __code const struct uf2_configuration
   uf2_configuration_c;
 
-/// The global UF2 configuration, defined in the application code.
-/// It only makes sense for a single device to expose a single UF2 interface at a time.
-extern uf2_configuration_c uf2_config;
-
 #ifndef DOXYGEN
 bool uf2_scsi_command (uint8_t lun, __xdata uint8_t *command, uint8_t length) __reentrant;
 bool uf2_scsi_data_out(uint8_t lun, __xdata const uint8_t *data, uint16_t length) __reentrant;
@@ -48,5 +44,11 @@ bool uf2_scsi_data_in (uint8_t lun, __xdata uint8_t *data, uint16_t length) __re
 bool uf2_fat_read (uint32_t lba, __xdata uint8_t *data);
 bool uf2_fat_write(uint32_t lba, __xdata const uint8_t *data);
 #endif
+
+/**
+ * The global UF2 configuration, defined in the application code.
+ * It only makes sense for a single device to expose a single UF2 interface at a time.
+ */
+extern uf2_configuration_c uf2_config;
 
 #endif

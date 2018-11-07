@@ -6,6 +6,7 @@ Device-side library reference
 
    usb_h
    usbmicrosoft_h
+   usbdfu_h
    usbmassstor_h
    fx2regs_h
    fx2ints_h
@@ -14,5 +15,6 @@ Device-side library reference
    fx2i2c_h
    fx2eeprom_h
    fx2usb_h
+   fx2usbdfu_h
    fx2usbmassstor_h
    fx2uf2_h
