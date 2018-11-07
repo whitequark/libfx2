@@ -69,14 +69,14 @@ __asm
 __endasm;
 
   // Get Descriptor
-  if(req->bRequest == USB_REQ_GET_DESCRIPTOR &&
-     req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_IN) {
+  if(req->bmRequestType == (USB_RECIP_DEVICE|USB_DIR_IN) &&
+     req->bRequest == USB_REQ_GET_DESCRIPTOR) {
     enum usb_descriptor type = (enum usb_descriptor)(req->wValue >> 8);
     uint8_t index = req->wValue & 0xff;
     handle_usb_get_descriptor(type, index);
     // Set Configuration
-  } else if(req->bRequest == USB_REQ_SET_CONFIGURATION &&
-            req->bmRequestType == USB_RECIP_DEVICE|USB_DIR_OUT) {
+  } else if(req->bmRequestType == (USB_RECIP_DEVICE|USB_DIR_OUT) &&
+            req->bRequest == USB_REQ_SET_CONFIGURATION) {
     if(handle_usb_set_configuration((uint8_t)req->wValue)) {
       ACK_EP0();
     } else {
