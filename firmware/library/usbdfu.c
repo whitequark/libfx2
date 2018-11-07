@@ -49,8 +49,6 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
     }
 
     status->bStatus = dfu->status;
-    // We just need a few milliseconds to copy out EP0BUF contents to the scratch space,
-    // and then we can handle requests normally. So, hardcode 10 ms here.
     status->bwPollTimeout = 10;
     status->bwPollTimeoutHigh = 0;
     status->bState = dfu->state;
@@ -112,13 +110,15 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
     }
 
     if((req->bmRequestType & USB_DIR_MASK) == USB_DIR_OUT &&
-        req->bRequest == USB_DFU_REQ_ABORT) {
+        req->bRequest == 6 && req->wValue == 0 &&
+        req->wLength == 0) {
       if(dfu->state == USB_DFU_STATE_dfuIDLE ||
          dfu->state == USB_DFU_STATE_dfuDNLOAD_SYNC ||
          dfu->state == USB_DFU_STATE_dfuDNLOAD_IDLE ||
          dfu->state == USB_DFU_STATE_dfuMANIFEST_SYNC ||
          dfu->state == USB_DFU_STATE_dfuUPLOAD_IDLE) {
         dfu->state = USB_DFU_STATE_dfuIDLE;
+        ACK_EP0();
         return true;
       }
     }
