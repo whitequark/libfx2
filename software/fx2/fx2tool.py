@@ -301,7 +301,7 @@ def get_argparser():
     add_program_args(p_dfu)
     p_dfu.add_argument(
         "--dfu-pid", dest="dfu_product_id", metavar="ID", type=usb_id,
-        help="DFU mode USB product ID (default: firmware product ID plus one)")
+        help="DFU mode USB product ID (default: firmware product ID)")
     p_dfu.add_argument(
         "firmware_file", metavar="FIRMWARE-FILE", type=argparse.FileType("rb"),
         help="read firmware from the specified file")
@@ -532,7 +532,7 @@ def main():
                 0x44, 0x46, 0x55, # ucDfuSignature
                 0x0100, # bcdDFU
                 args.vendor_id,
-                args.dfu_product_id or args.product_id + 1,
+                args.dfu_product_id or args.product_id,
                 args.device_id)
             image += bytes(reversed(suffix))
 
