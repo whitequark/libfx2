@@ -336,7 +336,7 @@ def main():
     resource_dir = os.path.dirname(os.path.abspath(__file__))
     args = get_argparser().parse_args()
 
-    if args.action in ("uf2",):
+    if args.action in ("uf2", "dfu"):
         device = None
     else:
         try:
