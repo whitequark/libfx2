@@ -187,9 +187,6 @@ usb_dfu_iface_state_t usb_dfu_iface_state = {
   .firmware_manifest  = firmware_manifest,
 };
 
-// We perform lengthy operations in the main loop to avoid hogging the interrupts.
-volatile bool pending_setup;
-
 void handle_usb_setup(__xdata struct usb_req_setup *req) {
   if(usb_dfu_setup(&usb_dfu_iface_state, req))
     return;
