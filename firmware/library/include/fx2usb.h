@@ -13,7 +13,7 @@
  *   * takes EP0 under software control,
  *   * disconnects (if requested) and connects (if necessary).
  */
-void usb_init(bool reconnect);
+void usb_init(bool disconnect);
 
 /**
  * Configure EP0 for an IN transfer from RAM of an USB descriptor

@@ -191,7 +191,7 @@ void handle_pending_usb_setup() {
 
 int main() {
   CPUCS = _CLKOE|_CLKSPD1;
-  usb_init(/*reconnect=*/false);
+  usb_init(/*disconnect=*/false);
 
   while(1) {
     if(pending_setup)

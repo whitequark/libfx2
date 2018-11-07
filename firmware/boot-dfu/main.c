@@ -202,7 +202,7 @@ int main() {
   CPUCS = _CLKSPD1;
 
   // Re-enumerate, to make sure our descriptors are picked up correctly.
-  usb_init(/*reconnect=*/true);
+  usb_init(/*disconnect=*/true);
 
   while(1) {
     // Handle switching to DFU mode from application mode.
@@ -227,7 +227,7 @@ int main() {
       usb_descriptor_set.strings      = usb_strings_dfu;
 
       // Don't reconnect again in `usb_init`, as we have just disconnected explicitly.
-      usb_init(/*reconnect=*/false);
+      usb_init(/*disconnect=*/false);
     }
 
     // Handle any lengthy DFU requests, i.e. the ones that call back into firmware_* functions.

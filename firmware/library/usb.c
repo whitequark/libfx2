@@ -8,7 +8,7 @@ bool usb_self_powered;
 bool usb_remote_wakeup;
 uint8_t usb_config_value;
 
-void usb_init(bool reconnect) {
+void usb_init(bool disconnect) {
   usb_remote_wakeup = false;
   usb_config_value = 0;
 
@@ -22,7 +22,7 @@ void usb_init(bool reconnect) {
     USBCS |= _RENUM;
 
   // If requested, disconnect and wait for the host to discover that.
-  if(reconnect) {
+  if(disconnect) {
     USBCS |= _DISCON;
     delay_ms(10);
   }

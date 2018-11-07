@@ -199,7 +199,7 @@ int main() {
   FIFORESET = 0;
 
   // Re-enumerate, to make sure our descriptors are picked up correctly.
-  usb_init(/*reconnect=*/true);
+  usb_init(/*disconnect=*/true);
 
   while(1) {
     if(!(EP2CS & _EMPTY)) {
