@@ -23,7 +23,7 @@ usb_desc_device_c usb_device = {
   .bNumConfigurations   = 1,
 };
 
-usb_dfu_desc_functional_c usb_dfu_functional;
+extern usb_dfu_desc_functional_c usb_dfu_functional;
 
 usb_desc_interface_c usb_interface_dfu_runtime = {
   .bLength              = sizeof(struct usb_desc_interface),
