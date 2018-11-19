@@ -49,8 +49,13 @@ struct usb_mass_storage_bbb_state {
   } _state;
   uint32_t _tag;
   uint8_t  _lun;
+#if __SDCC_VERSION_MAJOR > 3 || __SDCC_VERSION_MINOR >= 7
   bool     _data_in;
   bool     _success;
+#else
+  uint8_t  _data_in;
+  uint8_t  _success;
+#endif
   uint32_t _data_length;
   uint32_t _residue;
 #endif

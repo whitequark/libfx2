@@ -65,7 +65,11 @@ struct usb_dfu_iface_state {
 #ifndef DOXYGEN
   // Private fields, subject to change at any time.
   volatile enum usb_dfu_status status;
+#if __SDCC_VERSION_MAJOR > 3 || __SDCC_VERSION_MINOR >= 7
   volatile bool pending, sync;
+#else
+  volatile uint8_t pending, sync;
+#endif
   uint16_t length;
   uint32_t offset;
 #endif
