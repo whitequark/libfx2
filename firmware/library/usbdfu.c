@@ -110,7 +110,7 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
     }
 
     if((req->bmRequestType & USB_DIR_MASK) == USB_DIR_OUT &&
-        req->bRequest == 6 && req->wValue == 0 &&
+        req->bRequest == USB_DFU_REQ_ABORT && req->wValue == 0 &&
         req->wLength == 0) {
       if(dfu->state == USB_DFU_STATE_dfuIDLE ||
          dfu->state == USB_DFU_STATE_dfuDNLOAD_SYNC ||
