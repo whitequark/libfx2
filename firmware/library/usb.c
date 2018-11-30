@@ -179,6 +179,8 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
 
   if(type == USB_DESC_DEVICE && index == 0) {
     APPEND(set->device);
+  } else if(type == USB_DESC_DEVICE_QUALIFIER && index == 0) {
+    APPEND(set->device_qualifier);
   } else if(type == USB_DESC_CONFIGURATION && index < set->config_count) {
     usb_configuration_c *config = set->configs[index];
     __xdata struct usb_desc_configuration *config_desc =

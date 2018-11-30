@@ -110,11 +110,12 @@ typedef __code const struct usb_configuration *__code const
  * A group of USB descriptors for a single device.
  */
 struct usb_descriptor_set {
-  usb_desc_device_c        *device;
-  uint8_t                   config_count;
-  usb_configuration_set_c  *configs;
-  uint8_t                   string_count;
-  usb_ascii_string_c       *strings;
+  usb_desc_device_c           *device;
+  usb_desc_device_qualifier_c *device_qualifier;
+  uint8_t                      config_count;
+  usb_configuration_set_c     *configs;
+  uint8_t                      string_count;
+  usb_ascii_string_c          *strings;
 };
 
 typedef __code const struct usb_descriptor_set
