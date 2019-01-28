@@ -15,6 +15,7 @@ Device-side library reference
    fx2delay_h
    fx2i2c_h
    fx2eeprom_h
+   fx2spi_h
    fx2usb_h
    fx2usbdfu_h
    fx2usbmassstor_h
