@@ -16,6 +16,7 @@ Device-side library reference
    fx2i2c_h
    fx2eeprom_h
    fx2spi_h
+   fx2spiflash_h
    fx2usb_h
    fx2usbdfu_h
    fx2usbmassstor_h

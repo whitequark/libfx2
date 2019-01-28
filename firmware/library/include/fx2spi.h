@@ -71,10 +71,10 @@
 /**
  * This macro defines a function `void name(__xdata uint8_t *data, uint16_t len)` that implements
  * an optimized (76 clock cycles per iteration; ~5 MHz at 48 MHz CLKOUT) SPI Mode 3 write routine.
- * The `sck` and `si` parameters may point to any pins, and are defined in the format `_IOx+n`
+ * The `sck` and `si` parameters may point to any pins, and are defined in the format `_Pxn`
  * (note the underscore).
  *
- * For example, invoking the macro as `DEFINE_SPI_WR_FN(flash_write, _IOA+1, _IOB+6)` defines
+ * For example, invoking the macro as `DEFINE_SPI_WR_FN(flash_write, _PA1, _PB6)` defines
  * a routine `void flash_write()` that assumes an SPI device's SCK pin is connected to A1 and
  * MOSI pin is connected to B6.
  */
@@ -84,10 +84,10 @@
 /**
  * This macro defines a function `void name(__xdata uint8_t *data, uint16_t len)` that implements
  * an optimized (76 clock cycles per iteration; ~5 MHz at 48 MHz CLKOUT) SPI Mode 3 read routine.
- * The `sck` and `so` parameters may point to any pins, and are defined in the format `_IOx+n`
+ * The `sck` and `so` parameters may point to any pins, and are defined in the format `_Pxn`
  * (note the underscore).
  *
- * For example, invoking the macro as `DEFINE_SPI_RD_FN(flash_read, _IOA+1, _IOB+5)` defines
+ * For example, invoking the macro as `DEFINE_SPI_RD_FN(flash_read, _PA1, _PB5)` defines
  * a routine `void flash_read()` that assumes an SPI device's SCK pin is connected to A1 and
  * MISO pin is connected to B5.
  */

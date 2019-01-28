@@ -23,7 +23,7 @@ breathe_projects_source = {
         '../firmware/library/include', [
             'usb.h', 'usbmicrosoft.h', 'usbdfu.h', 'usbcdc.h', 'usbmassstor.h',
             'fx2regs.h', 'fx2ints.h', 'fx2lib.h',
-            'fx2delay.h', 'fx2i2c.h', 'fx2eeprom.h', 'fx2spi.h',
+            'fx2delay.h', 'fx2i2c.h', 'fx2eeprom.h', 'fx2spi.h', 'fx2spiflash.h',
             'fx2usb.h', 'fx2usbdfu.h', 'fx2usbmassstor.h', 'fx2uf2.h',
         ]
     )
