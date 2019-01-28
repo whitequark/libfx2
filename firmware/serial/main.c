@@ -39,7 +39,7 @@ usb_desc_device_c usb_device = {
   // It would make more sense for this to be USB_DEV_CLASS_PER_INTERFACE, such that the device
   // could be a composite device and include non-CDC interfaces. However, this does not work under
   // Windows; it enumerates a broken unknown device and a broken serial port instead. It is likely
-  // that the following Microsoft documet describes a way to make it work, but I have not verified
+  // that the following Microsoft document describes a way to make it work, but I have not verified
   // it: https://docs.microsoft.com/en-us/windows-hardware/drivers/usbcon/usb-common-class-generic-parent-driver
   .bDeviceClass         = USB_DEV_CLASS_CDC,
   .bDeviceSubClass      = USB_DEV_SUBCLASS_PER_INTERFACE,
