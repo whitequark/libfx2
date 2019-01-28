@@ -57,8 +57,6 @@ usb_desc_endpoint_c usb_endpoint_ep6_in = {
   .bInterval            = 0,
 };
 
-usb_dfu_desc_functional_c usb_dfu_functional;
-
 usb_desc_interface_c usb_interface_dfu_runtime = {
   .bLength              = sizeof(struct usb_desc_interface),
   .bDescriptorType      = USB_DESC_INTERFACE,
