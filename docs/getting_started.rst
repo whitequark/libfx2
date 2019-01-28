@@ -11,18 +11,18 @@ Load the Blinky example (a LED should be attached to PA0):
 
 .. code-block:: sh
 
-  make -C firmware/blinky load
+  make -C examples/blinky load
 
 Blinking a LED
 --------------
 
 Read the code for the *blinky* example if you're looking for something minimal:
 
-.. literalinclude:: ../firmware/blinky/main.c
+.. literalinclude:: ../examples/blinky/main.c
    :caption: main.c
    :language: c
 
-.. literalinclude:: ../firmware/blinky/Makefile
+.. literalinclude:: ../examples/blinky/Makefile
    :caption: Makefile
    :language: make
 

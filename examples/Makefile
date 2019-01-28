@@ -1,4 +1,4 @@
-SUBDIRS = library boot-cypress boot-dfu boot-uf2
+SUBDIRS = blinky serial boot-uf2-dfu
 
 all:
 	@set -e; for dir in $(SUBDIRS); do $(MAKE) -C $${dir} all; done
