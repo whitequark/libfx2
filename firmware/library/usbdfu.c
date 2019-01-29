@@ -159,8 +159,8 @@ void usb_dfu_setup_deferred(usb_dfu_iface_state_t *dfu) {
         dfu->offset += dfu->length;
         dfu->state = USB_DFU_STATE_dfuDNLOAD_IDLE;
         dfu->pending = false;
+        return;
       }
-      return;
     } else if(dfu->state == USB_DFU_STATE_dfuMANIFEST_SYNC) {
       while(!dfu->sync);
       usb_dfu_setup(dfu, (__xdata struct usb_req_setup *)SETUPDAT);
