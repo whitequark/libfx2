@@ -45,8 +45,8 @@
       djnz r1, 00001$        ; 4c                     \
                                                       \
     00002$:                                           \
-      pop  dpl                                        \
       pop  dph                                        \
+      pop  dpl                                        \
     __endasm;                                         \
   }
 
