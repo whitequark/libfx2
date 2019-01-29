@@ -17,13 +17,13 @@
       mov  _AUTOPTRL1, dpl                            \
       mov  _AUTOPTRH1, dph                            \
                                                       \
-      _ASM_GET_PARM(r0, r1, _##name##_PARM_2)         \
+      _ASM_GET_PARM(r2, r3, _##name##_PARM_2)         \
                                                       \
-      mov  a, r0                                      \
+      mov  a, r2                                      \
       jz   00000$                                     \
-      inc  r1                                         \
+      inc  r3                                         \
     00000$:                                           \
-      mov  a, r1                                      \
+      mov  a, r3                                      \
       jz   00002$                                     \
                                                       \
       mov  dptr, _ASM_HASH _XAUTODAT1                 \
@@ -38,8 +38,8 @@
         bit(sck, si, so, 1)    ; 8c                   \
         bit(sck, si, so, 0)    ; 8c                   \
         atlr                   ; 8c+s                 \
-        djnz r0, 00001$        ; 4c                   \
-      djnz r1, 00001$        ; 4c                     \
+        djnz r2, 00001$        ; 4c                   \
+      djnz r3, 00001$        ; 4c                     \
                                                       \
     00002$:                                           \
     __endasm;                                         \
