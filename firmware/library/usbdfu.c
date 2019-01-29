@@ -1,6 +1,8 @@
 #include <fx2lib.h>
 #include <fx2usbdfu.h>
 
+#pragma save
+#pragma nooverlay
 bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req) {
   uint8_t interface = dfu->state > USB_DFU_STATE_appDETACH ? 0 : dfu->interface;
 
@@ -129,6 +131,7 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
   STALL_EP0();
   return true;
 }
+#pragma restore
 
 void usb_dfu_setup_deferred(usb_dfu_iface_state_t *dfu) {
   if(dfu->pending) {

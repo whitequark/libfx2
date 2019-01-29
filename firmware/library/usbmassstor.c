@@ -1,5 +1,7 @@
 #include <fx2usbmassstor.h>
 
+#pragma save
+#pragma nooverlay
 bool usb_mass_storage_bbb_setup(usb_mass_storage_bbb_state_t *state,
                                 __xdata struct usb_req_setup *request) {
   if(request->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_OUT) &&
@@ -22,6 +24,7 @@ bool usb_mass_storage_bbb_setup(usb_mass_storage_bbb_state_t *state,
 
   return false;
 }
+#pragma restore
 
 bool usb_mass_storage_bbb_bulk_out(usb_mass_storage_bbb_state_t *state,
                                    __xdata const uint8_t *data,
