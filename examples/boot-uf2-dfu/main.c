@@ -8,6 +8,9 @@
 #include <fx2usbmassstor.h>
 #include <fx2uf2.h>
 
+// Memory parameters:
+#define FIRMWARE_SIZE 16384
+
 // Application mode descriptors.
 
 usb_desc_device_c usb_device = {
@@ -161,8 +164,6 @@ __xdata struct usb_descriptor_set usb_descriptor_set = {
   .string_count     = ARRAYSIZE(usb_strings_uf2),
   .strings          = usb_strings_uf2,
 };
-
-#define FIRMWARE_SIZE 16384
 
 // UF2 support code
 
