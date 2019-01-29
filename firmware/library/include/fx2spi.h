@@ -13,9 +13,6 @@
     data;                                             \
     len;                                              \
     __asm                                             \
-      push dpl                                        \
-      push dph                                        \
-                                                      \
       mov  _AUTOPTRSETUP, _ASM_HASH 0b11              \
       mov  _AUTOPTRL1, dpl                            \
       mov  _AUTOPTRH1, dph                            \
@@ -45,8 +42,6 @@
       djnz r1, 00001$        ; 4c                     \
                                                       \
     00002$:                                           \
-      pop  dph                                        \
-      pop  dpl                                        \
     __endasm;                                         \
   }
 

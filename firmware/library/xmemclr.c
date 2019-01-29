@@ -6,9 +6,6 @@ __xdata void *xmemclr(__xdata void *dest, uint16_t length) {
   dest;
   length;
   __asm
-    push dpl
-    push dph
-
     // Retrieve arguments.
     // _ASM_GET_PARM may use dptr, so save that first.
     mov  r2, dpl
@@ -40,7 +37,5 @@ __xdata void *xmemclr(__xdata void *dest, uint16_t length) {
       djnz r5, 00001$        ; 4c
 
   00002$:
-    pop  dph
-    pop  dpl
   __endasm;
 }

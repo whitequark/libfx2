@@ -7,9 +7,6 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
   src;
   length;
   __asm
-    push dpl
-    push dph
-
     // Retrieve arguments.
     // _ASM_GET_PARM may use dptr, so save that first.
     mov  r2, dpl
@@ -52,7 +49,5 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
       djnz r7, 00001$        ; 4c
 
   00002$:
-    pop  dph
-    pop  dpl
   __endasm;
 }
