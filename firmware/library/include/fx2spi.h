@@ -8,8 +8,8 @@
 #ifndef DOXYGEN
 
 // See the implementation of xmemcpy for a detailed explanation of the loop structure below.
-#define _SPI_FN(name, bit, sck, si, so, aldr, atlr)   \
-  void name(__xdata uint8_t *data, uint16_t len) {    \
+#define _SPI_FN(name, cst, bit, sck, si, so, aldr, atlr)   \
+  void name(cst __xdata uint8_t *data, uint16_t len) {    \
     data;                                             \
     len;                                              \
     __asm                                             \
@@ -69,8 +69,9 @@
 #endif
 
 /**
- * This macro defines a function `void name(__xdata uint8_t *data, uint16_t len)` that implements
- * an optimized (76 clock cycles per iteration; ~5 MHz at 48 MHz CLKOUT) SPI Mode 3 write routine.
+ * This macro defines a function `void name(const __xdata uint8_t *data, uint16_t len)` that
+ * implements an optimized (76 clock cycles per iteration; ~5 MHz at 48 MHz CLKOUT) SPI Mode 3
+ * write routine.
  * The `sck` and `si` parameters may point to any pins, and are defined in the format `_Pxn`
  * (note the underscore).
  *
@@ -79,7 +80,7 @@
  * MOSI pin is connected to B6.
  */
 #define DEFINE_SPI_WR_FN(name, sck, si) \
-  _SPI_FN(name, _SPI_WR_BIT, sck, si, 0, _SPI_WR_LDR, _SPI_DUMMY)
+  _SPI_FN(name, const, _SPI_WR_BIT, sck, si, 0, _SPI_WR_LDR, _SPI_DUMMY)
 
 /**
  * This macro defines a function `void name(__xdata uint8_t *data, uint16_t len)` that implements
@@ -92,6 +93,6 @@
  * MISO pin is connected to B5.
  */
 #define DEFINE_SPI_RD_FN(name, sck, so) \
-  _SPI_FN(name, _SPI_RD_BIT, sck, 0, so, _SPI_DUMMY, _SPI_RD_TLR)
+  _SPI_FN(name, _SPI_DUMMY, _SPI_RD_BIT, sck, 0, so, _SPI_DUMMY, _SPI_RD_TLR)
 
 #endif
