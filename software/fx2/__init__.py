@@ -266,19 +266,29 @@ class FX2Device:
         Read ``length`` bytes at ``addr`` from internal RAM.
         Note that not all memory can be addressed this way; consult the TRM.
         """
-        if addr & 1: # unaligned
-            return self.control_read(usb1.REQUEST_TYPE_VENDOR,
-                                     REQ_RAM, addr, 0, length + 1)[1:]
-        else:
-            return self.control_read(usb1.REQUEST_TYPE_VENDOR,
-                                     REQ_RAM, addr, 0, length)
+        data = bytearray()
+        while length > 0:
+            chunk_length = min(length, 4096)
+            if addr & 1: # unaligned
+                data += self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                          REQ_RAM, addr, 0, chunk_length + 1)[1:]
+            else:
+                data += self.control_read(usb1.REQUEST_TYPE_VENDOR,
+                                          REQ_RAM, addr, 0, chunk_length)
+            addr += chunk_length
+            length -= chunk_length
+        return data
 
     def write_ram(self, addr, data):
         """
         Write ``data`` to ``addr`` to internal RAM.
         Note that not all memory can be addressed this way; consult the TRM.
         """
-        self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RAM, addr, 0, data)
+        while len(data) > 0:
+            chunk_length = min(len(data), 4096)
+            self.control_write(usb1.REQUEST_TYPE_VENDOR, REQ_RAM, addr, 0, data[:chunk_length])
+            addr += chunk_length
+            data = data[chunk_length:]
 
     def cpu_reset(self, is_reset):
         """Bring CPU in or out of reset."""
