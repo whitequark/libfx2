@@ -89,7 +89,7 @@ class FX2Config:
 
         if len(self.firmware) > 0:
             for (addr, chunk) in self.firmware:
-                assert len(chunk) < 1024
+                assert len(chunk) > 0 and len(chunk) < 1024
                 data += struct.pack(">HH", len(chunk), addr)
                 data += chunk
 
