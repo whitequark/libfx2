@@ -7,7 +7,7 @@
 
 #ifndef DOXYGEN
 #define _SFR(addr)   static __sfr __at (addr)
-#define _SFR16(addr) static __sfr __at (addr)
+#define _SFR16(addr) static __sfr16 __at (addr)
 #define _SBIT(addr)  static __sbit __at (addr)
 #define _IOR(addr)   static __xdata __at (addr) volatile uint8_t
 #define _IOR16(addr) static __xdata __at (addr) volatile uint16_t
