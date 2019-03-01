@@ -8,7 +8,7 @@ bool i2c_wait(bool need_ack) {
   while(!(I2CS & _DONE)) {
     if(i2c_cancel) {
       i2c_cancel = false;
-      break;
+      return false;
     }
   }
 
@@ -26,11 +26,12 @@ bool i2c_start(uint8_t chip) {
 }
 
 bool i2c_stop() {
-  I2CS  = _STOP;
-  while(I2CS & _STOP);
-
   if(I2CS & _BERR)
     return false;
+
+  I2CS = _STOP;
+  while(I2CS & _STOP);
+
   return true;
 }
 
@@ -90,9 +91,10 @@ __endasm;
     }
   }
 
-  while(I2CS & _STOP);
   if(I2CS & _BERR)
     return false;
+
+  while(I2CS & _STOP);
 
 end:
   return i == len;
