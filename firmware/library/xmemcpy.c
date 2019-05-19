@@ -11,8 +11,8 @@ __xdata void *xmemcpy(__xdata void *dest, __xdata void *src, uint16_t length) {
     // _ASM_GET_PARM may use dptr, so save that first.
     mov  r2, dpl
     mov  r3, dph
-    _ASM_GET_PARM(r4, r5, _xmemcpy_PARM_2)
-    _ASM_GET_PARM(r6, r7, _xmemcpy_PARM_3)
+    _ASM_GET_PARM2(r4, r5, _xmemcpy_PARM_2)
+    _ASM_GET_PARM2(r6, r7, _xmemcpy_PARM_3)
 
     // Handle edge conditions.
     // Skip the entire function if r7:r6=0.

@@ -10,7 +10,7 @@ __xdata void *xmemclr(__xdata void *dest, uint16_t length) {
     // _ASM_GET_PARM may use dptr, so save that first.
     mov  r2, dpl
     mov  r3, dph
-    _ASM_GET_PARM(r4, r5, _xmemclr_PARM_2)
+    _ASM_GET_PARM2(r4, r5, _xmemclr_PARM_2)
 
     // Handle edge conditions.
     // Skip the entire function if r7:r6=0.
