@@ -1,24 +1,40 @@
 #ifndef FX2DELAY_H
 #define FX2DELAY_H
 
+#if !defined(__SDCC_MODEL_HUGE)
+#pragma callee_saves delay_ms
+#pragma callee_saves _delay_us_overhead
+#pragma callee_saves delay_us
+#pragma callee_saves delay_4c
+#endif
+
 #include <stdint.h>
 
 /**
  * Spin for the given number of milliseconds.
  */
-void delay_ms(uint16_t count);
+void delay_ms(uint16_t count_ms);
 
 /**
- * Spin for the given number of microseconds.
- * `count` must be no greater than 21845.
+ * Spin for the given number of microseconds, minus `overh_c` processor cycles.
+ * `count_us` must be no greater than 21845, and `overh_c` must be no greater than 128.
+ *
+ * This function is cycle-accurate at any CPU clock frequency provided that the delay is not less
+ * than the intrinsic overhead of up to 100 processor cycles.
  */
-void delay_us(uint16_t count);
+void delay_us_overhead(uint16_t count_us, uint8_t overh_c) __reentrant;
+
+/**
+ * Equivalent to `delay_us_overhead(count_us, 3)` where 3 is the number of cycles of overhead
+ * when `delay_us` is called with a constant argument.
+ */
+void delay_us(uint16_t count_us);
 
 /**
  * Spin for `count * 4` processor cycles, or `count * 16` clock cycles.
- * Takes exactly 28 processor cycles if `count` is less than that.
+ * Takes exactly 32 processor cycles if `count` is less than `8`.
  */
-void delay_4c(uint16_t count);
+void delay_4c(uint16_t count_4c);
 
 /**
  * Synchronization delay length.
