@@ -56,9 +56,15 @@ void delay_4c(uint16_t count_4c);
 #endif
 
 #ifndef DOXYGEN
-#define _NOP2     __asm__("nop \n nop")
-#define _NOP3     __asm__("nop \n nop \n nop")
-#define _NOPn(n)  __asm__("lcall _nop" #n)
+// Accumulator doesn't need to be preserved
+#define _NOP1     __asm__("nop")                            // 1b 1c
+#define _NOP2     __asm__("nop  \n nop")                    // 2b 2c
+#define _NOP3     __asm__("ajmp  .+2")                      // 2b 3c
+#define _NOP4     __asm__("nop          \n movc a, @a+pc")  // 2b 4c
+#define _NOP5     __asm__("nop  \n nop  \n movc a, @a+pc")  // 3b 5c
+#define _NOP6     __asm__("ajmp  .+2    \n movc a, @a+pc")  // 3b 6c
+#define _NOP7     __asm__("acall .+2    \n ret")            // 3b 7c
+#define _NOPn(n)  __asm__("lcall _nop"#n)                   // 3b nc 8<=n<=16
 #endif
 
 /**
@@ -67,21 +73,19 @@ void delay_4c(uint16_t count_4c);
  * See TRM 15.15 for details.
  *
  * This macro produces very compact code, using only 2 or 3 bytes per instance.
- * This comes with a tradeoff that `SYNCDELAYLEN` values between 4 and 7
- * result in a 8 cycle delay.
  */
 #if SYNCDELAYLEN == 2
 #define SYNCDELAY _NOP2
 #elif SYNCDELAYLEN == 3
 #define SYNCDELAY _NOP3
 #elif SYNCDELAYLEN == 4
-#define SYNCDELAY _NOPn(8) // lcall 4c ret 4c
+#define SYNCDELAY _NOP4
 #elif SYNCDELAYLEN == 5
-#define SYNCDELAY _NOPn(8) // lcall 4c ret 4c
+#define SYNCDELAY _NOP5
 #elif SYNCDELAYLEN == 6
-#define SYNCDELAY _NOPn(8) // lcall 4c ret 4c
+#define SYNCDELAY _NOP6
 #elif SYNCDELAYLEN == 7
-#define SYNCDELAY _NOPn(8) // lcall 4c ret 4c
+#define SYNCDELAY _NOP7
 #elif SYNCDELAYLEN == 8
 #define SYNCDELAY _NOPn(8)
 #elif SYNCDELAYLEN == 9
