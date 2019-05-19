@@ -10,6 +10,8 @@
 
 #define _DEBUG_FN_DIV(a, b) (((a)+(b)/2+1)/(b))
 
+// This implementation not only keeps overhead to absolute minimum, but it also takes great care
+// to execute in constant time per bit to minimize clock drift.
 #define _DEBUG_FN(retty, name, argty, tx, baud) \
   retty name(argty c) __naked {               \
     c;                                        \
@@ -99,7 +101,8 @@
  * This macro defines a function `void name(uint8_t c)` that implements a robust blocking serial
  * transmitter for debug output. The `tx` parameter may point to any pin, and is defined in
  * the format `Pxn`. The serial format is fixed at 8 data bits, no parity, 1 stop bit, and
- * the baud rate is configurable, up to 115200 at 48 MHz and 24 MHz, and up to 57600 at 12 MHz.
+ * the baud rate is configurable, up to 230400 at 48 MHz, up to 115200 at 24 MHz, and up to
+ * 57600 at 12 MHz.
  *
  * For example, invoking the macro as `DEFINE_DEBUG_FN(tx_byte, PA0, 57600)` defines a routine
  * `void tx_byte(uint8_t c)` that assumes an UART receiver's RX pin is connected to A0.
