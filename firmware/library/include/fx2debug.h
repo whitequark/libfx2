@@ -42,25 +42,25 @@
                                               \
       mov  a, r3                              \
     00001$:                                   \
-      clr  tx                     ; 2c        \
+      clr  _ASM_REG(tx)           ; 2c        \
         sjmp 00002$               ; 3c        \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      mov  tx, c                              \
+      mov  _ASM_REG(tx), c                    \
         sjmp 00002$                           \
-      setb tx                                 \
+      setb _ASM_REG(tx)                       \
         sjmp 00002$                           \
       sjmp 00003$                             \
                                               \
@@ -98,11 +98,10 @@
 /**
  * This macro defines a function `void name(uint8_t c)` that implements a robust blocking serial
  * transmitter for debug output. The `tx` parameter may point to any pin, and is defined in
- * the format `_Pxn` (note the underscore). The serial format is fixed at 8 data bits, no parity,
- * 1 stop bit, and the baud rate is configurable, up to 115200 at 48 MHz and 24 MHz, and up to
- * 57600 at 12 MHz.
+ * the format `Pxn`. The serial format is fixed at 8 data bits, no parity, 1 stop bit, and
+ * the baud rate is configurable, up to 115200 at 48 MHz and 24 MHz, and up to 57600 at 12 MHz.
  *
- * For example, invoking the macro as `DEFINE_DEBUG_FN(tx_byte, _PA0, 57600)` defines a routine
+ * For example, invoking the macro as `DEFINE_DEBUG_FN(tx_byte, PA0, 57600)` defines a routine
  * `void tx_byte(uint8_t c)` that assumes an UART receiver's RX pin is connected to A0.
  */
 #define DEFINE_DEBUG_FN(name, tx, baud) \

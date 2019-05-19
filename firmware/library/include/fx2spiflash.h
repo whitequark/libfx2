@@ -10,25 +10,25 @@
 
 #define _DEFINE_SPIFLASH_INIT_FN(name, cs, sck, si, so)                           \
   void name##_init() {                                                            \
-    __asm setb cs  __endasm;                                                      \
-    __asm setb sck __endasm;                                                      \
-    __asm setb si  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
+    __asm setb _ASM_REG(sck) __endasm;                                            \
+    __asm setb _ASM_REG(si)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_RDP_FN(name, cs)                                         \
   void name##_rdp() {                                                             \
     _##name##_spiflash_buf[0] = 0xAB;                                             \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 1);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_DP_FN(name, cs)                                          \
   void name##_dp() {                                                              \
     _##name##_spiflash_buf[0] = 0xB9;                                             \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 1);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_READ_FN(name, cs)                                        \
@@ -37,36 +37,36 @@
     _##name##_spiflash_buf[1] = (addr >> 16);                                     \
     _##name##_spiflash_buf[2] = (addr >> 8);                                      \
     _##name##_spiflash_buf[3] = (addr >> 0);                                      \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 4);                                  \
     _##name##_spi_rd(data, length);                                               \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_WREN_FN(name, cs)                                        \
   void name##_wren() {                                                            \
     _##name##_spiflash_buf[0] = 0x06;                                             \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 1);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_RDSR_FN(name, cs)                                        \
   uint8_t name##_rdsr() {                                                         \
     _##name##_spiflash_buf[0] = 0x05;                                             \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 1);                                  \
     _##name##_spi_rd(_##name##_spiflash_buf, 1);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
     return _##name##_spiflash_buf[0];                                             \
   }
 
 #define _DEFINE_SPIFLASH_CE_FN(name, cs)                                          \
   void name##_ce() {                                                              \
     _##name##_spiflash_buf[0] = 0x60;                                             \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 1);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_SE_FN(name, cs)                                          \
@@ -75,9 +75,9 @@
     _##name##_spiflash_buf[1] = (addr >> 16);                                     \
     _##name##_spiflash_buf[2] = (addr >> 8);                                      \
     _##name##_spiflash_buf[3] = (addr >> 0);                                      \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 4);                                  \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #define _DEFINE_SPIFLASH_PP_FN(name, cs)                                          \
@@ -86,10 +86,10 @@
     _##name##_spiflash_buf[1] = (addr >> 16);                                     \
     _##name##_spiflash_buf[2] = (addr >> 8);                                      \
     _##name##_spiflash_buf[3] = (addr >> 0);                                      \
-    __asm clr  cs  __endasm;                                                      \
+    __asm clr  _ASM_REG(cs)  __endasm;                                            \
     _##name##_spi_wr(_##name##_spiflash_buf, 4);                                  \
     _##name##_spi_wr(data, length);                                               \
-    __asm setb cs  __endasm;                                                      \
+    __asm setb _ASM_REG(cs)  __endasm;                                            \
   }
 
 #endif
@@ -104,7 +104,7 @@
  * This macro defines a number of functions that implement common operations on 25C-compatible
  * SPI flashes. They are optimized and run at ~5 MHz SCK frequency at 48 MHz CLKOUT.
  * The `cs`, `sck`, `so`, and `si` parameters may point to any pins, and are defined in the
- * format `_IOx+n` (note the underscore).
+ * format `Pxn`.
  *
  * The defined routines are:
  *
@@ -121,7 +121,7 @@
  *   * `void name_pp(uint32_t addr, const __xdata uint8_t *data, uint16_t length)`, to program
  *     up to a whole page at the given address, with wraparound at page boundary (command `02`).
  *
- * For example, invoking the macro as `DEFINE_SPIFLASH_FNS(flash, _IOA+0, _IOB+0, _IOB+1, _IOB+2)`
+ * For example, invoking the macro as `DEFINE_SPIFLASH_FNS(flash, PA0, PB0, PB1, PB2)`
  * defines the routines `void flash_init()`, `void flash_read()`, etc that assume an SPI flash's
  * CS# pin is connected to A0, SCK pin is connected to B0, MISO pin is connected to B1, and MOSI
  * pin is connected to B2.

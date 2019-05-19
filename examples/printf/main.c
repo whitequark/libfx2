@@ -2,7 +2,7 @@
 #include <fx2debug.h>
 #include <stdio.h>
 
-DEFINE_DEBUG_PUTCHAR_FN(_PA0, 57600)
+DEFINE_DEBUG_PUTCHAR_FN(PA0, 57600)
 
 int main() {
   // Any of these will work at 57600 baud:

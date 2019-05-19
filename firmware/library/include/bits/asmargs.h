@@ -3,6 +3,8 @@
 
 #define _ASM_HASH #
 
+#define _ASM_REG(x) _ ## x
+
 #if defined(__SDCC_MODEL_SMALL)
 #define _ASM_GET_PARM1(rA, parm) \
     mov  rA, parm+0

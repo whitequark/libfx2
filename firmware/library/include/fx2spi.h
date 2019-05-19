@@ -17,7 +17,7 @@
       mov  _AUTOPTRL1, dpl                            \
       mov  _AUTOPTRH1, dph                            \
                                                       \
-      _ASM_GET_PARM(r2, r3, _##name##_PARM_2)         \
+      _ASM_GET_PARM2(r2, r3, _##name##_PARM_2)        \
                                                       \
       mov  a, r2                                      \
       jz   00000$                                     \
@@ -49,28 +49,27 @@
 
 #define _SPI_WR_LDR movx a, @dptr
 #define _SPI_WR_BIT(sck, si, so, num) \
-  mov  c, acc+num ; 2c                \
-  clr  sck        ; 2c                \
-  mov  si, c      ; 2c                \
-  setb sck        ; 2c
+  mov  c, acc+num       ; 2c                \
+  clr  _ASM_REG(sck)    ; 2c                \
+  mov  _ASM_REG(si), c  ; 2c                \
+  setb _ASM_REG(sck)    ; 2c
 
 #define _SPI_RD_TLR movx @dptr, a
 #define _SPI_RD_BIT(sck, si, so, num) \
-  clr  sck        ; 2c                \
-  mov  c, so      ; 2c                \
-  setb sck        ; 2c                \
-  mov  acc+num, c ; 2c
+  clr  _ASM_REG(sck)    ; 2c                \
+  mov  c, _ASM_REG(so)  ; 2c                \
+  setb _ASM_REG(sck)    ; 2c                \
+  mov  acc+num, c       ; 2c
 
 #endif
 
 /**
  * This macro defines a function `void name(const __xdata uint8_t *data, uint16_t len)` that
  * implements an optimized (76 clock cycles per iteration; ~5 MHz at 48 MHz CLKOUT) SPI Mode 3
- * write routine.
- * The `sck` and `si` parameters may point to any pins, and are defined in the format `_Pxn`
- * (note the underscore).
+ * write routine. The `sck` and `si` parameters may point to any pins, and are defined in
+ * the format `Pxn`.
  *
- * For example, invoking the macro as `DEFINE_SPI_WR_FN(flash_write, _PA1, _PB6)` defines
+ * For example, invoking the macro as `DEFINE_SPI_WR_FN(flash_write, PA1, PB6)` defines
  * a routine `void flash_write()` that assumes an SPI device's SCK pin is connected to A1 and
  * MOSI pin is connected to B6.
  */
@@ -83,7 +82,7 @@
  * The `sck` and `so` parameters may point to any pins, and are defined in the format `_Pxn`
  * (note the underscore).
  *
- * For example, invoking the macro as `DEFINE_SPI_RD_FN(flash_read, _PA1, _PB5)` defines
+ * For example, invoking the macro as `DEFINE_SPI_RD_FN(flash_read, PA1, PB5)` defines
  * a routine `void flash_read()` that assumes an SPI device's SCK pin is connected to A1 and
  * MISO pin is connected to B5.
  */

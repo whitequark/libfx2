@@ -22,7 +22,7 @@ void flash_bus_deinit() {
   OEA &= ~0b0111;
 }
 
-DEFINE_SPIFLASH_FNS(flash, /*cs=*/_PA0, /*sck=*/_PA1, /*si=*/_PA2, /*so=*/_PA3)
+DEFINE_SPIFLASH_FNS(flash, /*cs=*/PA0, /*sck=*/PA1, /*si=*/PA2, /*so=*/PA3)
 
 // Application mode descriptors.
 
