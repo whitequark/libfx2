@@ -40,4 +40,12 @@
     mov  rB, a
 #endif
 
+#if !defined(__SDCC_MODEL_HUGE)
+#define _ASM_RET \
+    ret
+#else
+#define _ASM_RET \
+    ljmp __sdcc_banked_ret
+#endif
+
 #endif

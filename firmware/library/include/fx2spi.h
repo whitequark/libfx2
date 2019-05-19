@@ -9,7 +9,7 @@
 
 // See the implementation of xmemcpy for a detailed explanation of the loop structure below.
 #define _SPI_FN(name, cst, bit, sck, si, so, aldr, atlr)   \
-  void name(cst __xdata uint8_t *data, uint16_t len) {    \
+  void name(cst __xdata uint8_t *data, uint16_t len) {     \
     data;                                             \
     len;                                              \
     __asm                                             \
