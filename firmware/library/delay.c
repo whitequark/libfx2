@@ -200,7 +200,7 @@ void delay_ms(uint16_t count) __naked {
     mov  r7, dph
 
     // overhead = (cycle tally)
-    mov  a, #18
+    mov  a, #17
     push acc
 
   00000$:
@@ -211,10 +211,10 @@ void delay_ms(uint16_t count) __naked {
     dec  r6             ; 1c
     cjne r6, #0xff, 00001$ ; 4c
     dec  r7             ; 1c
-
   00001$:
-    mov  dpl, #(1000&0xff) ; 2c
-    mov  dph, #(1000>>8)   ; 2c
+
+    // count_us = 1000
+    mov  dptr, #1000    ; 3c
     lcall _delay_us_overhead
 
     sjmp 00000$         ; 3c

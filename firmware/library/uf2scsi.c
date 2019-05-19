@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <fx2lib.h>
 #include <fx2uf2.h>
@@ -102,7 +103,7 @@ bool uf2_scsi_data_in(uint8_t lun, __xdata uint8_t *buffer, uint16_t length) __r
     xmemclr(buffer, length);
 
     data->additional_length = sizeof(struct scsi_inquiry_data) -
-      (__builtin_offsetof(struct scsi_inquiry_data, additional_length) +
+      (offsetof(struct scsi_inquiry_data, additional_length) +
        sizeof(data->additional_length));
 
     // SBC-2 (Direct access block device).

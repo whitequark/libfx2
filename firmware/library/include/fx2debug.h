@@ -26,7 +26,7 @@
       push ar3                                \
       push ar2                                \
                                               \
-      mov  r2, _ASM_HASH 4                    \
+      mov  r2, _ASM_HASH (00002$-00001$)      \
       mov  r3, _ASM_HASH 0                    \
       mov  r4, dpl                            \
       mov  r5, dpl                            \
@@ -45,28 +45,29 @@
       mov  a, r3                              \
     00001$:                                   \
       clr  _ASM_REG(tx)           ; 2c        \
-        sjmp 00002$               ; 3c        \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      mov  _ASM_REG(tx), c                    \
-        sjmp 00002$                           \
-      setb _ASM_REG(tx)                       \
-        sjmp 00002$                           \
-      sjmp 00003$                             \
-                                              \
+        sjmp 00003$               ; 3c        \
     00002$:                                   \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      mov  _ASM_REG(tx), c                    \
+        sjmp 00003$                           \
+      setb _ASM_REG(tx)                       \
+        sjmp 00003$                           \
+      sjmp 00004$                             \
+                                              \
+    00003$:                                   \
       add  a, r2                  ; 1c        \
       mov  r3, a                  ; 1c        \
                                               \
@@ -82,7 +83,7 @@
       mov  a, r3                  ; 1c        \
       jmp  @a+dptr                ; 3c        \
                                               \
-    00003$:                                   \
+    00004$:                                   \
       mov  dpl, r5                            \
                                               \
       pop  ar2                                \
