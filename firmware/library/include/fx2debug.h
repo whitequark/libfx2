@@ -116,7 +116,12 @@
  * the `printf` family of functions. (The C standard requires `putchar` to have the specified
  * signature).
  */
+#if (__SDCC_VERSION_MAJOR > 3) || ((__SDCC_VERSION_MAJOR == 3) && (__SDCC_VERSION_MINOR > 6))
 #define DEFINE_DEBUG_PUTCHAR_FN(tx, baud) \
   _DEBUG_FN(int, putchar, int, tx, baud)
+#else
+#define DEFINE_DEBUG_PUTCHAR_FN(tx, baud) \
+  _DEBUG_FN(void, putchar, char, tx, baud)
+#endif
 
 #endif
