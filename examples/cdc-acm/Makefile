@@ -1,4 +1,4 @@
-TARGET    = serial
+TARGET    = cdc-acm
 LIBRARIES = fx2 fx2usb fx2isrs
 MODEL     = small
 
