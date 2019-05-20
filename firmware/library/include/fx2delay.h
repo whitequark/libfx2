@@ -31,7 +31,7 @@ void delay_us(uint16_t count_us);
 
 /**
  * Spin for `count * 4` processor cycles, or `count * 16` clock cycles.
- * Takes exactly 32 processor cycles (3..10 microseconds) if `count` is less than `8`.
+ * Takes exactly 24 processor cycles (2..8 microseconds) if `count` is less than `6`.
  */
 void delay_4c(uint16_t count_4c);
 

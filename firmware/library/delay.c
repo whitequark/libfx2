@@ -1,58 +1,43 @@
 #include <fx2delay.h>
 #include <fx2regs.h>
+#include <bits/asmargs.h>
 
-// Spin for exactly min(32, DP*4) cycles (i.e. min(128, DP*16) clocks), including the call of
+// Spin for exactly min(24, DP*4) cycles (i.e. min(96, DP*16) clocks), including the call of
 // this function. The implementation is a bit complicated, but the calculations in the callee
 // are simpler.
 void delay_4c(uint16_t count) __naked {
   count;
   __asm
-    ; (ljmp delay_4c) ; 4c
-    // subtract fixed delay; 4c ljmp, 13c prolog, 11c loop conditions, 4c epilog
-    clr  c            ; 1c
-    mov  a, dpl       ; 2c
-    subb a, #8        ; 2c
-    mov  dpl, a       ; 2c
-    mov  a, dph       ; 2c
-    subb a, #0        ; 2c
-    mov  dph, a       ; 2c
-
-    // only run for minimum cycle count on underflow
-    jnc  00000$       ; 3c
-    // we've ran for 20 cycles, but need 32, fill in
-    nop               ; 1c
-    nop               ; 1c
-    nop               ; 1c
-    nop               ; 1c
-    nop               ; 1c
-    sjmp 00005$       ; 3c
-
+    ; (ljmp delay_4c)       ;  0c >    4c
+    mov  acc, dph           ;          3c
+    cjne a, #0, 00000$      ;          4c > 11c [A]
+    mov  acc, dpl           ;          3c
+    subb a, #(24/4+1)       ;          2c
+    inc  a                  ;          1c
+    jnc  00003$             ;          3c > 20c [B]
+    _ASM_RET                ;          4c > 24c
   00000$:
-    // don't run the DPH loop if DPH is zero
-    jz   00003$       ; 3c
-    // loop for DPH*256*4 cycles, DPH*512 instructions
+    mov  a, dpl             ; [A] >    2c
+    jz   00002$             ;          3c > 16c [C]
   00001$:
-      nop               ; 1c
-      nop               ; 1c
-      mov  a, #0xfe     ; 2c
+    djnz acc, 00001$        ; [C] >   4Lc > (16+4L)c [D]
+                            ; [E] > 1016c > (16+1024H+4L)c [G]
   00002$:
-        djnz acc, 00002$  ; 3c
-      djnz dph, 00001$  ; 4c
-
+    nop                     ; [D] >    1c
+    mov  acc, #-2           ;          3c
+    djnz dph, 00001$        ;          4c > (16+8+4L) [E]
+    nop                     ;          1c
+    mov  acc, #-((28+4)/4)  ;          3c > (28+4L) [F]
+                            ; [G] >    1c
+                            ;          3c
+                            ;          4c > (16+8+1024H+4L)c [E]
+                            ;          1c
+                            ;          3c > (28+1024H+4L)c [F]
   00003$:
-    // don't run the DPL loop if DPL is zero
-    mov  a, dpl       ; 2c
-    jz   00005$       ; 3c
-    // loop for DPL*4 cycles, DPL instructions
-  00004$:
-      djnz dpl, 00004$  ; 4c
-
-  00005$:
-#if !defined(__SDCC_MODEL_HUGE)
-    ret               ; 4c
-#else
-    ljmp __sdcc_banked_ret
-#endif
+    djnz acc, 00003$        ; [B] >   4Lc
+    _ASM_RET                ;          4c > (24+4L)c
+                            ; [F] >  992c
+                            ;          4c > (1024H+4L)c
   __endasm;
 }
 
@@ -155,11 +140,7 @@ void delay_us_overhead(uint16_t count, uint8_t caller_overh) __naked __reentrant
 
     // if(underflow) return
     jnc  00001$         ; 4c
-#if !defined(__SDCC_MODEL_HUGE)
-    ret
-#else
-    ljmp __sdcc_banked_ret
-#endif
+    _ASM_RET
 
   00001$:
     // delay_4c(iters)
@@ -180,11 +161,7 @@ void delay_us(uint16_t count) __naked {
     push acc            ; 2c
     lcall _delay_us_overhead
     dec  sp             ; 2c
-#if !defined(__SDCC_MODEL_HUGE)
-    ret                 ; 4c => 17c
-#else
-    ljmp __sdcc_banked_ret
-#endif
+    _ASM_RET            ; 4c => 17c
   __endasm;
 }
 
@@ -225,10 +202,6 @@ void delay_ms(uint16_t count) __naked {
     // epilog
     pop  ar6
     pop  ar7
-#if !defined(__SDCC_MODEL_HUGE)
-    ret                 ; 4c => 17c
-#else
-    ljmp __sdcc_banked_ret
-#endif
+    _ASM_RET            ; 4c => 17c
   __endasm;
 }
