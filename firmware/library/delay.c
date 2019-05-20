@@ -2,8 +2,8 @@
 #include <fx2regs.h>
 #include <bits/asmargs.h>
 
-// Spin for exactly min(24, DP*4) cycles (i.e. min(96, DP*16) clocks), including the call of
-// this function. The implementation is a bit complicated, but the calculations in the callee
+// Spin for exactly max(24, DP*4) cycles (i.e. max(96, DP*16) clocks), including the call of
+// this function. The implementation is a bit complicated, but the calculations in the caller
 // are simpler.
 void delay_4c(uint16_t count) __naked {
   count;
@@ -156,7 +156,7 @@ void delay_us(uint16_t count) __naked {
   count;
   __asm;
     ; (mov dptr, #?)    ; 3c
-    ; (ljmp delay_us)   ; 4c
+    ; (lcall delay_us)  ; 4c
     mov  a, #17         ; 2c
     push acc            ; 2c
     lcall _delay_us_overhead
@@ -194,7 +194,7 @@ void delay_ms(uint16_t count) __naked {
     mov  dptr, #1000    ; 3c
     lcall _delay_us_overhead
 
-    sjmp 00000$         ; 3c
+    sjmp 00000$         ; 3c => 17c
 
   00002$:
     dec  sp
@@ -202,6 +202,6 @@ void delay_ms(uint16_t count) __naked {
     // epilog
     pop  ar6
     pop  ar7
-    _ASM_RET            ; 4c => 17c
+    _ASM_RET
   __endasm;
 }
