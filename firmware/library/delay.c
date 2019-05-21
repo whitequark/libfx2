@@ -5,38 +5,40 @@
 // Spin for exactly max(24, DP*4) cycles (i.e. max(96, DP*16) clocks), including the call of
 // this function. The implementation is a bit complicated, but the calculations in the caller
 // are simpler.
+//
+// This was originally optimized by @whitequark, and then improved by @8051Enthusiast.
 void delay_4c(uint16_t count) __naked {
   count;
   __asm
     ; (ljmp delay_4c)       ;  0c >    4c
-    mov  acc, dph           ;          3c
-    cjne a, #0, 00000$      ;          4c > 11c [A]
-    mov  acc, dpl           ;          3c
-    subb a, #(24/4+1)       ;          2c
-    inc  a                  ;          1c
-    jnc  00003$             ;          3c > 20c [B]
-    _ASM_RET                ;          4c > 24c
+    mov  a, dph             ;          2c
+    jnz  00001$             ;          3c >  9c [A]
+    mov  a, dpl             ;          2c
+    add  a, #-(20/4+1)      ;          2c
+    jc   00000$             ;          3c > 16c [B]
+    _ASM_RET                ;          4c > 20c
   00000$:
-    mov  a, dpl             ; [A] >    2c
-    jz   00002$             ;          3c > 16c [C]
+    cjne a, #0, 00004$      ; [B] >    4c > 20c [H]
+    _ASM_RET                ;          4c > 24c
   00001$:
-    djnz acc, 00001$        ; [C] >   4Lc > (16+4L)c [D]
-                            ; [E] > 1016c > (16+1024H+4L)c [G]
+    mov  a, dpl             ; [A] >    2c
+    jz   00003$             ;          3c > 14c [C]
   00002$:
+    djnz acc, 00002$        ; [C] >   4Lc > (14+4L)c [D]
+                            ; [E] > 1016c > (14+1024H+4L)c [G]
+  00003$:
     nop                     ; [D] >    1c
     mov  acc, #-2           ;          3c
-    djnz dph, 00001$        ;          4c > (16+8+4L) [E]
-    nop                     ;          1c
-    mov  acc, #-((28+4)/4)  ;          3c > (28+4L) [F]
+    djnz dph, 00002$        ;          4c > (14+8+4L) [E]
+    mov  a, #-((24+4)/4)    ;          2c > (24+4L) [F]
                             ; [G] >    1c
                             ;          3c
-                            ;          4c > (16+8+1024H+4L)c [E]
-                            ;          1c
-                            ;          3c > (28+1024H+4L)c [F]
-  00003$:
-    djnz acc, 00003$        ; [B] >   4Lc
+                            ;          4c > (14+8+1024H+4L)c [E]
+                            ;          2c > (24+1024H+4L)c [F]
+  00004$:
+    djnz acc, 00004$        ; [H] >   4Lc
     _ASM_RET                ;          4c > (24+4L)c
-                            ; [F] >  992c
+                            ; [F] >  996c
                             ;          4c > (1024H+4L)c
   __endasm;
 }
