@@ -140,16 +140,17 @@ void delay_us_overhead(uint16_t count, uint8_t caller_overh) __naked __reentrant
     subb a, #0          ; 2c
     mov  dph, a         ; 1c
 
-    // if(underflow) return
-    jnc  00001$         ; 4c
-    _ASM_RET
-
-  00001$:
-    // delay_4c(iters)
     pop  ar0            ; 2c
     pop  ar1            ; 2c
     pop  ar6            ; 2c
-    pop  ar7            ; 2c => 36c
+    pop  ar7            ; 2c
+
+    // if(underflow) return
+    jnc  00001$         ; 4c => 36c
+    _ASM_RET
+
+  00001$:
+    // else delay_4c(iters)
     ljmp _delay_4c
   __endasm;
 }
