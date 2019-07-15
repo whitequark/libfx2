@@ -103,12 +103,12 @@ typedef unsigned char sig_atomic_t;
 // allow placing data and pointers in different address spaces.
 
 // Round `v` up to next power of two, or itself if `v` is already a power of two.
-#define _QUEUE_NEXT_POT_S1(v) ((v)|(v>>32))
-#define _QUEUE_NEXT_POT_S2(v) ((v)|(v>>16))
-#define _QUEUE_NEXT_POT_S3(v) ((v)|(v>>8))
-#define _QUEUE_NEXT_POT_S4(v) ((v)|(v>>4))
-#define _QUEUE_NEXT_POT_S5(v) ((v)|(v>>2))
-#define _QUEUE_NEXT_POT_S6(v) ((v)|(v>>1))
+#define _QUEUE_NEXT_POT_S1(v) ((v)|((v)>>32))
+#define _QUEUE_NEXT_POT_S2(v) ((v)|((v)>>16))
+#define _QUEUE_NEXT_POT_S3(v) ((v)|((v)>>8))
+#define _QUEUE_NEXT_POT_S4(v) ((v)|((v)>>4))
+#define _QUEUE_NEXT_POT_S5(v) ((v)|((v)>>2))
+#define _QUEUE_NEXT_POT_S6(v) ((v)|((v)>>1))
 #define _QUEUE_NEXT_POT(v)                                                  \
   (1+_QUEUE_NEXT_POT_S6(_QUEUE_NEXT_POT_S5(_QUEUE_NEXT_POT_S4(              \
      _QUEUE_NEXT_POT_S3(_QUEUE_NEXT_POT_S2(_QUEUE_NEXT_POT_S1((v)-1)))))))
@@ -122,7 +122,7 @@ struct _queue {
 #define DEFINE_QUEUE(name, ty, cap)                                         \
   struct _queue name = {0, 0};                                              \
   ty name##_data[cap];                                                      \
-  _Static_assert(cap <= (1 << (sizeof(sig_atomic_t) * 8 - 1)),              \
+  _Static_assert((cap) <= (1 << (sizeof(sig_atomic_t) * 8 - 1)),            \
     "Capacity of queue " #name                                              \
     " must be less than one half of the range of sig_atomic_t");
 
@@ -133,24 +133,24 @@ struct _queue {
 #define _QUEUE_INDEX_MASK(queue)                                            \
   (_QUEUE_EPOCH_LSB(queue)-1)
 #define _QUEUE_NEXT(queue, ptr)                                             \
-  (queue.ptr & _QUEUE_INDEX_MASK(queue)) == (_QUEUE_CAP(queue) - 1)         \
-    ? queue.ptr + 1 + (_QUEUE_EPOCH_LSB(queue) - _QUEUE_CAP(queue))         \
-    : queue.ptr + 1                                                         \
+  ((queue).ptr & _QUEUE_INDEX_MASK(queue)) == (_QUEUE_CAP(queue) - 1)       \
+    ? (queue).ptr + 1 + (_QUEUE_EPOCH_LSB(queue) - _QUEUE_CAP(queue))       \
+    : (queue).ptr + 1                                                       \
 
 #define QUEUE_EMPTY(queue)                                                  \
-  (queue.tail == queue.head)
+  ((queue).tail == (queue).head)
 #define QUEUE_FULL(queue)                                                   \
-  ((sig_atomic_t)(queue.tail + _QUEUE_EPOCH_LSB(queue)) == queue.head)
+  ((sig_atomic_t)((queue).tail + _QUEUE_EPOCH_LSB(queue)) == (queue).head)
 
 #define QUEUE_PUT(queue, elem)                                              \
   do {                                                                      \
-    queue##_data[queue.head & _QUEUE_INDEX_MASK(queue)] = elem;             \
-    queue.head = _QUEUE_NEXT(queue, head);                                  \
+    queue##_data[(queue).head & _QUEUE_INDEX_MASK(queue)] = (elem);         \
+    (queue).head = _QUEUE_NEXT(queue, head);                                \
   } while(0)
 #define QUEUE_GET(queue, elem)                                              \
   do {                                                                      \
-    elem = queue##_data[queue.tail & _QUEUE_INDEX_MASK(queue)];             \
-    queue.tail = _QUEUE_NEXT(queue, tail);                                  \
+    elem = queue##_data[(queue).tail & _QUEUE_INDEX_MASK(queue)];           \
+    (queue).tail = _QUEUE_NEXT(queue, tail);                                \
   } while(0)
 
 #endif
