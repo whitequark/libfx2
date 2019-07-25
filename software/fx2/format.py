@@ -110,25 +110,43 @@ def output_data(file, data, fmt="auto", offset=0):
         if not isinstance(data, list):
             data = [(offset, data)]
 
+        def write_record(record):
+            record.append((~sum(record) + 1) & 0xff)
+            file.write(b":")
+            file.write(bytes(record).hex().upper().encode())
+            file.write(b"\n")
+
+        bankoff = 0
         for (addr, chunk) in data:
             pos = 0
             while pos < len(chunk):
-                recoff  = addr + pos
+                recoff = addr + pos
+                if bankoff != recoff >> 16:
+                    bankoff = recoff >> 16
+                    write_record([
+                        2,
+                        0x00, # dummy
+                        0x00, # dummy
+                        0x04, # Extended Linear Address
+                        (bankoff >> 8) & 0xff,
+                        (bankoff >> 0) & 0xff,
+                    ])
                 recdata = chunk[pos:pos + 0x10]
-                record  = [
+                write_record([
                     len(recdata),
                     (recoff >> 8) & 0xff,
                     (recoff >> 0) & 0xff,
-                    0x00,
+                    0x00, # Data
                     *list(recdata)
-                ]
-                record.append((~sum(record) + 1) & 0xff)
-                file.write(b":")
-                file.write(bytes(record).hex().upper().encode())
-                file.write(b"\n")
+                ])
                 pos += len(recdata)
 
-        file.write(b":00000001FF\n")
+        write_record([
+            0,
+            0x00, # dummy
+            0x00, # dummy
+            0x01, # End Of File
+        ])
 
 
 def input_data(file_or_data, fmt="auto", offset=0):
@@ -175,10 +193,10 @@ def input_data(file_or_data, fmt="auto", offset=0):
         RE_HDR = re.compile(rb":([0-9a-f]{8})", re.I)
         RE_WS  = re.compile(rb"\s*")
 
-        bank_bias = 0  # Support Record Type 04
-        resoff = 0
-        resbuf = []
-        res = []
+        bankoff = 0
+        resoff  = 0
+        resbuf  = []
+        res     = []
 
         pos = 0
         while pos < len(data):
@@ -203,20 +221,20 @@ def input_data(file_or_data, fmt="auto", offset=0):
             if rectype == 0x01:
                 break
             elif rectype == 0x04:
-                res.append((offset + resoff + bank_bias, resbuf))
+                res.append((offset + resoff + bankoff, resbuf))
 
                 # If we switch banks, we know there is a discontinuity, so
                 # make no assumption about previous position or buffer contents.
-                resoff = 0
-                resbuf = []
-                bank_bias = ((recdata[0] << 8) | recdata[1]) << 16
+                resoff  = 0
+                resbuf  = []
+                bankoff = ((recdata[0] << 8) | recdata[1]) << 16
             else:
                 recoff = (recoffh << 8) | recoffl
                 if resoff + len(resbuf) == recoff:
                     resbuf += recdata
                 else:
                     if len(resbuf) > 0:
-                        res.append((offset + resoff + bank_bias, resbuf))
+                        res.append((offset + resoff + bankoff, resbuf))
                     resoff  = recoff
                     resbuf  = recdata
 
@@ -225,6 +243,6 @@ def input_data(file_or_data, fmt="auto", offset=0):
 
         # Handle last record that was seen before Record Type 0x01.
         if len(resbuf) > 0:
-            res.append((offset + resoff + bank_bias, resbuf))
+            res.append((offset + resoff + bankoff, resbuf))
 
         return res
