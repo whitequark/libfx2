@@ -1,4 +1,4 @@
-#include <fx2delay.h>
+#include <stdint.h>
 #include <fx2regs.h>
 #include <bits/asmargs.h>
 

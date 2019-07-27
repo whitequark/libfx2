@@ -1,5 +1,4 @@
-#include <fx2lib.h>
-#include <fx2regs.h>
+#include <stdint.h>
 
 uint16_t bswap16(uint16_t value) __naked {
   value;
