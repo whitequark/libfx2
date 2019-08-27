@@ -45,7 +45,7 @@ class Fx2Sdist(sdist):
 
 setup(
     name="fx2",
-    version="0.6",
+    version="0.7",
     author="whitequark",
     author_email="whitequark@whitequark.org",
     description="A Python package for interacting with Cypress EZ-USB FX2 series chips",
