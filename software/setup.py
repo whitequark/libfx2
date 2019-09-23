@@ -23,7 +23,7 @@ class Fx2BuildExt(build_ext):
                                         "build", "boot-cypress.ihex")
             self.copy_file(bootloader_ihex, "fx2")
         except DistutilsExecError as e:
-            if os.access(path.join("fx2", "bootloader.ihex"), os.R_OK):
+            if os.access(path.join("fx2", "boot-cypress.ihex"), os.R_OK):
                 log.info("using prebuilt bootloader")
             else:
                 raise
