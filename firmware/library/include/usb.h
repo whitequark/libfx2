@@ -94,6 +94,12 @@ enum usb_usage_type {
   USB_USAGE_MASK            = 0b00110000,
 };
 
+enum usb_tx_per_microframe {
+  USB_TX_1_PER_MICROFRAME   = 0b00 << 11,
+  USB_TX_2_PER_MICROFRAME   = 0b01 << 11,
+  USB_TX_3_PER_MICROFRAME   = 0b10 << 11,
+};
+
 struct usb_req_setup {
   uint8_t bmRequestType;
   uint8_t bRequest;
