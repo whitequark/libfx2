@@ -202,7 +202,15 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
   } else if(type == USB_DESC_STRING && index == 0) {
     APPEND(&usb_langid);
   } else if(type == USB_DESC_STRING && index - 1 < set->string_count) {
-    __code const char *string = set->strings[index - 1];
+    uint8_t string_index = index - 1;
+    // use string from descriptor set by default
+    //
+    const char *string = set->strings[string_index];
+    // if user defined dynamic string then use it
+    if (usb_user_strings[string_index] != 0) {
+      string = usb_user_strings[string_index];
+    }
+
     *buf++ = 2;               // bLength
     *buf++ = USB_DESC_STRING; // bDescriptorType
     while(*string) {

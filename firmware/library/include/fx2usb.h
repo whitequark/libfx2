@@ -121,6 +121,18 @@ struct usb_descriptor_set {
 typedef __code const struct usb_descriptor_set
   usb_descriptor_set_c;
 
+/*
+ * This is an array of strings that can be modified by the user at runtime,
+ * to dynamically change chosen usb strings. The array should have a length
+ * equal to the number of USB strings. Each element can point to an arbitrary
+ * string, an then this string will be used instead of the defined ones.
+ * If given pointer is zero, then string from descriptor set will be used.
+ * All the strings must be null-terminated.
+ * If this feature is not needed define these as:
+ *   char *usb_user_strings[ARRAYSIZE(usb_strings)] = {0};
+ */
+extern char *usb_user_strings[];
+
 /**
  * Helper function for returning descriptors from a set of C structure definitions.
  * This function relaxes all hardware restrictions on descriptor layout by
