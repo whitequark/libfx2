@@ -82,6 +82,8 @@ usb_ascii_string_c usb_strings[] = {
   [2] = "000000000000",
 };
 
+char *usb_user_strings[ARRAYSIZE(usb_strings)] = {0};
+
 usb_descriptor_set_c usb_descriptor_set = {
   .device          = &usb_device,
   .config_count    = ARRAYSIZE(usb_configs),
