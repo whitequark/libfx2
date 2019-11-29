@@ -160,6 +160,8 @@ usb_ascii_string_c usb_strings[] = {
   [1] = "FX2 series serial interface example",
 };
 
+char *usb_user_strings[ARRAYSIZE(usb_strings)] = {0};
+
 usb_descriptor_set_c usb_descriptor_set = {
   .device           = &usb_device,
   .config_count     = ARRAYSIZE(usb_configs),

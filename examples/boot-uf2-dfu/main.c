@@ -102,6 +102,8 @@ usb_ascii_string_c usb_strings_uf2[] = {
   [2] = "000000000000",
 };
 
+char *usb_user_strings[ARRAYSIZE(usb_strings_uf2)] = {0};
+
 // DFU mode descriptors
 
 usb_desc_interface_c usb_interface_dfu_upgrade = {

@@ -83,6 +83,8 @@ usb_ascii_string_c usb_strings_app[] = {
   [1] = "Example application with DFU support",
 };
 
+char *usb_user_strings[ARRAYSIZE(usb_strings_app)] = {0};
+
 // DFU mode descriptors
 
 usb_desc_interface_c usb_interface_dfu_upgrade_eeprom = {
