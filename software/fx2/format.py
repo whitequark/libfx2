@@ -32,7 +32,7 @@ def flatten_data(data):
     """
     data_flat = bytearray(max([addr + len(chunk) for (addr, chunk) in data]))
     for (addr, chunk) in data:
-        data_flat[addr:len(chunk)] = chunk
+        data_flat[addr:addr+len(chunk)] = chunk
     return data_flat
 
 
