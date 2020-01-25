@@ -193,6 +193,7 @@ def input_data(file_or_data, fmt="auto", offset=0):
         RE_HDR = re.compile(rb":([0-9a-f]{8})", re.I)
         RE_WS  = re.compile(rb"\s*")
 
+        segoff  = 0
         bankoff = 0
         resoff  = 0
         resbuf  = []
@@ -215,34 +216,42 @@ def input_data(file_or_data, fmt="auto", offset=0):
                 raise ValueError("Invalid record data at offset {}".format(pos))
             if sum(rechdr + recdata + [recsum]) & 0xff != 0:
                 raise ValueError("Invalid record checksum at offset {}".format(pos))
-            if rectype not in [0x00, 0x01, 0x04]:
-                raise ValueError("Unknown record type at offset {}".format(pos))
 
             if rectype == 0x01:
                 break
-            elif rectype == 0x04:
-                res.append((offset + resoff + bankoff, resbuf))
 
-                # If we switch banks, we know there is a discontinuity, so
+            elif rectype in (0x02, 0x04):
+                res.append((offset + resoff + segoff + bankoff, resbuf))
+
+                # If we switch segments/banks, we know there is a discontinuity, so
                 # make no assumption about previous position or buffer contents.
                 resoff  = 0
                 resbuf  = []
-                bankoff = ((recdata[0] << 8) | recdata[1]) << 16
-            else:
+                if rectype == 0x02:
+                    segoff  = ((recdata[0] << 8) | recdata[1]) << 4
+                elif rectype == 0x04:
+                    bankoff = ((recdata[0] << 8) | recdata[1]) << 16
+                else:
+                    assert False
+
+            elif rectype == 0x00:
                 recoff = (recoffh << 8) | recoffl
                 if resoff + len(resbuf) == recoff:
                     resbuf += recdata
                 else:
                     if len(resbuf) > 0:
-                        res.append((offset + resoff + bankoff, resbuf))
+                        res.append((offset + resoff + segoff + bankoff, resbuf))
                     resoff  = recoff
                     resbuf  = recdata
+
+            else:
+                raise ValueError("Unknown record type {:02x} at offset {}".format(rectype, pos))
 
             match = RE_WS.match(data, match.end(0) + len(recdatahex))
             pos = match.end(0)
 
         # Handle last record that was seen before Record Type 0x01.
         if len(resbuf) > 0:
-            res.append((offset + resoff + bankoff, resbuf))
+            res.append((offset + resoff + segoff + bankoff, resbuf))
 
         return res
