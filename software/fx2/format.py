@@ -25,12 +25,12 @@ def autodetect(file):
         raise ValueError("Specify file format explicitly")
 
 
-def flatten_data(data):
+def flatten_data(data, *, fill=0x00):
     """
     Flatten a list of ``(addr, chunk)`` pairs, such as that returned by :func:`input_data`,
     to a flat byte array, such as that accepted by :func:`output_data`.
     """
-    data_flat = bytearray(max([addr + len(chunk) for (addr, chunk) in data]))
+    data_flat = bytearray([fill]) * max([addr + len(chunk) for (addr, chunk) in data])
     for (addr, chunk) in data:
         data_flat[addr:addr+len(chunk)] = chunk
     return data_flat
