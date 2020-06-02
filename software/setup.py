@@ -78,6 +78,7 @@ See the documentation for details.
         "bdist_egg": Fx2BdistEgg,
         "sdist": Fx2Sdist,
     },
+    url="https://libfx2.readthedocs.io/",
     project_urls={
         "Documentation": "https://libfx2.readthedocs.io/",
         "Source Code": "https://github.com/whitequark/libfx2",
