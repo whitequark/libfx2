@@ -189,7 +189,7 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
     usb_configuration_c *config = set->configs[index];
     __xdata struct usb_desc_configuration *config_desc =
       (__xdata struct usb_desc_configuration *)buf;
-    const union usb_config_item *config_item = &config->items[0];
+    __code const union usb_config_item *config_item = &config->items[0];
 
     APPEND(&config->desc);
     do {
@@ -224,7 +224,7 @@ void usb_reset_data_toggles(usb_descriptor_set_c *set, uint8_t interface_num,
   uint8_t nconfig;
   for(nconfig = 0; nconfig < set->config_count; nconfig++) {
     usb_configuration_c *config = set->configs[nconfig];
-    const union usb_config_item *config_item = &config->items[0];
+    __code const union usb_config_item *config_item = &config->items[0];
     bool use_interface = false;
 
     if(config->desc.bConfigurationValue != usb_config_value)
