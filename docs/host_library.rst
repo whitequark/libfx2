@@ -15,9 +15,6 @@ Host-side library reference
       .. automethod:: control_write
       .. automethod:: bulk_read
       .. automethod:: bulk_write
-      .. automethod:: create_poller
-      .. automethod:: get_poller
-      .. automethod:: poll
 
       .. automethod:: read_ram
       .. automethod:: write_ram
