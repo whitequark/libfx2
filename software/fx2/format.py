@@ -234,6 +234,9 @@ def input_data(file_or_data, fmt="auto", offset=0):
                 else:
                     assert False
 
+            elif rectype == 0x05:
+                pass
+
             elif rectype == 0x00:
                 recoff = (recoffh << 8) | recoffl
                 if resoff + len(resbuf) == recoff:
