@@ -11,6 +11,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.7'
     - name: Install dependencies
       run: |
         sudo apt-get install sdcc
@@ -20,3 +24,6 @@ jobs:
     - name: Build examples
       run: |
         make -C examples CFLAGS=--Werror
+    - name: Build Python package
+      run: |
+        pip install ./software

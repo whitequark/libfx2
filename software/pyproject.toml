@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools~=67.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fx2"
+version = "0.9"
+authors = [{name = "whitequark", email = "whitequark@whitequark.org"}]
+description = "A Python package for interacting with Cypress EZ-USB FX2 series chips"
+readme = "README.rst"
+license = {text = "BSD-0-clause"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved", # " :: 0-clause BSD License", (not in PyPI)
+  "Topic :: Software Development :: Embedded Systems",
+  "Topic :: System :: Hardware",
+]
+
+dependencies = [
+  "libusb1>=1.0",
+  "crcmod~=1.7"
+]
+
+[project.urls]
+"Documentation" = "https://libfx2.readthedocs.io/"
+"Source Code" = "https://github.com/whitequark/libfx2"
+"Bug Tracker" = "https://github.com/whitequark/libfx2/issues"
+
+[project.scripts]
+fx2tool = "fx2.fx2tool:main"
+
+[tool.setuptools.package-data]
+fx2 = ["boot-cypress.ihex"]
