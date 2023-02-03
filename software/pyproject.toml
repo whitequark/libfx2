@@ -1,10 +1,11 @@
 [build-system]
-requires = ["setuptools~=67.0"]
+requires = ["setuptools~=67.0", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
+dynamic = ["version"]
+
 name = "fx2"
-version = "0.9"
 authors = [{name = "whitequark", email = "whitequark@whitequark.org"}]
 description = "A Python package for interacting with Cypress EZ-USB FX2 series chips"
 readme = "README.rst"
@@ -31,3 +32,7 @@ fx2tool = "fx2.fx2tool:main"
 
 [tool.setuptools.package-data]
 fx2 = ["boot-cypress.ihex"]
+
+[tool.setuptools_scm]
+root = ".."
+local_scheme = "node-and-timestamp"
