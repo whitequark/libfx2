@@ -1,0 +1,22 @@
+on:
+  push: {}
+  pull_request:
+    types: [opened, reopened, synchronize]
+name: CI
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out source code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install dependencies
+      run: |
+        sudo apt-get install sdcc
+    - name: Build firmware
+      run: |
+        make -C firmware CFLAGS=--Werror
+    - name: Build examples
+      run: |
+        make -C examples CFLAGS=--Werror
