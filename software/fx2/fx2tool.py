@@ -7,8 +7,8 @@ import struct
 import collections
 import argparse
 import textwrap
-import crcmod
 import usb1
+from zlib import crc32
 
 from . import VID_CYPRESS, PID_FX2, FX2Config, FX2Device, FX2DeviceError
 from .format import input_data, output_data, diff_data
@@ -535,10 +535,7 @@ def main():
                 args.dfu_product_id or args.product_id,
                 args.device_id)
             image += bytes(reversed(suffix))
-
-            crc = crcmod.Crc(poly=0x104c11db7, initCrc=0xffffffff)
-            crc.update(image)
-            image += struct.pack("<L", crc.crcValue)
+            image += struct.pack("<L", crc32(image) ^ 0xffffffff)
 
             args.dfu_file.write(image)
 
