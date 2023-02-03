@@ -306,7 +306,7 @@ def get_argparser():
         "firmware_file", metavar="FIRMWARE-FILE", type=argparse.FileType("rb"),
         help="read firmware from the specified file")
     p_dfu.add_argument(
-        "dfu_file", metavar="UF2-FILE", type=argparse.FileType("wb"),
+        "dfu_file", metavar="DFU-FILE", type=argparse.FileType("wb"),
         help="write DFU image to the specified file")
 
     return parser
