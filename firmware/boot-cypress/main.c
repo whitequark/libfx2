@@ -196,6 +196,10 @@ void handle_pending_usb_setup() {
 
 int main() {
   CPUCS = _CLKOE|_CLKSPD1;
+
+  // Don't re-enumerate. `fx2tool -B` will load this firmware to access EEPROM, and it
+  // expects to be able to keep accessing the device. If you are using this firmware
+  // in your own code, set /*diconnect=*/true.
   usb_init(/*disconnect=*/false);
 
   while(1) {
