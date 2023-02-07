@@ -17,7 +17,7 @@ from .format import input_data, output_data, diff_data
 class VID_PID(collections.namedtuple("VID_PID", "vid pid")):
     @classmethod
     def parse(cls, s):
-        match = re.match(r"^([0-9a-f]{1,4}):([0-9a-f]{1,4})$", s, re.I)
+        match = re.match(r"^(?:0x)?([0-9a-f]{1,4}):(?:0x)?([0-9a-f]{1,4})$", s, re.I)
         if not match:
             raise ValueError("{} is not a VID:PID pair".format(s))
         vid = int(match.group(1), 16)
@@ -51,7 +51,7 @@ class TextHelpFormatter(argparse.HelpFormatter):
 
 def get_argparser():
     def usb_id(arg):
-        if re.match(r"^([0-9a-f]{1,4})$", arg, re.I) and int(arg, 16) not in (0x0000, 0xffff):
+        if re.match(r"^(?:0x)?([0-9a-f]{1,4})$", arg, re.I) and int(arg, 16) not in (0x0000, 0xffff):
             return int(arg, 16)
         else:
             raise argparse.ArgumentTypeError("{} is not an USB ID".format(arg))
