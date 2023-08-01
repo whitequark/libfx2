@@ -349,7 +349,7 @@ def main():
         if device is not None:
             if args.bootloader:
                 bootloader_ihex = os.path.join(resource_dir, "boot-cypress.ihex")
-                device.load_ram(input_data(open(bootloader_ihex)))
+                device.load_ram(input_data(open(bootloader_ihex, "rb")))
             elif args.stage2:
                 device.load_ram(input_data(args.stage2))
 
