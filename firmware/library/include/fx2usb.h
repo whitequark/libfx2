@@ -74,7 +74,7 @@ void usb_init(bool disconnect);
  * Indicate an error in response to a EP0 transfer.
  */
 #define STALL_EP0() \
-  do { EP0CS = _STALL; } while(0)
+  do { EP0CS = _STALL; EP0CS = _STALL|_HSNAK; } while(0)
 
 /**
  * Return a EPnCS register for given USB endpoint index, or 0
