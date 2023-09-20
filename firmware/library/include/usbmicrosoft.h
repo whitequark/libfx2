@@ -42,4 +42,14 @@ struct usb_desc_ms_ext_compat_id {
 typedef __code const struct usb_desc_ms_ext_compat_id
   usb_desc_ms_ext_compat_id_c;
 
+struct usb_desc_ms_ext_property {
+  uint32_t dwLength;
+  uint16_t bcdVersion;
+  uint16_t wIndex;
+  uint16_t wCount;
+};
+
+typedef __code const struct usb_desc_ms_ext_property
+  usb_desc_ms_ext_property_c;
+
 #endif
