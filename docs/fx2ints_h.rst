@@ -15,7 +15,7 @@ To define a core interrupt handler, override the corresponding ``isr_`` function
 
 .. code-block:: c
 
-   void isr_TF0() __interrupt(_INT_TF0) {
+   void isr_TF0(void) __interrupt(_INT_TF0) {
      // TIMER0 has overflowed
    }
 
@@ -23,7 +23,7 @@ Interrupts with flags in the ``EXIF`` register need to be reset manually:
 
 .. code-block:: c
 
-   void isr_I2C() __interrupt(_INT_I2C) {
+   void isr_I2C(void) __interrupt(_INT_I2C) {
      // I2C is done or errored
      CLEAR_I2C_IRQ();
    }
@@ -35,7 +35,7 @@ To define an autovectored interrupt handler, override the corresponding ``isr_``
 
 .. code-block:: c
 
-   void isr_SOF() __interrupt {
+   void isr_SOF(void) __interrupt {
      // Start of Frame packet has been received
      CLEAR_USB_IRQ();
      USBIRQ = _SOF;

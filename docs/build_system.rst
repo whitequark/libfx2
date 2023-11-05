@@ -17,7 +17,7 @@ To start using it, create a source file...
 
   #include <fx2regs.h>
 
-  int main() {
+  int main(void) {
     IOA = OEA = 1;
     while(1);
   }

@@ -1,3 +1,3 @@
 #include <fx2ints.h>
 
-void ISRNAME() __interrupt(INTNAME) {}
+void ISRNAME(void) __interrupt(INTNAME) {}

@@ -259,14 +259,14 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
 
 volatile bool pending_ep6_in;
 
-void isr_IBN() __interrupt {
+void isr_IBN(void) __interrupt {
   pending_ep6_in = true;
   CLEAR_USB_IRQ();
   NAKIRQ = _IBN;
   IBNIRQ = _IBNI_EP6;
 }
 
-int main() {
+int main(void) {
   CPUCS = _CLKSPD1;
 
   REVCTL = _ENH_PKT|_DYN_OUT;

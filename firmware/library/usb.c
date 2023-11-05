@@ -57,7 +57,7 @@ __xdata volatile uint8_t *EPnCS_for_n(uint8_t n) {
   }
 }
 
-void isr_SUDAV() __interrupt {
+void isr_SUDAV(void) __interrupt {
   __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
   bool handled = false;
 

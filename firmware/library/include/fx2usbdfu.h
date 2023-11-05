@@ -57,7 +57,7 @@ struct usb_dfu_iface_state {
    * If this callback is set to ``NULL``, the behavior is the same as if the callback was
    * implemented as an empty function returning ``USB_DFU_STATUS_OK``.
    */
-  usb_dfu_status_t (*firmware_manifest)() __reentrant;
+  usb_dfu_status_t (*firmware_manifest)(void) __reentrant;
 
   /// State of the DFU interface, as per DFU specification.
   volatile enum usb_dfu_state state;

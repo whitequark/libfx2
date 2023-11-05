@@ -4,7 +4,7 @@
 
 DEFINE_DEBUG_PUTCHAR_FN(PA0, 57600)
 
-int main() {
+int main(void) {
   // Any of these will work at 57600 baud:
   CPUCS = 0;
   // CPUCS = _CLKSPD0;

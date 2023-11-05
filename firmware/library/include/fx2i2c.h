@@ -39,7 +39,7 @@ bool i2c_start(uint8_t chip);
 /**
  * This function generates a stop condition.
  */
-bool i2c_stop();
+bool i2c_stop(void);
 
 /**
  * This function writes `len` bytes from `buf` to the I2C bus.

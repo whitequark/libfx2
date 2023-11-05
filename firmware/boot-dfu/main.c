@@ -169,7 +169,7 @@ usb_dfu_status_t firmware_dnload(uint32_t address, __xdata uint8_t *data,
   }
 }
 
-usb_dfu_status_t firmware_manifest() __reentrant {
+usb_dfu_status_t firmware_manifest(void) __reentrant {
   // Simulate committing the firmware. If this function is not necessary, it may simply be omitted,
   // together with its entry in `usb_dfu_iface_state`.
   delay_ms(1000);
@@ -193,7 +193,7 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
   STALL_EP0();
 }
 
-int main() {
+int main(void) {
   // Run core at 48 MHz fCLK.
   CPUCS = _CLKSPD1;
 

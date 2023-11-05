@@ -102,7 +102,7 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
 // requests A2/A9 work the same as in Cypress libraries by default.
 uint8_t page_size = 0; // log2(page size in bytes)
 
-void handle_pending_usb_setup() {
+void handle_pending_usb_setup(void) {
   __xdata struct usb_req_setup *req = (__xdata struct usb_req_setup *)SETUPDAT;
 
   if(req->bmRequestType == (USB_RECIP_DEVICE|USB_TYPE_VENDOR|USB_DIR_OUT) &&
@@ -194,7 +194,7 @@ void handle_pending_usb_setup() {
   STALL_EP0();
 }
 
-int main() {
+int main(void) {
   CPUCS = _CLKOE|_CLKSPD1;
 
   // Don't re-enumerate. `fx2tool -B` will load this firmware to access EEPROM, and it

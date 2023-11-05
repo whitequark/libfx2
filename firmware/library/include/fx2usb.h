@@ -183,7 +183,7 @@ bool handle_usb_set_configuration(uint8_t config_value);
  * This callback has a default implementation that sets up an EP0 IN transfer
  * with value `usb_config_value`.
  */
-void handle_usb_get_configuration();
+void handle_usb_get_configuration(void);
 
 /**
  * Callback for the standard Set Interface request.

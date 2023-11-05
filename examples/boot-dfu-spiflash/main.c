@@ -15,10 +15,10 @@
 // The following routines should handle the multi-master nature of SPI flash usage in
 // an application. E.g. if an FPGA is the primary user of the SPI flash, flash_bus_init() should
 // also assert FPGA reset, and flash_bus_deinit() would deassert it.
-void flash_bus_init() {
+void flash_bus_init(void) {
   OEA |=  0b0111;
 }
-void flash_bus_deinit() {
+void flash_bus_deinit(void) {
   OEA &= ~0b0111;
 }
 
@@ -292,7 +292,7 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
   STALL_EP0();
 }
 
-int main() {
+int main(void) {
   CPUCS = _CLKSPD1;
 
   flash_bus_deinit();

@@ -25,7 +25,7 @@ bool i2c_start(uint8_t chip) {
   return i2c_wait(/*need_ack=*/true);
 }
 
-bool i2c_stop() {
+bool i2c_stop(void) {
   if(I2CS & _BERR)
     return false;
 

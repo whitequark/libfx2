@@ -2,13 +2,13 @@
 #include <fx2ints.h>
 
 // Register an interrupt handler for TIMER0 overflow
-void isr_TF0() __interrupt(_INT_TF0) {
+void isr_TF0(void) __interrupt(_INT_TF0) {
   static int i;
   if(i++ % 64 == 0)
     PA0 = !PA0;
 }
 
-int main() {
+int main(void) {
   // Configure pins
   PA0 = 1;      // set PA0 to high
   OEA = 0b1;    // set PA0 as output
