@@ -27,6 +27,13 @@ Program the RAM to start the demo code autmatically
 <img width="502" alt="image" src="https://github.com/sidd-kishan/libfx2/assets/1007208/b56dacf6-74f9-418a-b87d-26fd2a582f5f">
 
 
+Select the hex file to program
+<img width="414" alt="image" src="https://github.com/sidd-kishan/libfx2/assets/1007208/e84252fe-373c-4f2c-90d0-ef7e11b672c1">
+
+will find the status programmin succeeded
+<img width="506" alt="image" src="https://github.com/sidd-kishan/libfx2/assets/1007208/123357ad-79f6-4b82-a996-6a1f87334b16">
+
+
 See the [complete documentation](https://libfx2.readthedocs.io) for details.
 
 ## License
