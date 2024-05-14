@@ -5,6 +5,7 @@ _libfx2_ is a chip support package for Cypress EZ-USB FX2 series microcontroller
 Build examples to play with this library
 
 ```
+apt install sdcc 
 cd libfx2
 make -C firmware
 make -C examples
