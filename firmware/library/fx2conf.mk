@@ -31,6 +31,8 @@ ifeq ($(V),1)
 SDCCFLAGS += -V
 endif
 
-SDCC       = sdcc -mmcs51 $(SDCCFLAGS)
-SDAS       = sdas8051 -plo
+include $(LIBFX2)/sdcc.mk
+
+SDCC       = $(SDCC_EXECUTABLE) -mmcs51 $(SDCCFLAGS)
+SDAS       = $(SDAS_EXECUTABLE) -plo
 FX2LOAD    = python3 -m fx2.fx2tool -d $(VID):$(PID) load

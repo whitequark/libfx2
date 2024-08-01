@@ -1,6 +1,8 @@
-SDCC  = sdcc -mmcs51 --std-sdcc99 -Iinclude $(CFLAGS)
-SDAS  = sdas8051 -plo
-SDAR ?= sdar rc
+include sdcc.mk
+
+SDCC  = $(SDCC_EXECUTABLE) -mmcs51 --std-sdcc99 -Iinclude $(CFLAGS)
+SDAS  = $(SDAS_EXECUTABLE) -plo
+SDAR ?= $(SDAR_EXECUTABLE) rc
 
 # core interrupts
 DEFISRS  = \
