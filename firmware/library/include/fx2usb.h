@@ -53,15 +53,53 @@ void usb_init(bool disconnect);
   } while(0)
 
 /**
- * Configure EP0 for an IN or OUT transfer from or to `EP0BUF`.
- * For an OUT transfer, specify `length` as `0`.
- */
+  * This call is deprecated.
+  *
+  * Old documentation said:
+  * Configure EP0 for an IN or OUT transfer from or to `EP0BUF`.
+  * For an OUT transfer, specify `length` as `0`.
+  *
+  * However using `SETUP_EP0_BUF(0)` for OUT transfers will expose a
+  * race condition when the host is too eager to send more control
+  * transfers.
+  *
+  * For IN control transfers, please use `SETUP_EP0_IN_BUF(length)` instead.
+  *
+  * For OUT control transfers, please use one or more `SETUP_EP0_OUT_BUF()`,
+  * followed by a single `ACK_EP0()` call, but only after all data has been
+  * processed from `EP0BUF`.
+  */
 #define SETUP_EP0_BUF(length) \
   do { \
     SUDPTRCTL = _SDPAUTO; \
     EP0BCH = 0; \
     EP0BCL = length; \
     EP0CS = _HSNAK; \
+  } while(0)
+
+/**
+ * Configure EP0 for an IN transfer from `EP0BUF`.
+ */
+#define SETUP_EP0_IN_BUF(length) \
+  do { \
+    SUDPTRCTL = _SDPAUTO; \
+    EP0BCH = 0; \
+    EP0BCL = length; \
+    EP0CS = _HSNAK; \
+  } while(0)
+
+/**
+ * Configure EP0 for an OUT transfer from `EP0BUF`.
+ *
+ * For OUT transfers please use one or more calls to
+ * `SETUP_EP0_OUT_BUF()` followed by a single call to `ACK_EP0()`.
+ * Do not call `ACK_EP0()` before processing all pending data in `EP0BUF`
+ */
+#define SETUP_EP0_OUT_BUF() \
+  do { \
+    SUDPTRCTL = _SDPAUTO; \
+    EP0BCH = 0; \
+    EP0BCL = 0; \
   } while(0)
 
 /**
