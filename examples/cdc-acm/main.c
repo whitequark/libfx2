@@ -199,7 +199,8 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
   if(req->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_CLASS|USB_DIR_OUT) &&
      req->bRequest == USB_CDC_PSTN_REQ_SET_LINE_CODING &&
      req->wIndex == 0 && req->wLength == 7) {
-    SETUP_EP0_BUF(0);
+    SETUP_EP0_OUT_BUF();
+    ACK_EP0(); // Since we're throwing away the buffer, it's okay to immediately just ACK it.
     return;
   }
 
