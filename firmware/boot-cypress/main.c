@@ -147,13 +147,14 @@ void handle_pending_usb_setup(void) {
         }
         SETUP_EP0_BUF(len);
       } else {
-        SETUP_EP0_BUF(0);
+        SETUP_EP0_OUT_BUF();
         while(EP0CS & _BUSY);
         if(!eeprom_write(arg_chip, arg_addr, EP0BUF, len, arg_dbyte, page_size,
                          /*timeout=*/166)) {
           STALL_EP0();
           break;
         }
+        ACK_EP0();
       }
 
       arg_len  -= len;
@@ -179,9 +180,10 @@ void handle_pending_usb_setup(void) {
         xmemcpy(EP0BUF, (__xdata void *)arg_addr, len);
         SETUP_EP0_BUF(len);
       } else {
-        SETUP_EP0_BUF(0);
+        SETUP_EP0_OUT_BUF();
         while(EP0CS & _BUSY);
         xmemcpy((__xdata void *)arg_addr, EP0BUF, arg_len);
+        ACK_EP0();
       }
 
       arg_len  -= len;
