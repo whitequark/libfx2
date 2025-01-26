@@ -6,8 +6,7 @@
 // An example of how to push characters to a software UART on PA0.
 // As a test, the CLK speed is changed to check the code works for
 // a variety of frequencies.
-// 38400 likely works in all scenarios.  If you increase the baud
-// rate it may or may not work, but  
+// 38400 likely works in all scenarios, YMMV with higher values.  
 
 
 DEFINE_DEBUG_PUTCHAR_FN(PA0, 38400)
