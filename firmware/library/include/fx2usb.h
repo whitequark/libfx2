@@ -53,8 +53,12 @@ void usb_init(bool disconnect);
   } while(0)
 
 /**
- * Configure EP0 for an IN or OUT transfer from or to `EP0BUF`.
- * For an OUT transfer, specify `length` as `0`.
+ * Configure EP0 for an IN transfer from `EP0BUF`.
+ *
+ * Using this for an OUT transfer is deprecated, because it exposes a
+ * race condition. For OUT transfers please use one or more calls to
+ * `SETUP_EP0_OUT_BUF()` instead followed by a single call to `ACK_EP0()`.
+ * Do not call `ACK_EP0()` before processing all pending data in `EP0BUF`
  */
 #define SETUP_EP0_BUF(length) \
   do { \
@@ -62,6 +66,13 @@ void usb_init(bool disconnect);
     EP0BCH = 0; \
     EP0BCL = length; \
     EP0CS = _HSNAK; \
+  } while(0)
+
+#define SETUP_EP0_OUT_BUF() \
+  do { \
+    SUDPTRCTL = _SDPAUTO; \
+    EP0BCH = 0; \
+    EP0BCL = 0; \
   } while(0)
 
 /**
