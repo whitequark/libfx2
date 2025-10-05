@@ -113,13 +113,13 @@ __endasm;
     EP0BUF[0] = (usb_self_powered  << 0) |
                 (usb_remote_wakeup << 1);
     EP0BUF[1] = 0;
-    SETUP_EP0_BUF(2);
+    SETUP_EP0_IN_BUF(2);
     // Get Status - Interface
   } else if(req->bmRequestType == (USB_RECIP_IFACE|USB_TYPE_STANDARD|USB_DIR_IN) &&
             req->bRequest == USB_REQ_GET_STATUS) {
     EP0BUF[0] = 0;
     EP0BUF[1] = 0;
-    SETUP_EP0_BUF(2);
+    SETUP_EP0_IN_BUF(2);
     // Set Feature - Endpoint
     // Clear Feature - Endpoint
   } else if(req->bmRequestType == (USB_RECIP_ENDPT|USB_TYPE_STANDARD|USB_DIR_OUT) &&
@@ -147,7 +147,7 @@ __endasm;
     if(EPnCS != 0) {
       EP0BUF[0] = ((*EPnCS & _STALL) != 0);
       EP0BUF[1] = 0;
-      SETUP_EP0_BUF(2);
+      SETUP_EP0_IN_BUF(2);
     }
   } else {
     handle_usb_setup(req);

@@ -268,7 +268,7 @@ usb_dfu_iface_state_t usb_dfu_iface_state = {
 void handle_usb_get_interface(uint8_t interface) {
   if(interface == 0) {
     EP0BUF[0] = dfu_alt_setting;
-    SETUP_EP0_BUF(1);
+    SETUP_EP0_IN_BUF(1);
     return;
   }
   STALL_EP0();

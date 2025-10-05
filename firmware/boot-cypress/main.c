@@ -145,7 +145,7 @@ void handle_pending_usb_setup(void) {
           STALL_EP0();
           break;
         }
-        SETUP_EP0_BUF(len);
+        SETUP_EP0_IN_BUF(len);
       } else {
         SETUP_EP0_BUF(0);
         while(EP0CS & _BUSY);
@@ -177,7 +177,7 @@ void handle_pending_usb_setup(void) {
       if(arg_read) {
         while(EP0CS & _BUSY);
         xmemcpy(EP0BUF, (__xdata void *)arg_addr, len);
-        SETUP_EP0_BUF(len);
+        SETUP_EP0_IN_BUF(len);
       } else {
         SETUP_EP0_BUF(0);
         while(EP0CS & _BUSY);

@@ -18,7 +18,7 @@ bool usb_mass_storage_bbb_setup(usb_mass_storage_bbb_state_t *state,
      request->bRequest == USB_REQ_MASS_STORAGE_GET_MAX_LUN &&
      request->wValue == 0 && request->wIndex == state->interface && request->wLength == 1) {
     EP0BUF[0] = state->max_lun;
-    SETUP_EP0_BUF(1);
+    SETUP_EP0_IN_BUF(1);
     return true;
   }
 
