@@ -191,6 +191,7 @@ void handle_pending_usb_setup(void) {
     return;
   }
 
+  pending_setup = false;
   STALL_EP0();
 }
 
