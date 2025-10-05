@@ -23,7 +23,7 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
       req->bRequest == USB_DFU_REQ_GETSTATE && req->wValue == 0 &&
       req->wLength == sizeof(uint8_t)) {
     EP0BUF[0] = dfu->state;
-    SETUP_EP0_BUF(1);
+    SETUP_EP0_IN_BUF(1);
     return true;
   }
 
@@ -55,7 +55,7 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
     status->bwPollTimeoutHigh = 0;
     status->bState = dfu->state;
     status->iString = 0;
-    SETUP_EP0_BUF(sizeof(struct usb_dfu_req_get_status));
+    SETUP_EP0_IN_BUF(sizeof(struct usb_dfu_req_get_status));
     return true;
   }
 
@@ -139,7 +139,7 @@ void usb_dfu_setup_deferred(usb_dfu_iface_state_t *dfu) {
       uint16_t length = dfu->length;
       dfu->status = dfu->firmware_upload(dfu->offset, &EP0BUF[0], &dfu->length);
       if(dfu->status == USB_DFU_STATUS_OK) {
-        SETUP_EP0_BUF(dfu->length);
+        SETUP_EP0_IN_BUF(dfu->length);
         if(dfu->length < length) {
           dfu->state = USB_DFU_STATE_dfuIDLE;
         }

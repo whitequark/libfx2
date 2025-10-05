@@ -190,7 +190,7 @@ void handle_usb_setup(__xdata struct usb_req_setup *req) {
     line_coding->bCharFormat = USB_CDC_REQ_LINE_CODING_STOP_BITS_1;
     line_coding->bParityType = USB_CDC_REQ_LINE_CODING_PARITY_NONE;
     line_coding->bDataBits = 8;
-    SETUP_EP0_BUF(sizeof(struct usb_cdc_req_line_coding));
+    SETUP_EP0_IN_BUF(sizeof(struct usb_cdc_req_line_coding));
     return;
   }
 
