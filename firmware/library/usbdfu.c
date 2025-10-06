@@ -3,6 +3,9 @@
 
 #pragma save
 #pragma nooverlay
+
+__xdata uint8_t scratch2[512];
+
 bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req) {
   uint8_t interface = dfu->state > USB_DFU_STATE_appDETACH ? 0 : dfu->interface;
 
@@ -38,7 +41,9 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
        !dfu->sync) {
       // If we're here, then EP0BUF is still in use, but the host already sent GETSTATUS.
       // If we do SETUP_EP0_* right now, we'll overwrite EP0BUF, and get corrupted data.
-      // So, delay responding to this packet until after EP0BUF is copied to scratch space.
+      // So, delay responding to this packet until after EP0BUF is copied a second scratch
+      // space. We cannot use the normal scratch space, because it's used when getting
+      // descriptors, and our downloaded data might get overwritten.
       //
       // (GETSTATUS in dfuMANIFEST-SYNC does not have this restriction, but these requests
       // use identical flows in the DFU spec, and it is simpler to handle them the same way.)
@@ -93,14 +98,14 @@ bool usb_dfu_setup(usb_dfu_iface_state_t *dfu, __xdata struct usb_req_setup *req
         dfu->length   = req->wLength;
         dfu->pending  = true;
         dfu->sync     = false;
-        SETUP_EP0_BUF(0);
+        SETUP_EP0_OUT_BUF();
         return true;
       } else if(dfu->state == USB_DFU_STATE_dfuDNLOAD_IDLE && req->wLength > 0) {
         dfu->state    = USB_DFU_STATE_dfuDNLOAD_SYNC;
         dfu->length   = req->wLength;
         dfu->pending  = true;
         dfu->sync     = false;
-        SETUP_EP0_BUF(0);
+        SETUP_EP0_OUT_BUF();
         return true;
       } else if(dfu->state == USB_DFU_STATE_dfuDNLOAD_IDLE) {
         dfu->state    = USB_DFU_STATE_dfuMANIFEST_SYNC;
@@ -149,7 +154,8 @@ void usb_dfu_setup_deferred(usb_dfu_iface_state_t *dfu) {
       }
     } else if(dfu->state == USB_DFU_STATE_dfuDNLOAD_SYNC) {
       while(EP0CS & _BUSY);
-      xmemcpy(scratch, &EP0BUF[0], dfu->length);
+      xmemcpy(scratch2, &EP0BUF[0], dfu->length);
+      ACK_EP0();
 
       // Wait until we get a GETSTATUS request (in case we still haven't got one), and then reply
       // to it from here, after we've safely stashed away EP0BUF contents.
@@ -157,7 +163,7 @@ void usb_dfu_setup_deferred(usb_dfu_iface_state_t *dfu) {
       usb_dfu_setup(dfu, (__xdata struct usb_req_setup *)SETUPDAT);
       return;
     } else if(dfu->state == USB_DFU_STATE_dfuDNBUSY) {
-      dfu->status = dfu->firmware_dnload(dfu->offset, scratch, dfu->length);
+      dfu->status = dfu->firmware_dnload(dfu->offset, scratch2, dfu->length);
       if(dfu->status == USB_DFU_STATUS_OK) {
         dfu->offset += dfu->length;
         dfu->state = USB_DFU_STATE_dfuDNLOAD_IDLE;
