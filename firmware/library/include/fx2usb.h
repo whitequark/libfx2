@@ -68,13 +68,19 @@ void usb_init(bool disconnect);
   * For OUT control transfers, please use one or more `SETUP_EP0_OUT_BUF()`,
   * followed by a single `ACK_EP0()` call, but only after all data has been
   * processed from `EP0BUF`.
+  *
+  * If one desires to use the deprecated SETUP_EP0_BUF, then it can be
+  * re-enabled with:
+  * `CFLAGS=-DSETUP_EP0_BUF_is_deprecated_use_SETUP_EP0_IN_BUF_or_SETUP_EP0_OUT_BUF_instead=1`
   */
 #define SETUP_EP0_BUF(length) \
   do { \
-    SUDPTRCTL = _SDPAUTO; \
-    EP0BCH = 0; \
-    EP0BCL = length; \
-    EP0CS = _HSNAK; \
+    if (SETUP_EP0_BUF_is_deprecated_use_SETUP_EP0_IN_BUF_or_SETUP_EP0_OUT_BUF_instead) { \
+      SUDPTRCTL = _SDPAUTO; \
+      EP0BCH = 0; \
+      EP0BCL = length; \
+      EP0CS = _HSNAK; \
+    } \
   } while(0)
 
 /**
