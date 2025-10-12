@@ -54,6 +54,12 @@ enum usb_descriptor {
   USB_DESC_DEVICE_QUALIFIER = 6,
   USB_DESC_OTHER_SPEED_CONFIGURATION = 7,
   USB_DESC_INTERFACE_POWER  = 8,
+  USB_DESC_BINARY_OBJECT_STORE = 15,
+  USB_DESC_DEVICE_CAPABILITY = 16,
+};
+
+enum usb_device_capability {
+  USB_DEV_CAP_PLATFORM      = 5,
 };
 
 enum usb_feature {
@@ -231,5 +237,15 @@ struct usb_desc_string {
 
 typedef __code const struct usb_desc_string
   usb_desc_string_c;
+
+struct usb_desc_binary_object_store {
+  uint8_t  bLength;
+  uint8_t  bDescriptorType;
+  uint16_t wTotalLength;
+  uint8_t  bNumDeviceCaps;
+};
+
+typedef __code const struct usb_desc_binary_object_store
+  usb_binary_object_store_c;
 
 #endif

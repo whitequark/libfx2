@@ -160,6 +160,8 @@ struct usb_descriptor_set {
   usb_configuration_set_c     *configs;
   uint8_t                      string_count;
   usb_ascii_string_c          *strings;
+  uint8_t                      capability_count;
+  usb_desc_generic_c          *capabilities;
 };
 
 typedef __code const struct usb_descriptor_set
