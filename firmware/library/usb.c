@@ -213,6 +213,22 @@ void usb_serve_descriptor(usb_descriptor_set_c *set,
       *buf++ = 0;
       scratch[0] += 2;
     }
+  } else if(type == USB_DESC_BINARY_OBJECT_STORE && index == 0) {
+    __xdata struct usb_desc_binary_object_store *bos_desc =
+      (__xdata struct usb_desc_binary_object_store *)buf;
+    bos_desc->bLength = sizeof(struct usb_desc_binary_object_store);
+    bos_desc->bDescriptorType = USB_DESC_BINARY_OBJECT_STORE;
+    // bos_desc->wTotalLength filled in later
+    bos_desc->bNumDeviceCaps = set->capability_count;
+    buf += bos_desc->bLength;
+    __code const struct usb_desc_generic *dev_cap_desc = set->capabilities;
+    for(uint8_t i = 0; i < set->capability_count; i++) {
+      APPEND(dev_cap_desc);
+      dev_cap_desc++;
+    }
+    bos_desc->wTotalLength = (uint16_t)(buf - scratch);
+    SETUP_EP0_IN_DATA(scratch, bos_desc->wTotalLength);
+    return;
   } else {
     STALL_EP0();
     return;
