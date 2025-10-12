@@ -49,6 +49,7 @@ enum usb_descriptor {
   USB_DESC_DEVICE           = 1,
   USB_DESC_CONFIGURATION    = 2,
   USB_DESC_STRING           = 3,
+  USB_DESC_URL              = USB_DESC_STRING,
   USB_DESC_INTERFACE        = 4,
   USB_DESC_ENDPOINT         = 5,
   USB_DESC_DEVICE_QUALIFIER = 6,
@@ -237,6 +238,21 @@ struct usb_desc_string {
 
 typedef __code const struct usb_desc_string
   usb_desc_string_c;
+
+enum usb_url_scheme {
+  USB_URL_SCHEME_HTTP  = 0,
+  USB_URL_SCHEME_HTTPS = 1,
+};
+
+struct usb_desc_url {
+  uint8_t  bLength;
+  uint8_t  bDescriptorType;
+  uint8_t  bScheme;
+  uint8_t  bURL[];
+};
+
+typedef __code const struct usb_desc_url
+  usb_desc_url_c;
 
 struct usb_desc_binary_object_store {
   uint8_t  bLength;
